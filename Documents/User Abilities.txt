@@ -5,6 +5,7 @@ What can People do using @Event?
 - Create @Events
 - View their events in their calendar
 - Edit Created Events
+- Add a location to an created Event
 - Delete Events
 - Share Events with other @signs
 - Receive a shared @Event
