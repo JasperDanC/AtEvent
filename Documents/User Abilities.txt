@@ -1,0 +1,16 @@
+What can People do using @Event?
+
+- Login to their @sign
+- View their calendar. (week view + month view + day view?)
+- Create @Events
+- View their events in their calendar
+- Edit Created Events
+- Delete Events
+- Share Events with other @signs
+- Receive a shared @Event
+- Accept a shared @Event (automatically gets added to receivers calendar)
+( When a person shares an @Event it exists as the same event for both users,
+  e.i. the creator edits a detail about the @Event it changes for all @sign holders
+  who had the event shared with them )
+- Decline a shared @Event ( @Event is not added to calendar and Inviter sees that it was declined )
+- View who has accepted and declined shared event.
