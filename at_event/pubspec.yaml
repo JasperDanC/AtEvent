@@ -19,12 +19,13 @@ dependencies:
   at_demo_data: ^0.0.3+1
   syncfusion_flutter_calendar: ^19.1.67
   toggle_switch: ^1.0.0+1
+  adobe_xd: ^2.0.0+1
 
 
 flutter:
 
   assets:
-    - assets/
+    - assets/images/
 
 
   uses-material-design: true
