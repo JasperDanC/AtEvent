@@ -114,7 +114,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         });
                       } else {
                         if(ctd.appointments.length != null){
-
+                          Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {}));
                         }
                       }
                     },

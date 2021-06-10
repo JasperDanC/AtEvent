@@ -57,6 +57,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             padding: const EdgeInsets.all(35.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
                   widget.event.eventName,
