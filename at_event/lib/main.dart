@@ -16,24 +16,10 @@ class Vento extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
           primaryColor: kForegroundGrey,
           scaffoldBackgroundColor: kBackgroundGrey),
-      home: EventDetailsScreen(
-        event: Event(
-            eventName: "Lunch with Thomas",
-            from: DateTime(2021, 06, 09, 6),
-            to: DateTime(2021, 06, 09, 9),
-            location: '123 Street Avenue N.',
-            description: 'Lunch at my place!\n\n' +
-                'Bring some board games, pops, and some delicious sides\n\n' +
-                'We will be eating burgers',
-            peopleGoing: [
-              '@gerald',
-              '@norton',
-              '@thomas',
-              '@MrSmith',
-              '@Harriet',
-              '@funkyfrog',
-            ]),
-      ),
+      home: WelcomeScreen(),
+      routes: <String, WidgetBuilder>{
+        '/HomeScreen': (BuildContext context) => HomeScreen()
+      },
     );
   }
 }

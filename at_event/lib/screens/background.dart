@@ -3,7 +3,6 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:at_event/constants.dart';
 
 class Background extends StatelessWidget {
-
   Background({this.child});
   final Widget child;
 
@@ -23,7 +22,9 @@ class Background extends StatelessWidget {
           title: Text(
             "@Vento",
             style: TextStyle(
-                fontSize: 28.0, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 28.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white),
           ),
         ),
         body: Stack(
@@ -44,7 +45,8 @@ class Background extends StatelessWidget {
                     ],
                     stops: [0.0, 0.0, 0.46, 1.0],
                   ),
-                  border: Border.all(width: 1.0, color: const Color(0xff707070)),
+                  border:
+                      Border.all(width: 1.0, color: const Color(0xff707070)),
                 ),
               ),
             ),
