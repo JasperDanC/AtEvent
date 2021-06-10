@@ -8,9 +8,24 @@ import 'package:intl/intl.dart';
 void main() {
   runApp(EventDetailsScreen(
     event: Event(
-        eventName: "Test Event 1",
+        eventName: "Lunch with Thomas",
         from: DateTime(2021, 06, 09, 6),
-        to: DateTime(2021, 06, 09, 9)),
+        to: DateTime(2021, 06, 09, 9),
+        location: '123 Street Avenue N.',
+        description:
+        'Lunch at my place!\n\n'+
+        'Bring some board games, pops, and some delicious sides\n\n'+
+        'We will be eating burgers',
+        peopleGoing: [
+          '@gerald',
+          '@norton',
+          '@thomas',
+          '@MrSmith',
+          '@Harriet',
+          '@funkyfrog',
+        ]
+
+    ),
   ));
 }
 
@@ -27,29 +42,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(45.0),
-                bottomLeft: Radius.circular(45.0),
-              )),
-          centerTitle: true,
-          backgroundColor: kPrimaryBlue,
-          title: Text(
-            "@Vento",
-            style: TextStyle(
-                fontSize: 28.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-        ),
-        backgroundColor: kBackgroundGrey,
         body: Container(
           decoration: BoxDecoration(
               color: kEventBlue, borderRadius: kBasicBorderRadius),
           child: Padding(
             padding: const EdgeInsets.all(35.0),
             child: Column(
+
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
@@ -63,6 +62,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: Colors.white,
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "From: " +
@@ -91,8 +92,30 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       style: kEventDetailsTextStyle,
                     )
                   ],
+                ),
+                Divider(
+                  color: Colors.white,
+                ),
+                Text(
+                  widget.event.description,
+                  style: kEventDetailsTextStyle,
+                ),
+                Divider(
+                  color: Colors.white,
+                ),
+                Text(
+                  widget.event.peopleGoing.length.toString() + " going:",
+                  style: kEventDetailsTextStyle,
+                ),
+                MaterialButton(
+                    onPressed: (){},
+                    shape: CircleBorder(),
+                    child: Icon(
+                      Icons.add
+                    ),
                 )
               ],
+
             ),
           ),
         ),

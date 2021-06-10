@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:at_event/constants.dart';
 
 class Event {
-  Event({this.eventName = '',this.description = '', @required this.from, @required this.to, this.location});
+  Event({this.eventName = '',this.description = '', @required this.from, @required this.to, this.location, this.peopleGoing});
   String eventName;
   DateTime from;
   DateTime to;

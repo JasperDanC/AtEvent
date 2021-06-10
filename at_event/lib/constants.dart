@@ -41,5 +41,22 @@ const kButtonTextStyle = TextStyle(
 
 const kEventDetailsTextStyle = TextStyle(
   color: Colors.white,
-  fontSize: 15,
+  fontSize: 16,
+);
+
+AppBar globalAppBar = AppBar(
+  shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(45.0),
+        bottomLeft: Radius.circular(45.0),
+      )),
+  centerTitle: true,
+  backgroundColor: kPrimaryBlue,
+  title: Text(
+    "@Vento",
+    style: TextStyle(
+        fontSize: 28.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.white),
+  ),
 );
