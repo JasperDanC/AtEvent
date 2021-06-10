@@ -10,6 +10,7 @@ class Background extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           toolbarHeight: 65.0,
           shape: RoundedRectangleBorder(

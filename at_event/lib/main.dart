@@ -5,8 +5,16 @@ import 'package:at_event/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/models/event.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(Vento());
+void main() async {
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
+
+  runApp(Vento());
+}
 
 class Vento extends StatelessWidget {
   // This widget is the root of your application.
