@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:at_event/constants.dart';
-import 'calendar_event.dart';
+import 'event.dart';
 
 
 
@@ -22,7 +22,7 @@ class EventDataSource extends CalendarDataSource {
 
   @override
   bool isAllDay(int index) {
-    return appointments[index].isAllDay;
+    return false;
   }
 
   @override
@@ -32,6 +32,6 @@ class EventDataSource extends CalendarDataSource {
 
   @override
   Color getColor(int index) {
-    return appointments[index].background;
+    return kEventBlue;
   }
 }

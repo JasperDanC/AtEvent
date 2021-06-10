@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:at_event/constants.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:at_event/models/calendar_event.dart';
+import 'package:at_event/models/event.dart';
 import 'package:at_event/models/calendar_event_data_source.dart';
 
 void main() {
@@ -208,7 +208,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           : Colors.white,
                       cellBorderColor: _controller.view == CalendarView.month
                           ? Colors.white
-                          : Colors.black,
+                          : Colors.grey[110],
                     ),
                   )
                 ],
