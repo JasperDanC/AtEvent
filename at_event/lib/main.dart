@@ -1,3 +1,5 @@
+import 'package:at_event/screens/background.dart';
+import 'package:at_event/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
@@ -12,8 +14,7 @@ class Vento extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
           primaryColor: kForegroundGrey,
           scaffoldBackgroundColor: kBackgroundGrey),
-      home: WelcomeScreen(),
-
+      home: Background(),
     );
   }
 }
