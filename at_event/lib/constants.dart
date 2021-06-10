@@ -38,3 +38,8 @@ const kButtonTextStyle = TextStyle(
   fontSize: 22,
   color: const Color(0xfff1f1f1),
 );
+
+const kEventDetailsTextStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 15,
+);

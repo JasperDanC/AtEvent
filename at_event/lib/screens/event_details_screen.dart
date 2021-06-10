@@ -30,9 +30,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         appBar: AppBar(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(45.0),
-            bottomLeft: Radius.circular(45.0),
-          )),
+                bottomRight: Radius.circular(45.0),
+                bottomLeft: Radius.circular(45.0),
+              )),
           centerTitle: true,
           backgroundColor: kPrimaryBlue,
           title: Text(
@@ -83,12 +83,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           ":" +
                           DateFormat('mm').format(widget.event.to),
                       textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-
-                      ),
+                      style: kEventDetailsTextStyle,
                     ),
+                    Text(
+                      widget.event.location,
+                      textAlign: TextAlign.end,
+                      style: kEventDetailsTextStyle,
+                    )
                   ],
                 )
               ],
