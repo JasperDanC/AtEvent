@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:at_event/constants.dart';
 import 'package:at_event/models/event.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(EventDetailsScreen(
@@ -55,7 +58,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
-                  ),
+                ),
+                Divider(
+                  color: Colors.white,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      "From: " +
+                          DateFormat('MMMM').format(widget.event.from) +
+                          " " +
+                          widget.event.from.day.toString() +
+                          " " +
+                          widget.event.from.hour.toString() +
+                          ":" +
+                          DateFormat('mm').format(widget.event.from) +
+                          "\n" +
+                          "To: " +
+                          DateFormat('MMMM').format(widget.event.to) +
+                          " " +
+                          widget.event.to.day.toString() +
+                          " " +
+                          widget.event.to.hour.toString() +
+                          ":" +
+                          DateFormat('mm').format(widget.event.to),
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
