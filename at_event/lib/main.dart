@@ -8,8 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:at_event/models/event.dart';
 
 void main() async {
-
-
   runApp(Vento());
 }
 
@@ -21,11 +19,10 @@ class Vento extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
           primaryColor: kForegroundGrey,
           scaffoldBackgroundColor: kBackgroundGrey),
-
       routes: <String, WidgetBuilder>{
-        '/WelcomeScreen': (BuildContext context) => WelcomeScreen(),
+        '/': (BuildContext context) => WelcomeScreen(),
         '/HomeScreen': (BuildContext context) => HomeScreen(),
-        '/': (BuildContext context) => CalendarScreen(),
+        '/CalendarScreen': (BuildContext context) => CalendarScreen(),
         '/EventDetailsScreen': (BuildContext context) => EventDetailsScreen(
               event: Event(
                   eventName: "Lunch with Thomas",

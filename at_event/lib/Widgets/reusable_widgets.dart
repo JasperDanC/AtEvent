@@ -26,7 +26,7 @@ class _StartRoundButtonState extends State<StartRoundButton> {
       children: <Widget>[
         MaterialButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/HomeScreen');
+            Navigator.pushNamed(context, '/CalendarScreen');
             setState(() {
               _color = kForegroundGrey;
             });
