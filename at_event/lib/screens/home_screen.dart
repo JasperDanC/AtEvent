@@ -2,6 +2,7 @@ import 'package:at_event/screens/background.dart';
 import 'package:at_event/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:at_event/models/event.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -64,13 +65,36 @@ class _HomeScreenState extends State<HomeScreen> {
                         headerStyle: HeaderStyle(
                           titleTextStyle: kHeadingTextStyle,
                           formatButtonDecoration: BoxDecoration(
-                            border: Border.all(),
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(20)),
+                          formatButtonTextStyle: kNormalTextStyle,
+                          leftChevronIcon: Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                          ),
+                          rightChevronIcon: Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
                           ),
                           decoration: BoxDecoration(
                             color: kPrimaryBlue,
                           ),
                           headerMargin: const EdgeInsets.only(bottom: 8.0),
                         ),
+                        calendarStyle: CalendarStyle(
+                          canMarkersOverflow: true,
+                        ),
+                        eventLoader: (day) {
+                          List<Event> allEvents = [];
+                          for (int i = 0; i < kDummyEvents.length; i++) {
+                            if (kDummyEvents[i].from.day == day.day &&
+                                kDummyEvents[i].from.month == day.month &&
+                                kDummyEvents[i].from.year == day.year) {
+                              allEvents.add(kDummyEvents[i]);
+                            }
+                          }
+                          return allEvents;
+                        },
                       ),
                     )
                   ],

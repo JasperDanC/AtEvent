@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:at_event/models/event.dart';
+
 const Color kBackgroundGrey = Color(0xFF555555);
 const Color kForegroundGrey = Color(0xFF404040);
 const Color kPrimaryBlue = Color(0xFF3F51B5);
@@ -10,7 +11,7 @@ const BorderRadius kBasicBorderRadius = BorderRadius.all(
 const kTitleTextStyle = TextStyle(
   fontFamily: 'Open Sans',
   fontSize: 50,
-  color: const Color(0xffd49999),
+  color: Colors.white,
   letterSpacing: 0.7,
   fontWeight: FontWeight.w600,
   shadows: [
@@ -83,8 +84,7 @@ AppBar globalAppBar = AppBar(
   ),
 );
 
-
-List<Event> kDummyEvents  = [
+List<Event> kDummyEvents = [
   Event(
       eventName: "Test Event 1",
       from: DateTime(2021, 06, 09, 6),
