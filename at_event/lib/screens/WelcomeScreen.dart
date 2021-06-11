@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 80),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/CalendarScreen');
+                        Navigator.pushNamed(context, '/HomeScreen');
                       },
                       style: ElevatedButton.styleFrom(
                           elevation: 10,

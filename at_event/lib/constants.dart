@@ -11,7 +11,7 @@ const kTitleTextStyle = TextStyle(
   fontFamily: 'Open Sans',
   fontSize: 50,
   color: const Color(0xffd49999),
-  letterSpacing: 0.7000000000000001,
+  letterSpacing: 0.7,
   fontWeight: FontWeight.w600,
   shadows: [
     Shadow(
@@ -20,6 +20,27 @@ const kTitleTextStyle = TextStyle(
       blurRadius: 6,
     )
   ],
+);
+const kHeadingTextStyle = TextStyle(
+  fontFamily: 'Open Sans',
+  fontSize: 22,
+  color: Colors.white,
+  letterSpacing: 0.7,
+  fontWeight: FontWeight.w600,
+  shadows: [
+    Shadow(
+      color: const Color(0xa8000000),
+      offset: Offset(0, 3),
+      blurRadius: 6,
+    )
+  ],
+);
+const kNormalTextStyle = TextStyle(
+  fontFamily: 'Open Sans',
+  fontSize: 17,
+  color: Colors.white,
+  letterSpacing: 0.7,
+  fontWeight: FontWeight.w300,
 );
 
 const kQuoteTextStyle = TextStyle(
