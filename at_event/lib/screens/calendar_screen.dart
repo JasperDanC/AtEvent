@@ -21,25 +21,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int switchIndex = 0;
 
   EventDataSource _getEventData() {
-    List<Event> dummyEvents = [
-      Event(
-          eventName: "Test Event 1",
-          from: DateTime(2021, 06, 09, 6),
-          to: DateTime(2021, 06, 09, 9)),
-      Event(
-          eventName: "Test Event 2",
-          from: DateTime(2021, 06, 10, 18),
-          to: DateTime(2021, 06, 10, 21)),
-      Event(
-          eventName: "Test Event 3",
-          from: DateTime(2021, 06, 14, 10),
-          to: DateTime(2021, 06, 14, 11)),
-      Event(
-          eventName: "Test Event 4",
-          from: DateTime(2021, 06, 22, 6),
-          to: DateTime(2021, 06, 22, 9)),
-    ];
-    return EventDataSource(dummyEvents);
+
+    return EventDataSource(kDummyEvents);
   }
 
   @override
@@ -75,7 +58,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Icons.chevron_left,
                           color: Colors.white,
                           size: 50.0,
-                        ))
+                        ),)
                   ],
                 ),
                 ToggleSwitch(
@@ -247,6 +230,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     cellBorderColor: _controller.view == CalendarView.month
                         ? Colors.white
                         : Colors.grey[110],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: FloatingActionButton(
+                        backgroundColor: kBackgroundGrey,
+                        child: Icon(Icons.add),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/EventCreateScreen');
+                        }),
                   ),
                 )
               ],

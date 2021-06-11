@@ -27,7 +27,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           child: Padding(
             padding: const EdgeInsets.all(35.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
+
               children: [
                 Text(
                   'Your New Event',
@@ -210,7 +211,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   ],
                 ),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: Icon(Icons.add),
                 )
               ],

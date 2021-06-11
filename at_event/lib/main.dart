@@ -1,5 +1,6 @@
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
+import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/constants.dart';
@@ -23,6 +24,7 @@ class Vento extends StatelessWidget {
         '/': (BuildContext context) => WelcomeScreen(),
         '/HomeScreen': (BuildContext context) => HomeScreen(),
         '/CalendarScreen': (BuildContext context) => CalendarScreen(),
+        '/EventCreateScreen': (BuildContext context) => EventCreateScreen()
       }
     );
   }
