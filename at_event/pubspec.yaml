@@ -20,6 +20,7 @@ dependencies:
   syncfusion_flutter_calendar: ^19.1.67
   toggle_switch: ^1.0.0+1
   adobe_xd: ^2.0.0+1
+  date_time_picker: ^2.0.0
 
 
 flutter:
