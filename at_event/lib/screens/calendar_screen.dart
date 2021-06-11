@@ -12,13 +12,27 @@ void main() {
 }
 
 class CalendarScreen extends StatefulWidget {
+
+
+  CalendarScreen({this.specificDay}){
+    if(specificDay != null){
+      switchIndex = 2;
+      _controller.displayDate = specificDay;
+      _controller.view = CalendarView.day;
+    }
+  }
+
+
+  int switchIndex = 0;
+  final DateTime specificDay;
+  final CalendarController _controller = CalendarController();
+
   @override
   _CalendarScreenState createState() => _CalendarScreenState();
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  final CalendarController _controller = CalendarController();
-  int switchIndex = 0;
+
 
   EventDataSource _getEventData() {
 
@@ -27,6 +41,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Background(
       child: Expanded(
         child: Container(
@@ -64,24 +79,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ToggleSwitch(
                   totalSwitches: 3,
                   labels: ["Month", "Week", "Day"],
-                  initialLabelIndex: switchIndex,
+                  initialLabelIndex: widget.switchIndex,
                   onToggle: (index) {
                     setState(() {
-                      switchIndex = index;
+                      widget.switchIndex = index;
                       switch (index) {
                         case 0:
                           {
-                            _controller.view = CalendarView.month;
+                            widget._controller.view = CalendarView.month;
                           }
                           break;
                         case 1:
                           {
-                            _controller.view = CalendarView.week;
+                            widget._controller.view = CalendarView.week;
                           }
                           break;
                         case 2:
                           {
-                            _controller.view = CalendarView.day;
+                            widget._controller.view = CalendarView.day;
                           }
                           break;
                       }
@@ -91,10 +106,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Expanded(
                   child: SfCalendar(
                     onTap: (CalendarTapDetails ctd) {
-                      if (switchIndex == 0) {
+                      if (widget.switchIndex == 0) {
                         setState(() {
-                          switchIndex = 2;
-                          _controller.view = CalendarView.day;
+                          widget.switchIndex = 2;
+                          widget._controller.view = CalendarView.day;
                         });
                       } else {
                         if (ctd.appointments.length != null) {
@@ -131,7 +146,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       }
                     },
                     dataSource: _getEventData(),
-                    controller: _controller,
+                    controller: widget._controller,
                     monthCellBuilder: (context, details) {
                       bool isTopLeft =
                           details.visibleDates.first == details.date;
@@ -224,10 +239,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontWeight: FontWeight.bold, color: Colors.white),
                         backgroundColor: kPrimaryBlue),
                     view: CalendarView.month,
-                    backgroundColor: _controller.view == CalendarView.month
+                    backgroundColor: widget._controller.view == CalendarView.month
                         ? Colors.transparent
                         : Colors.white,
-                    cellBorderColor: _controller.view == CalendarView.month
+                    cellBorderColor: widget._controller.view == CalendarView.month
                         ? Colors.white
                         : Colors.grey[110],
                   ),

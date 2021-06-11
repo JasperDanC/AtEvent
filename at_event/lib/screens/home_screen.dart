@@ -1,5 +1,6 @@
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/constants.dart';
+import 'package:at_event/screens/calendar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/event.dart';
@@ -62,6 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         firstDay: DateTime(2010, 01, 01),
                         lastDay: DateTime(2050, 12, 31),
                         focusedDay: DateTime.now(),
+                        onDaySelected: (selectedDay,today ){
+                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                            return CalendarScreen(specificDay: selectedDay);
+                          }));
+                        },
                         headerStyle: HeaderStyle(
                           titleTextStyle: kHeadingTextStyle,
                           formatButtonDecoration: BoxDecoration(
