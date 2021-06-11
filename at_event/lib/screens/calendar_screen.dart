@@ -1,4 +1,5 @@
 import 'package:at_event/screens/background.dart';
+import 'package:at_event/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/constants.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -20,25 +21,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int switchIndex = 0;
 
   EventDataSource _getEventData() {
-    List<Event> dummyEvents = [
-      Event(
-          eventName: "Test Event 1",
-          from: DateTime(2021, 06, 09, 6),
-          to: DateTime(2021, 06, 09, 9)),
-      Event(
-          eventName: "Test Event 2",
-          from: DateTime(2021, 06, 10, 18),
-          to: DateTime(2021, 06, 10, 21)),
-      Event(
-          eventName: "Test Event 3",
-          from: DateTime(2021, 06, 14, 10),
-          to: DateTime(2021, 06, 14, 11)),
-      Event(
-          eventName: "Test Event 4",
-          from: DateTime(2021, 06, 22, 6),
-          to: DateTime(2021, 06, 22, 9)),
-    ];
-    return EventDataSource(dummyEvents);
+
+    return EventDataSource(kDummyEvents);
   }
 
   @override
@@ -74,7 +58,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Icons.chevron_left,
                           color: Colors.white,
                           size: 50.0,
-                        ))
+                        ),)
                   ],
                 ),
                 ToggleSwitch(
@@ -106,23 +90,51 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
                 Expanded(
                   child: SfCalendar(
-                    onTap: (CalendarTapDetails ctd){
-                      if(switchIndex == 0) {
+                    onTap: (CalendarTapDetails ctd) {
+                      if (switchIndex == 0) {
                         setState(() {
                           switchIndex = 2;
                           _controller.view = CalendarView.day;
                         });
                       } else {
-                        if(ctd.appointments.length != null){
+                        if (ctd.appointments.length != null) {
                           Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {}));
+                              MaterialPageRoute(builder: (context) {
+                            return EventDetailsScreen(
+                              event: Event(
+                                  eventName: "Lunch with Thomas",
+                                  from: DateTime(2021, 06, 09, 6),
+                                  to: DateTime(2021, 06, 09, 9),
+                                  location: '123 Street Avenue N.',
+                                  description: 'Lunch at my place!\n\n' +
+                                      'Bring some board games, pops, and some delicious sides\n\n' +
+                                      'We will be eating burgers',
+                                  peopleGoing: [
+                                    '@gerald',
+                                    '@norton',
+                                    '@thomas',
+                                    '@MrSmith',
+                                    '@Harriet',
+                                    '@funkyfrog',
+                                    '@3frogs',
+                                    '@dagoth_ur',
+                                    '@clavicus_vile',
+                                    '@BenjaminButton',
+                                    '@samus',
+                                    '@atom_eve',
+                                    '@buggs',
+                                    '@george',
+                                  ]),
+                            );
+                          }));
                         }
                       }
                     },
                     dataSource: _getEventData(),
                     controller: _controller,
                     monthCellBuilder: (context, details) {
-                      bool isTopLeft = details.visibleDates.first == details.date;
+                      bool isTopLeft =
+                          details.visibleDates.first == details.date;
                       bool isBottomRight =
                           details.visibleDates.last == details.date;
                       bool isTopRight = details.visibleDates[6] == details.date;
@@ -132,7 +144,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       BorderRadius dateRadius = BorderRadius.only(
                         topRight:
                             isTopRight ? Radius.circular(20.0) : Radius.zero,
-                        topLeft: isTopLeft ? Radius.circular(20.0) : Radius.zero,
+                        topLeft:
+                            isTopLeft ? Radius.circular(20.0) : Radius.zero,
                         bottomLeft:
                             isBottomLeft ? Radius.circular(20.0) : Radius.zero,
                         bottomRight:
@@ -142,13 +155,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       int dayIndex = details.visibleDates.indexOf(details.date);
 
                       int lastDayOfLastMonth = 0;
-                      while (details.visibleDates[lastDayOfLastMonth].day != 1) {
+                      while (
+                          details.visibleDates[lastDayOfLastMonth].day != 1) {
                         lastDayOfLastMonth++;
                       }
                       lastDayOfLastMonth--;
 
                       int firstDayOfNextMonth = 26;
-                      while (details.visibleDates[firstDayOfNextMonth].day != 1) {
+                      while (
+                          details.visibleDates[firstDayOfNextMonth].day != 1) {
                         firstDayOfNextMonth++;
                       }
 
@@ -157,8 +172,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                       return Container(
                         decoration: BoxDecoration(
-                          color:
-                              details.date == today ? kPrimaryBlue : Colors.white,
+                          color: details.date == today
+                              ? kPrimaryBlue
+                              : Colors.white,
                           borderRadius: dateRadius,
                         ),
                         child: Center(
@@ -182,7 +198,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                               CircleAvatar(
                                 backgroundColor: kEventBlue,
-                                radius: details.appointments.length != 0 ? 15 : 0,
+                                radius:
+                                    details.appointments.length != 0 ? 15 : 0,
                                 child: Text(
                                   details.appointments.length != 0
                                       ? details.appointments.length.toString()
@@ -213,6 +230,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     cellBorderColor: _controller.view == CalendarView.month
                         ? Colors.white
                         : Colors.grey[110],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: FloatingActionButton(
+                        backgroundColor: kBackgroundGrey,
+                        child: Icon(Icons.add),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/EventCreateScreen');
+                        }),
                   ),
                 )
               ],

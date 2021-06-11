@@ -104,9 +104,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 Divider(
                   color: Colors.white,
                 ),
-                Text(
-                  widget.event.description,
-                  style: kEventDetailsTextStyle,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Text(
+                      widget.event.description,
+                      overflow: TextOverflow.visible,
+                      style: kEventDetailsTextStyle,
+                    ),
+                  ),
                 ),
                 Divider(
                   color: Colors.white,
@@ -186,13 +191,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       ),
                     ),
                   ),
-                MaterialButton(
+                FloatingActionButton(
                     onPressed:(){
 
                     },
-                  padding: EdgeInsets.zero,
-                  shape: CircleBorder(),
-                  minWidth: 0,
+                  backgroundColor: kPrimaryBlue,
                   child: Icon(
                     Icons.edit,
                     size: 38,

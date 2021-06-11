@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:at_event/models/event.dart';
 const Color kBackgroundGrey = Color(0xFF555555);
 const Color kForegroundGrey = Color(0xFF404040);
 const Color kPrimaryBlue = Color(0xFF3F51B5);
@@ -82,3 +82,23 @@ AppBar globalAppBar = AppBar(
         fontSize: 28.0, fontWeight: FontWeight.bold, color: Colors.white),
   ),
 );
+
+
+List<Event> kDummyEvents  = [
+  Event(
+      eventName: "Test Event 1",
+      from: DateTime(2021, 06, 09, 6),
+      to: DateTime(2021, 06, 09, 9)),
+  Event(
+      eventName: "Test Event 2",
+      from: DateTime(2021, 06, 10, 18),
+      to: DateTime(2021, 06, 10, 21)),
+  Event(
+      eventName: "Test Event 3",
+      from: DateTime(2021, 06, 14, 10),
+      to: DateTime(2021, 06, 14, 11)),
+  Event(
+      eventName: "Test Event 4",
+      from: DateTime(2021, 06, 22, 6),
+      to: DateTime(2021, 06, 22, 9)),
+];
