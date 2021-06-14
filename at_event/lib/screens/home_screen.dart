@@ -11,6 +11,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DateTime _selectedDay;
+  DateTime _focusedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Background(
@@ -18,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: EdgeInsets.only(top: 10),
           child: Container(
+            /// Box Decoration
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20), color: kPrimaryBlue),
             child: Column(
@@ -32,19 +35,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                "Hello, @User",
-                                style: kHeadingTextStyle,
-                                textAlign: TextAlign.left,
-                              ),
-                              SizedBox(
-                                height: 20,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(),
-                                  child: Text(
-                                      "Let's see what is happening today!",
-                                      style: kNormalTextStyle),
+                              Padding(
+                                padding: EdgeInsets.only(top: 30),
+                                child: Text(
+                                  "Hello, @User",
+                                  style: kHeadingTextStyle,
+                                  textAlign: TextAlign.left,
                                 ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 20,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(),
+                                      child: Text(
+                                          "Let's see what is happening today!",
+                                          style: kNormalTextStyle),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: CircleAvatar(
+                                      backgroundColor: kColorStyle1,
+                                      radius: 35,
+                                      child: CircleAvatar(
+                                        backgroundColor: kColorStyle2,
+                                        radius: 30,
+                                        child: CircleAvatar(
+                                          backgroundColor: kColorStyle3,
+                                          radius: 25,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/attempt.png'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -62,9 +89,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         calendarFormat: CalendarFormat.week,
                         firstDay: DateTime(2010, 01, 01),
                         lastDay: DateTime(2050, 12, 31),
-                        focusedDay: DateTime.now(),
-                        onDaySelected: (selectedDay,today ){
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
+                        focusedDay: _focusedDay,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        onDaySelected: (selectedDay, today) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
                             return CalendarScreen(specificDay: selectedDay);
                           }));
                         },
@@ -104,6 +138,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   ],
+                ),
+                Text(
+                  "All events",
+                  textAlign: TextAlign.left,
+                  style: kHeadingTextStyle,
+                ),
+
+                /// Events go here
+                SizedBox(
+                  height: 16,
                 ),
               ],
             ),

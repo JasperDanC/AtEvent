@@ -5,6 +5,11 @@ const Color kBackgroundGrey = Color(0xFF555555);
 const Color kForegroundGrey = Color(0xFF404040);
 const Color kPrimaryBlue = Color(0xFF3F51B5);
 const Color kEventBlue = Color(0xFF0D9DAD);
+const Color kCategoryTile = Color(0xFFC6CBE9);
+const Color kColorStyle1 = Color(0xFF20535A);
+const Color kColorStyle2 = Color(0xFF619494);
+const Color kColorStyle3 = Color(0xFF7C9885);
+
 const BorderRadius kBasicBorderRadius = BorderRadius.all(
   Radius.circular(75.0),
 );
@@ -24,7 +29,7 @@ const kTitleTextStyle = TextStyle(
 );
 const kHeadingTextStyle = TextStyle(
   fontFamily: 'Open Sans',
-  fontSize: 22,
+  fontSize: 26,
   color: Colors.white,
   letterSpacing: 0.7,
   fontWeight: FontWeight.w600,
