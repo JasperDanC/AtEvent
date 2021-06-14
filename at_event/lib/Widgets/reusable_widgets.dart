@@ -42,7 +42,64 @@ class PopularEventTile extends StatelessWidget {
     return Container(
       height: 100,
       margin: EdgeInsets.only(bottom: 16),
-      decoration: ,
+      decoration: BoxDecoration(
+        color: kColorStyle3,
+        borderRadius: BorderRadius.circular(8)
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+              child: Container(
+                padding: EdgeInsets.only(left: 16),
+                width: MediaQuery.of(context).size.width-100,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      desc,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18
+                      ),
+                    ),
+                    SizedBox(height: 8,),
+                    Row(
+                      children: <Widget>[
+                        Icon(Icons.calendar_today_rounded),
+                        SizedBox(width: 8),
+                        Text(date, style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10
+                        ),),
+                        
+                      ],
+                    ),
+                    SizedBox(height: 4),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.location_on_sharp
+                        ),
+                        SizedBox(width: 8),
+                        Text(date,style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10
+                        ),),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Row(
+                      children: <Widget>[],
+                    ),
+                  ],
+                ),
+              ),
+          ),
+        ],
+      ),
     );
   }
 }
