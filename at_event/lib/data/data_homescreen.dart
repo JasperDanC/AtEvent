@@ -34,7 +34,7 @@ List<EventsModel> getEvents() {
   EventsModel eventsModel = new EventsModel();
 
   //1
-  eventsModel.imgeAssetPath = "assets/tileimg.png";
+  eventsModel.imgeAssetPath = "assets/images/party.png";
   eventsModel.date = "Oct 05, 2021";
   eventsModel.desc = "Party at Fred's Place";
   eventsModel.address = "123 Avenue South Place";
@@ -43,7 +43,7 @@ List<EventsModel> getEvents() {
   eventsModel = new EventsModel();
 
   //2
-  eventsModel.imgeAssetPath = "assets/";
+  eventsModel.imgeAssetPath = "assets/images/sports.png";
   eventsModel.date = "Nov 20, 2021";
   eventsModel.desc = "Rec Soccer Game with Friends";
   eventsModel.address = "6468 8th Street East";
@@ -52,7 +52,7 @@ List<EventsModel> getEvents() {
   eventsModel = new EventsModel();
 
   //3
-  eventsModel.imgeAssetPath = "assets/";
+  eventsModel.imgeAssetPath = "assets/images/concert.png";
   eventsModel.date = "December 24, 2021";
   eventsModel.address = "2020 Education Street";
   eventsModel.desc = "Youth Concert at Faithful Church";

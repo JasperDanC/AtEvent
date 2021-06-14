@@ -2,12 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 
-class EventTile extends StatelessWidget {
+class EventTile extends StatefulWidget {
   String imgAssetPath;
   String eventType;
 
   EventTile({this.imgAssetPath, this.eventType});
 
+  @override
+  _EventTileState createState() => _EventTileState();
+}
+
+class _EventTileState extends State<EventTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,21 +25,27 @@ class EventTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image.asset(imgAssetPath, height: 27),
+          Image.asset(widget.imgAssetPath, height: 27),
           SizedBox(height: 12),
-          Text(eventType, style: TextStyle(color: Colors.white))
+          Text(widget.eventType, style: TextStyle(color: Colors.white))
         ],
       ),
     );
   }
 }
 
-class PopularEventTile extends StatelessWidget {
+class PopularEventTile extends StatefulWidget {
   String desc;
   String date;
   String address;
   String imgAssetPath;
   PopularEventTile({this.address, this.date, this.imgAssetPath, this.desc});
+
+  @override
+  _PopularEventTileState createState() => _PopularEventTileState();
+}
+
+class _PopularEventTileState extends State<PopularEventTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,18 +64,18 @@ class PopularEventTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    desc,
+                    widget.desc,
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                   SizedBox(
-                    height: 8,
+                    height: 6,
                   ),
                   Row(
                     children: <Widget>[
                       Icon(Icons.calendar_today_rounded),
                       SizedBox(width: 8),
                       Text(
-                        date,
+                        widget.date,
                         style: TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ],
@@ -75,7 +86,7 @@ class PopularEventTile extends StatelessWidget {
                       Icon(Icons.location_on_sharp),
                       SizedBox(width: 8),
                       Text(
-                        date,
+                        widget.address,
                         style: TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ],
@@ -88,7 +99,7 @@ class PopularEventTile extends StatelessWidget {
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
             child: Image.asset(
-              imgAssetPath,
+              widget.imgAssetPath,
               height: 100,
               width: 120,
               fit: BoxFit.cover,

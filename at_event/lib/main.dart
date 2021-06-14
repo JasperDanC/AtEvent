@@ -2,6 +2,7 @@ import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/home_screen.dart';
+import 'package:at_event/screens/invitations_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
@@ -18,16 +19,16 @@ class Vento extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-          primaryColor: kForegroundGrey,
-          scaffoldBackgroundColor: kBackgroundGrey),
-      routes: <String, WidgetBuilder>{
-        '/': (BuildContext context) => WelcomeScreen(),
-        '/OnboardingScreen': (BuildContext context) => OnboardingScreen(),
-        '/HomeScreen': (BuildContext context) => HomeScreen(),
-        '/CalendarScreen': (BuildContext context) => CalendarScreen(),
-        '/EventCreateScreen': (BuildContext context) => EventCreateScreen()
-      }
-    );
+        theme: ThemeData.dark().copyWith(
+            primaryColor: kForegroundGrey,
+            scaffoldBackgroundColor: kBackgroundGrey),
+        routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => WelcomeScreen(),
+          '/OnboardingScreen': (BuildContext context) => OnboardingScreen(),
+          '/HomeScreen': (BuildContext context) => HomeScreen(),
+          '/CalendarScreen': (BuildContext context) => CalendarScreen(),
+          '/EventCreateScreen': (BuildContext context) => EventCreateScreen(),
+          '/InvitationsScreen': (BuildContext context) => InvitationsScreen()
+        });
   }
 }

@@ -41,6 +41,21 @@ const kHeadingTextStyle = TextStyle(
     )
   ],
 );
+
+const kSubHeadingTextStyle = TextStyle(
+  fontFamily: 'Open Sans',
+  fontSize: 20,
+  color: Colors.white,
+  letterSpacing: 0.7,
+  fontWeight: FontWeight.w600,
+  shadows: [
+    Shadow(
+      color: const Color(0xa8000000),
+      offset: Offset(0, 3),
+      blurRadius: 6,
+    )
+  ],
+);
 const kNormalTextStyle = TextStyle(
   fontFamily: 'Open Sans',
   fontSize: 17,
@@ -124,4 +139,3 @@ class AppStrings {
   static const String reset_keychain = "Reset Keychain";
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
-

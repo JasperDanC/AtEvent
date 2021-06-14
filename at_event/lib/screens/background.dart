@@ -3,31 +3,34 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:at_event/utils/constants.dart';
 
 class Background extends StatelessWidget {
-  Background({this.child});
+  Background({this.child, this.turn_appbar = true});
   final Widget child;
+  final bool turn_appbar;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          toolbarHeight: 65.0,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(45.0),
-            bottomLeft: Radius.circular(45.0),
-          )),
-          centerTitle: true,
-          backgroundColor: kPrimaryBlue,
-          title: Text(
-            "@Vento",
-            style: TextStyle(
-                fontSize: 28.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-        ),
+        appBar: turn_appbar
+            ? AppBar(
+                toolbarHeight: 65.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(45.0),
+                  bottomLeft: Radius.circular(45.0),
+                )),
+                centerTitle: true,
+                backgroundColor: kPrimaryBlue,
+                title: Text(
+                  "@Vento",
+                  style: TextStyle(
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              )
+            : null,
         body: Stack(
           children: <Widget>[
             Pinned.fromPins(
@@ -54,7 +57,7 @@ class Background extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: 120,
+                  height: turn_appbar ? 120 : 0,
                 ),
                 child
               ],
