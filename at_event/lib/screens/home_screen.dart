@@ -1,9 +1,12 @@
+import 'package:at_event/models/event_type_model_homescreen.dart';
+import 'package:at_event/models/events_model_homescreen.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/event.dart';
+import 'package:at_event/Widgets/reusable_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -13,6 +16,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   DateTime _selectedDay;
   DateTime _focusedDay = DateTime.now();
+
+  List<EventTypeModel> eventsType = [];
+  List<EventsModel> events = [];
+
   @override
   Widget build(BuildContext context) {
     return Background(
@@ -148,6 +155,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 /// Events go here
                 SizedBox(
                   height: 16,
+                ),
+                Text(
+                  "Event List",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                Container(
+                  child: ListView.builder(
+                      itemCount: events.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return EventTile(
+                          imgAssetPath: eventsType[index].imgAssetPath,
+                          eventType: eventsType[index].eventType,
+                        );
+                      }),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  "Events List",
+                  style: kHeadingTextStyle,
                 ),
               ],
             ),
