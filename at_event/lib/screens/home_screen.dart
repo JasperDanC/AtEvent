@@ -4,15 +4,28 @@ import 'package:at_event/screens/calendar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/event.dart';
+import '../service/client_sdk_service.dart';
+import '../utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+
 class _HomeScreenState extends State<HomeScreen> {
   DateTime _selectedDay;
   DateTime _focusedDay = DateTime.now();
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  String activeAtSign = '';
+  GlobalKey<ScaffoldState> scaffoldKey;
+
+  @override
+  void initState() {
+    getAtSign();
+    scaffoldKey = GlobalKey<ScaffoldState>();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Background(
@@ -38,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Padding(
                                 padding: EdgeInsets.only(top: 30),
                                 child: Text(
-                                  "Hello, @User",
+                                  "Hello, $activeAtSign",
                                   style: kHeadingTextStyle,
                                   textAlign: TextAlign.left,
                                 ),
@@ -156,4 +169,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+
+  }
+
 }
