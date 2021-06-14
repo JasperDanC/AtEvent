@@ -1,4 +1,4 @@
-import 'package:at_event/constants.dart';
+import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';

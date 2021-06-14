@@ -1,4 +1,4 @@
-import 'package:at_event/constants.dart';
+import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class WelcomeScreen extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 80),
                   child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/HomeScreen');
+                        Navigator.pushNamed(context, '/OnboardingScreen');
                       },
                       style: ElevatedButton.styleFrom(
                           elevation: 10,
