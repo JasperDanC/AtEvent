@@ -10,7 +10,7 @@ import 'home_screen.dart';
 import 'background.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  static final String id = 'first';
+
   @override
   _OnboardingScreen createState() => _OnboardingScreen();
 }

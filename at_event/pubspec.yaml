@@ -6,6 +6,10 @@ version: 0.1.0+1
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
+dependency_overrides:
+  intl: ^0.16.0
+
+
 dependencies:
   flutter:
     sdk: flutter
@@ -22,7 +26,8 @@ dependencies:
   adobe_xd: ^2.0.0+1
   table_calendar: ^3.0.0
   date_time_picker: ^2.0.0
-
+  at_contacts_flutter: ^1.0.2
+  at_contact: ^1.0.0
 
 
 flutter:
