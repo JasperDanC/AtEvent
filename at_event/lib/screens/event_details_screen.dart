@@ -2,8 +2,8 @@ import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/constants.dart';
 import 'package:at_event/models/event.dart';
+import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
-
 
 void main() {
   runApp(EventDetailsScreen(
@@ -43,7 +43,6 @@ class EventDetailsScreen extends StatefulWidget {
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
-
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -51,20 +50,36 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     return Background(
       child: Expanded(
         child: Container(
-          decoration:
-              BoxDecoration(color: kEventBlue, borderRadius: kBasicBorderRadius),
+          decoration: BoxDecoration(
+              color: kEventBlue, borderRadius: kBasicBorderRadius),
           child: Padding(
             padding: const EdgeInsets.all(35.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text(
-                  widget.event.eventName,
-                  style: TextStyle(
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.event.eventName,
+                        style: TextStyle(
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                    MaterialButton(
+                      shape: CircleBorder(),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                        size: 50.0,
+                      ),),
+                  ],
                 ),
                 Divider(
                   color: Colors.white,
@@ -136,10 +151,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                     Text(
                       '@',
-                      style: TextStyle(
-                        color: Color(0xFFaae5e6),
-                        fontSize: 22
-                      ),
+                      style: TextStyle(color: Color(0xFFaae5e6), fontSize: 22),
                     ),
                     Expanded(
                       child: TextField(
@@ -147,11 +159,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         style: kEventDetailsTextStyle,
                         decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
-                            borderSide:  BorderSide(color: Colors.white)
-                          ),
+                              borderSide: BorderSide(color: Colors.white)),
                           focusedBorder: UnderlineInputBorder(
-                              borderSide:  BorderSide(color: Colors.white)
-                          ),
+                              borderSide: BorderSide(color: Colors.white)),
                         ),
                       ),
                     )
@@ -160,48 +170,49 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0,
-                      vertical: 20.0
-                    ),
+                        horizontal: 8.0, vertical: 20.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: kForegroundGrey,
-                        borderRadius: BorderRadius.all(Radius.circular(40.0))
-                      ),
+                          color: kForegroundGrey,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(40.0))),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 0,
-                            horizontal: 12.0
-                          ),
-                          controller: _scrollController,
-                          itemCount: widget.event.peopleGoing.length,
-                          itemBuilder: (context, index){
-                            return  Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 12.0),
+                            controller: _scrollController,
+                            itemCount: widget.event.peopleGoing.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
                                   widget.event.peopleGoing[index],
-                                      style: kEventDetailsTextStyle,
-                              ),
-                            );
-                          }),
-                      ),
+                                  style: kEventDetailsTextStyle,
+                                ),
+                              );
+                            }),
                       ),
                     ),
                   ),
+                ),
                 FloatingActionButton(
-                    onPressed:(){
-
-                    },
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            EventEditScreen(event: widget.event),
+                      ),
+                    );
+                  },
                   backgroundColor: kPrimaryBlue,
                   child: Icon(
                     Icons.edit,
                     size: 38,
                     color: Colors.white,
                   ),
-
                 ),
               ],
             ),

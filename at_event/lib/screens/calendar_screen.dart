@@ -68,12 +68,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     MaterialButton(
                         shape: CircleBorder(),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         child: Icon(
                           Icons.chevron_left,
                           color: Colors.white,
                           size: 50.0,
-                        ),)
+                        ),),
                   ],
                 ),
                 ToggleSwitch(

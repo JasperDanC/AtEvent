@@ -22,6 +22,7 @@ class Vento extends StatelessWidget {
           scaffoldBackgroundColor: kBackgroundGrey),
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => WelcomeScreen(),
+        '/OnboardingScreen': (BuildContext context) => WelcomeScreen(),
         '/HomeScreen': (BuildContext context) => HomeScreen(),
         '/CalendarScreen': (BuildContext context) => CalendarScreen(),
         '/EventCreateScreen': (BuildContext context) => EventCreateScreen()
