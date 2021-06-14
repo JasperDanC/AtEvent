@@ -1,7 +1,7 @@
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:at_event/constants.dart';
+import 'package:at_event/utils/constants.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:at_event/models/event.dart';

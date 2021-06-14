@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:at_event/constants.dart';
+import 'package:at_event/utils/constants.dart';
 import 'event.dart';
 
 

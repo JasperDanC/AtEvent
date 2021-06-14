@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
-import 'package:at_event/constants.dart';
+import 'package:at_event/utils/constants.dart';
 
 class Background extends StatelessWidget {
   Background({this.child});

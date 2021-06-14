@@ -1,6 +1,6 @@
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
-import 'package:at_event/constants.dart';
+import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/event.dart';
