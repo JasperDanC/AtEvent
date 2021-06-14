@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import '../service/client_sdk_service.dart';
+import '../utils/constants.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart';
-import '../utils/constants.dart';
 import 'home_screen.dart';
 import 'background.dart';
 
