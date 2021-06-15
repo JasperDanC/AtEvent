@@ -44,6 +44,7 @@ class EventEditScreen extends StatefulWidget {
 
 class _EventEditScreenState extends State<EventEditScreen> {
   List<String> invites = [];
+  int _dropDownValue = 1;
 
 
   final ScrollController _scrollController = ScrollController();
@@ -108,6 +109,54 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   ),
                 ),
 
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Category:",
+                        style: kEventDetailsTextStyle,
+                      ),
+                    ),
+                    Expanded(
+                      child: DropdownButtonFormField(
+                        onChanged: (value){},
+                        value: _dropDownValue,
+                        items: [
+                          DropdownMenuItem(
+                            child: Text(
+                              "No Category",
+                            ),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Music",
+                            ),
+                            value: 2,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Sports",
+                            ),
+                            value: 3,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Business",
+                            ),
+                            value: 4,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Party",
+                            ),
+                            value: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Row(
                   children: [
                     Expanded(

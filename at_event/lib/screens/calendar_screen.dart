@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:at_event/models/event.dart';
 import 'package:at_event/models/calendar_event_data_source.dart';
+import 'package:at_event/service/client_sdk_service.dart';
 
 void main() {
   runApp(CalendarScreen());
@@ -32,10 +33,18 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  GlobalKey<ScaffoldState> scaffoldKey;
+  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  String activeAtSign = '';
+  @override
+  void initState() {
+    getAtSign();
+    scaffoldKey = GlobalKey<ScaffoldState>();
 
+    super.initState();
+  }
 
   EventDataSource _getEventData() {
-
     return EventDataSource(kDummyEvents);
   }
 
@@ -43,6 +52,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
 
     return Background(
+
       child: Expanded(
         child: Container(
           decoration: BoxDecoration(
@@ -69,7 +79,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     MaterialButton(
                         shape: CircleBorder(),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/HomeScreen');
                         },
                         child: Icon(
                           Icons.chevron_left,
@@ -141,7 +151,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     '@atom_eve',
                                     '@buggs',
                                     '@george',
-                                  ]),
+                                  ],
+                              category: 'Party',
+                              ),
+
                             );
                           }));
                         }
@@ -266,5 +279,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
       ),
     );
+  }
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 }

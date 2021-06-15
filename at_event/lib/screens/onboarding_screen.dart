@@ -34,6 +34,7 @@ class _OnboardingScreen extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Background(
+        loggedIn: false,
         child: Expanded(
           child: Builder(
             builder: (context) => Column(

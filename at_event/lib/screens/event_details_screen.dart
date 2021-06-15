@@ -30,7 +30,9 @@ void main() {
           '@atom_eve',
           '@buggs',
           '@george',
-        ]),
+        ],
+      category: 'Party'
+    ),
   ));
 }
 
@@ -80,6 +82,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         size: 50.0,
                       ),),
                   ],
+                ),
+                Text(
+                  widget.event.category,
+                  style: kEventDetailsTextStyle,
                 ),
                 Divider(
                   color: Colors.white,

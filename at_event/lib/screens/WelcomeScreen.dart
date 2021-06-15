@@ -7,6 +7,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Background(
+      loggedIn: false,
       child: Expanded(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),

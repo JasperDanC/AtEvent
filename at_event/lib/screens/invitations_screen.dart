@@ -165,7 +165,9 @@ class InvitationsScreen extends StatelessWidget {
                     ),
                     MaterialButton(
                       shape: CircleBorder(),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                       child: Icon(
                         Icons.chevron_left,
                         color: Colors.white,

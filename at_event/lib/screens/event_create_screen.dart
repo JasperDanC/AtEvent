@@ -1,3 +1,4 @@
+
 import 'package:at_event/models/event.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class EventCreateScreen extends StatefulWidget {
 
 class _EventCreateScreenState extends State<EventCreateScreen> {
   List<String> invites = [];
+  int _dropDownValue = 1;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -28,7 +30,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
             padding: const EdgeInsets.all(35.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-
               children: [
                 Text(
                   'Your New Event',
@@ -52,8 +53,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
                     keyboardType: TextInputType.multiline,
-
-                    maxLines: 4,
+                    maxLines: 3,
                     cursorColor: Colors.white,
                     style: kEventDetailsTextStyle,
                     decoration: InputDecoration(
@@ -76,7 +76,60 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         borderSide: BorderSide(color: Colors.white)),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Category:",
+                        style: kEventDetailsTextStyle,
+                      ),
+                    ),
+                    Expanded(
+                      child: DropdownButtonFormField(
+                        onChanged: (value){},
+                        value: _dropDownValue,
+                        items: [
+                          DropdownMenuItem(
+                            child: Text(
+                              "No Category",
+                            ),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Music",
+                            ),
+                            value: 2,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Sports",
+                            ),
+                            value: 3,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Business",
+                            ),
+                            value: 4,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Party",
+                            ),
+                            value: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -142,7 +195,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 ),
                 Row(
                   children: [
-                    Expanded(
+                    Container(
+                      width: 100,
+                      height: 60,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
@@ -164,7 +219,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         ),
                       ),
                     ),
-                    Expanded(
+                    Container(
+                      width: 100,
+                      height: 60,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
@@ -185,8 +242,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         ),
                       ),
                     ),
-                    Text('-',style: kEventDetailsTextStyle),
-                    Expanded(
+                    Text('-', style: kEventDetailsTextStyle),
+                    Container(
+                      width: 100,
+                      height: 60,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
