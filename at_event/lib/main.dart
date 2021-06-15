@@ -10,8 +10,6 @@ import 'package:at_event/screens/onboarding_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/event.dart';
 
-
-
 void main() async {
   runApp(Vento());
 }
@@ -25,7 +23,7 @@ class Vento extends StatelessWidget {
             primaryColor: kForegroundGrey,
             scaffoldBackgroundColor: kBackgroundGrey),
         routes: <String, WidgetBuilder>{
-          '/': (BuildContext context) => OnboardingScreen(),
+          '/': (BuildContext context) => WelcomeScreen(),
           '/OnboardingScreen': (BuildContext context) => OnboardingScreen(),
           '/HomeScreen': (BuildContext context) => HomeScreen(),
           '/CalendarScreen': (BuildContext context) => CalendarScreen(),

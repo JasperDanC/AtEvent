@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:at_event/models/event.dart';
 
-
 /*
 Colors and Styles
  */
@@ -121,7 +120,6 @@ enum Categroy {
   Sports,
   None,
 }
-
 
 /*
  @ Protocol Essentials
