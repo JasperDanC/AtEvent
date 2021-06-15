@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 
 class EventTile extends StatefulWidget {
-  String imgAssetPath;
-  String eventType;
+  final String imgAssetPath;
+  final String eventType;
 
   EventTile({this.imgAssetPath, this.eventType});
 
@@ -35,11 +35,15 @@ class _EventTileState extends State<EventTile> {
 }
 
 class PopularEventTile extends StatefulWidget {
-  String desc;
-  String date;
-  String address;
-  String imgAssetPath;
-  PopularEventTile({this.address, this.date, this.imgAssetPath, this.desc});
+  final String desc;
+  final String date;
+  final String address;
+  final String imgAssetPath;
+  PopularEventTile(
+      {@required this.address,
+      @required this.date,
+      @required this.imgAssetPath,
+      @required this.desc});
 
   @override
   _PopularEventTileState createState() => _PopularEventTileState();

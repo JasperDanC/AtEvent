@@ -14,7 +14,6 @@ const Color kColorStyle1 = Color(0xFF20535A);
 const Color kColorStyle2 = Color(0xFF619494);
 const Color kColorStyle3 = Color(0xFF7C9885);
 
-
 const BorderRadius kBasicBorderRadius = BorderRadius.all(
   Radius.circular(75.0),
 );
@@ -34,7 +33,7 @@ const kTitleTextStyle = TextStyle(
 );
 const kHeadingTextStyle = TextStyle(
   fontFamily: 'Open Sans',
-  fontSize: 26,
+  fontSize: 22,
   color: Colors.white,
   letterSpacing: 0.7,
   fontWeight: FontWeight.w600,
@@ -86,7 +85,6 @@ const kButtonTextStyle = TextStyle(
   fontFamily: 'Open Sans',
   fontSize: 22,
   color: const Color(0xfff1f1f1),
-  height: 1.8,
 );
 
 const kEventDetailsTextStyle = TextStyle(

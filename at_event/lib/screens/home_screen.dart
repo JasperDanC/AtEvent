@@ -1,4 +1,3 @@
-import 'package:at_event/screens/background.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: kBackgroundGrey,
+        backgroundColor: Colors.transparent,
         key: scaffoldKey,
         drawer: Drawer(
           child: ListView(
@@ -232,6 +231,198 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      key: scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: Text("Your Invitations"),
+              onTap: () {
+                Navigator.pushNamed(context, '/InvitationsScreen');
+              },
+            ),
+            ListTile(
+              title: Text("Contacts"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => ContactsScreen(),
+                ));
+              },
+            ),
+            ListTile(
+              title: Text("Blocked"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => BlockedScreen(),
+                ));
+              },
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(top: 10),
+          child: Container(
+            /// Box Decoration
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), color: kPrimaryBlue),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 5, bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Hello, $activeAtSign",
+                                      style: kHeadingTextStyle,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  MaterialButton(
+                                    padding: EdgeInsets.zero,
+                                    shape: CircleBorder(),
+                                    onPressed: () {
+                                      scaffoldKey.currentState.openDrawer();
+                                    },
+                                    child: Icon(
+                                      Icons.menu,
+                                      color: Colors.white,
+                                      size: 40.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 20,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(),
+                                      child: Text(
+                                          "Let's see what is happening today!",
+                                          style: kNormalTextStyle),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: CircleAvatar(
+                                      backgroundColor: kColorStyle1,
+                                      radius: 35,
+                                      child: CircleAvatar(
+                                        backgroundColor: kColorStyle2,
+                                        radius: 30,
+                                        child: CircleAvatar(
+                                          backgroundColor: kColorStyle3,
+                                          radius: 25,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/attempt.png'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      margin: const EdgeInsets.all(4.0),
+                      child: TableCalendar(
+                        calendarFormat: CalendarFormat.week,
+                        firstDay: DateTime(2010, 01, 01),
+                        lastDay: DateTime(2050, 12, 31),
+                        focusedDay: _focusedDay,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        onFormatChanged: (format) {
+                          Navigator.pushNamed(context, '/CalendarScreen');
+                        },
+                        onDaySelected: (selectedDay, today) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return CalendarScreen(specificDay: selectedDay);
+                          }));
+                        },
+                        headerStyle: HeaderStyle(
+                          titleTextStyle: kHeadingTextStyle,
+                          formatButtonDecoration: BoxDecoration(
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(20)),
+                          formatButtonTextStyle: kNormalTextStyle,
+                          leftChevronIcon: Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                          ),
+                          rightChevronIcon: Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
+                          decoration: BoxDecoration(
+                            color: kColorStyle1,
+                          ),
+                          headerMargin: const EdgeInsets.only(bottom: 6),
+                        ),
+                        calendarStyle: CalendarStyle(
+                          canMarkersOverflow: true,
+                        ),
+                        eventLoader: (day) {
+                          List<Event> allEvents = [];
+                          for (int i = 0; i < kDummyEvents.length; i++) {
+                            if (kDummyEvents[i].from.day == day.day &&
+                                kDummyEvents[i].from.month == day.month &&
+                                kDummyEvents[i].from.year == day.year) {
+                              allEvents.add(kDummyEvents[i]);
+                            }
+                          }
+                          return allEvents;
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  "Event List",
+                  style: kSubHeadingTextStyle,
+                ),
+                Container(
+                  child: ListView.builder(
+                      padding: EdgeInsets.only(top: 8),
+                      shrinkWrap: true,
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return PopularEventTile(
+                          desc: events[index].desc,
+                          imgAssetPath: events[index].imgeAssetPath,
+                          address: events[index].address,
+                          date: events[index].date,
+                        );
+                      }),
+                ),
+              ],
             ),
           ),
         ),
