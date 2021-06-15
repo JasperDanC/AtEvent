@@ -19,6 +19,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
 
   final ScrollController _scrollController = ScrollController();
+  String _eventTitle;
+  String _eventDesc;
+  String _eventLocation;
 
   @override
   Widget build(BuildContext context) {
