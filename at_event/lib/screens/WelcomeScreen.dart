@@ -10,6 +10,52 @@ class WelcomeScreen extends StatelessWidget {
       loggedIn: false,
       child: Expanded(
         child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: kPrimaryBlue),
+                        child: Column(
+                          children: <Widget>[
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadiusDirectional.circular(20)),
+                              clipBehavior: Clip.antiAlias,
+                              child: Image.asset(
+                                  'assets/images/People_on_seafront_15.jpg'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: SizedBox(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+* Expanded(
+        child: Padding(
           padding: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
           child: Container(
             decoration: BoxDecoration(
@@ -52,6 +98,4 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
+* */
