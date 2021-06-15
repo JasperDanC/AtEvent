@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:at_event/models/event.dart';
 
+
+/*
+Colors and Styles
+ */
 const Color kBackgroundGrey = Color(0xFF404040);
 const Color kForegroundGrey = Color(0xFF555555);
 const Color kPrimaryBlue = Color(0xFF3F51B5);
@@ -88,21 +92,6 @@ const kEventDetailsTextStyle = TextStyle(
   fontSize: 16,
 );
 
-AppBar globalAppBar = AppBar(
-  shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-    bottomRight: Radius.circular(45.0),
-    bottomLeft: Radius.circular(45.0),
-  )),
-  centerTitle: true,
-  backgroundColor: kPrimaryBlue,
-  title: Text(
-    "@Vento",
-    style: TextStyle(
-        fontSize: 28.0, fontWeight: FontWeight.bold, color: Colors.white),
-  ),
-);
-
 List<Event> kDummyEvents = [
   Event(
       eventName: "Test Event 1",
@@ -122,6 +111,21 @@ List<Event> kDummyEvents = [
       to: DateTime(2021, 06, 22, 9)),
 ];
 
+/*
+Important App Data
+*/
+enum Categroy {
+  Party,
+  Music,
+  Bar,
+  Sports,
+  None,
+}
+
+
+/*
+ @ Protocol Essentials
+ */
 class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
   // for local server
@@ -138,3 +142,6 @@ class AppStrings {
   static const String reset_keychain = "Reset Keychain";
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
+
+final String namespace = 'vento.@bagelconservation';
+final String splitter = '@_@';

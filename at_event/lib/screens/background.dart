@@ -32,7 +32,7 @@ class _BackgroundState extends State<Background> {
 
   @override
   Widget build(BuildContext context) {
-    
+
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,

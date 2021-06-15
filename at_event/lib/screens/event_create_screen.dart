@@ -1,4 +1,5 @@
 import 'package:at_event/screens/background.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -17,6 +18,16 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   int _dropDownValue = 1;
 
   final ScrollController _scrollController = ScrollController();
+  String _eventTitle;
+  String _eventDesc;
+  String _eventLocation;
+  Category _eventCategory;
+  List<String> _invitees;
+  DateTime _eventStart;
+  DateTime _eventFrom;
+
+  TextEditingController _inviteTextController;
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +51,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 TextField(
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
+
                   decoration: InputDecoration(
                     hintText: 'Event Title',
                     enabledBorder: UnderlineInputBorder(
@@ -47,6 +59,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
+                  onChanged: (value){
+                    _eventTitle = value;
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -62,6 +77,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                     ),
+                    onChanged: (value){
+                      _eventDesc = value;
+                    },
                   ),
                 ),
                 TextField(
@@ -74,6 +92,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
+                  onChanged: (value) {
+                    _eventLocation = value;
+                  },
                 ),
                 SizedBox(
                   height: 10.0,
@@ -88,7 +109,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     MaterialButton(
                       padding: EdgeInsets.zero,
                       minWidth: 0,
-                      onPressed: () {},
+                      onPressed: () {
+                        _invitees.add(_inviteTextController.value.toString());
+                        _inviteTextController.clear();
+                      },
                       shape: CircleBorder(),
                       child: Icon(
                         Icons.add_circle_outline,
@@ -102,6 +126,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                     Expanded(
                       child: TextField(
+                        controller: _inviteTextController,
                         cursorColor: Colors.white,
                         style: kEventDetailsTextStyle,
                         decoration: InputDecoration(
