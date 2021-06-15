@@ -5,6 +5,8 @@ import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/widgets/category_selector.dart';
+import 'package:at_commons/at_commons.dart';
+import 'package:at_event/service/client_sdk_service.dart';
 
 void main() => runApp(EventCreateScreen());
 
@@ -18,17 +20,25 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   int _dropDownValue = 1;
 
   final ScrollController _scrollController = ScrollController();
+  ClientSdkService clientSdkService;
   String _eventTitle;
   String _eventDesc;
   String _eventLocation;
-  Category _eventCategory;
+  EventCategory _eventCategory;
   List<String> _invitees;
-  DateTime _eventStart;
-  DateTime _eventFrom;
+  String _eventDay;
+  String _eventStartTime;
+  String _eventEndTime;
+  String activeAtSign = '';
 
   TextEditingController _inviteTextController;
 
-
+  @override
+  void initState() {
+    getAtSign();
+    clientSdkService  = ClientSdkService.getInstance();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Background(
@@ -51,7 +61,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 TextField(
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
-
                   decoration: InputDecoration(
                     hintText: 'Event Title',
                     enabledBorder: UnderlineInputBorder(
@@ -59,7 +68,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
-                  onChanged: (value){
+                  onChanged: (value) {
                     _eventTitle = value;
                   },
                 ),
@@ -77,7 +86,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                     ),
-                    onChanged: (value){
+                    onChanged: (value) {
                       _eventDesc = value;
                     },
                   ),
@@ -179,6 +188,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
                           dateMask: "MMMM dd",
+                          onChanged: (dayPicked) {
+                            _eventDay = dayPicked;
+                          },
                           style: kEventDetailsTextStyle,
                           decoration: InputDecoration(
                             hintStyle: kEventDetailsTextStyle,
@@ -203,6 +215,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
                           style: kEventDetailsTextStyle,
+                          onChanged: (startTimePicked) {
+                            _eventStartTime = startTimePicked;
+                            print(_eventStartTime);
+                          },
                           decoration: InputDecoration(
                             hintStyle: kEventDetailsTextStyle,
                             hintText: 'Start',
@@ -227,6 +243,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
                           style: kEventDetailsTextStyle,
+                          onChanged: (endTimePicked) {
+                            _eventEndTime = endTimePicked;
+                          },
                           decoration: InputDecoration(
                             labelStyle: kEventDetailsTextStyle,
                             hintStyle: kEventDetailsTextStyle,
@@ -248,6 +267,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 ),
                 FloatingActionButton(
                   onPressed: () {
+                    _update();
                     Navigator.pop(context);
                   },
                   child: Icon(Icons.add),
@@ -258,5 +278,70 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ),
       ),
     );
+  }
+
+  _update() async {
+    bool filled = _eventTitle != null &&
+        _eventTitle != "" &&
+        _eventLocation != null &&
+        _eventLocation != "" &&
+        _eventDay != null &&
+        _eventDay != "" &&
+        _eventStartTime != null &&
+        _eventStartTime != "" &&
+        _eventEndTime != null &&
+        _eventEndTime != "";
+    if (filled) {
+      switch (_dropDownValue) {
+        case 1:
+          _eventCategory = EventCategory.None;
+          break;
+        case 2:
+          _eventCategory = EventCategory.Music;
+          break;
+        case 3:
+          _eventCategory = EventCategory.Sports;
+          break;
+        case 4:
+          _eventCategory = EventCategory.Bar;
+          break;
+        case 5:
+          _eventCategory = EventCategory.Party;
+          break;
+        default:
+          _eventCategory = EventCategory.None;
+      }
+      String _values = _eventTitle +
+          splitter +
+          _eventDesc +
+          splitter +
+          _eventLocation +
+          splitter +
+          _eventCategory.toString() +
+          splitter+
+          _eventDay +
+          splitter +
+          _eventStartTime +
+          splitter +
+          _eventEndTime +
+          splitter;
+
+      AtKey atKey = AtKey();
+      atKey.key = _eventTitle;
+      atKey.namespace = namespace;
+      atKey.sharedWith = activeAtSign;
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      atKey.metadata=metadata;
+      print(atKey.toString());
+      await clientSdkService.put(atKey, _values);
+    }
+  }
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 }
