@@ -5,7 +5,6 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/widgets/category_selector.dart';
 
-
 void main() => runApp(EventCreateScreen());
 
 class EventCreateScreen extends StatefulWidget {
@@ -16,7 +15,6 @@ class EventCreateScreen extends StatefulWidget {
 class _EventCreateScreenState extends State<EventCreateScreen> {
   List<String> invites = [];
   int _dropDownValue = 1;
-
 
   final ScrollController _scrollController = ScrollController();
 
