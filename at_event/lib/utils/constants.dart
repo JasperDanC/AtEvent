@@ -112,6 +112,19 @@ List<Event> kDummyEvents = [
       from: DateTime(2021, 06, 22, 6),
       to: DateTime(2021, 06, 22, 9)),
 ];
+
+/*
+Important App Data
+*/
+enum Categroy {
+  Party,
+  Music,
+  Bar,
+  Sports,
+  None,
+}
+
+
 /*
  @ Protocol Essentials
  */
