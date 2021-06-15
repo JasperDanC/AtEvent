@@ -23,14 +23,16 @@ class _BackgroundState extends State<Background> {
   GlobalKey<ScaffoldState> scaffoldKey;
   @override
   void initState() {
-    getAtSignAndInitContacts();
+    if(widget.loggedIn) {
+      getAtSignAndInitContacts();
+    }
     scaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    getAtSignAndInitContacts();
+    
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,

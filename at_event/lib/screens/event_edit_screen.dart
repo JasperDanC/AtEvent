@@ -4,6 +4,7 @@ import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/event.dart';
+import 'package:at_event/widgets/category_selector.dart';
 
 void main() {
   runApp(EventEditScreen(
@@ -109,54 +110,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   ),
                 ),
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Category:",
-                        style: kEventDetailsTextStyle,
-                      ),
-                    ),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        onChanged: (value){},
-                        value: _dropDownValue,
-                        items: [
-                          DropdownMenuItem(
-                            child: Text(
-                              "No Category",
-                            ),
-                            value: 1,
-                          ),
-                          DropdownMenuItem(
-                            child: Text(
-                              "Music",
-                            ),
-                            value: 2,
-                          ),
-                          DropdownMenuItem(
-                            child: Text(
-                              "Sports",
-                            ),
-                            value: 3,
-                          ),
-                          DropdownMenuItem(
-                            child: Text(
-                              "Business",
-                            ),
-                            value: 4,
-                          ),
-                          DropdownMenuItem(
-                            child: Text(
-                              "Party",
-                            ),
-                            value: 5,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                CategoryDropDown(dropDownValue: _dropDownValue),
                 Row(
                   children: [
                     Expanded(
@@ -241,3 +195,5 @@ class _EventEditScreenState extends State<EventEditScreen> {
     );
   }
 }
+
+
