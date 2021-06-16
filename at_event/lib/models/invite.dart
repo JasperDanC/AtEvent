@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 
-import 'event.dart';
+import 'ui_event.dart';
 
 
 
 class Invite {
   Invite({@required this.event, @required this.from});
-  final Event event;
+  final UI_Event event;
   final String from;
 
 }

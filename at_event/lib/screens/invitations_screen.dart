@@ -2,7 +2,7 @@ import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'background.dart';
@@ -10,7 +10,7 @@ import 'background.dart';
 List<Invite> invites = [
   Invite(
     from: '@bobert',
-    event: Event(
+    event: UI_Event(
         eventName: "Lunch with Thomas",
         from: DateTime(2021, 06, 09, 6),
         to: DateTime(2021, 06, 09, 9),
@@ -37,7 +37,7 @@ List<Invite> invites = [
   ),
   Invite(
     from: '@frankyG',
-    event: Event(
+    event: UI_Event(
         eventName: "Party Time",
         from: DateTime(2021, 06, 09, 18),
         to: DateTime(2021, 06, 09, 22),
@@ -47,7 +47,7 @@ List<Invite> invites = [
   ),
   Invite(
     from: '@your_boss',
-    event: Event(
+    event: UI_Event(
         eventName: "Important Business Meeting",
         from: DateTime(2021, 06, 09, 14, 30),
         to: DateTime(2021, 06, 09, 18, 45),
@@ -62,7 +62,7 @@ List<Invite> invites = [
   ),
   Invite(
     from: '@gerald',
-    event: Event(
+    event: UI_Event(
         eventName: "Gerald + Gertrude Wedding",
         from: DateTime(2021, 06, 09, 12),
         to: DateTime(2021, 06, 09, 24),
@@ -103,7 +103,7 @@ List<Invite> invites = [
   ),
   Invite(
     from: '@bobert',
-    event: Event(
+    event: UI_Event(
         eventName: "Lunch with Thomas",
         from: DateTime(2021, 06, 09, 11),
         to: DateTime(2021, 06, 09, 13),

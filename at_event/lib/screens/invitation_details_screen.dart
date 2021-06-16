@@ -4,12 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
 import 'background.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 
 void main() => runApp(InviteDetailsScreen(
   invite:  Invite(
     from: '@bobert',
-    event: Event(
+    event: UI_Event(
         eventName: "Lunch with Thomas",
         from: DateTime(2021, 06, 09, 6),
         to: DateTime(2021, 06, 09, 9),

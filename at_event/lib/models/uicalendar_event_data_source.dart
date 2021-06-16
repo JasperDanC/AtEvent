@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:at_event/utils/constants.dart';
-import 'event.dart';
+import 'ui_event.dart';
 
 
 
 class EventDataSource extends CalendarDataSource {
-  EventDataSource(List<Event> source){
+  EventDataSource(List<UI_Event> source){
     appointments = source;
   }
 

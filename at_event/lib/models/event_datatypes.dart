@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
+import 'ui_event.dart';
 
 class EventNotificationModel {
   EventNotificationModel();
   String atSignCreator;
   bool isCancelled;
   String title;
+  String description;
   Setting setting;
   AtGroup group;
-  AtCategory category;
+  EventCategory category;
   Event event;
   String key;
   bool isSharing;
@@ -18,6 +20,7 @@ class EventNotificationModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     category = data['category'] ?? '';
+    description = data['description'] ?? '';
     atSignCreator = data['atSignCreator' ?? ''];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
@@ -69,8 +72,10 @@ class EventNotificationModel {
           : '',
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
+      'description':eventNotification.description,
       'isUpdate': eventNotification.isUpdating.toString(),
-      'atsignCreator': eventNotification.atSignCreator.toString(),
+      'atSignCreator': eventNotification.atSignCreator.toString(),
+      'category': eventNotification.category.toString(),
       'key': '${eventNotification.key}',
       'group': json.encode(eventNotification.group),
       'venue': json.encode({
@@ -99,6 +104,18 @@ class EventNotificationModel {
     });
     return notification;
   }
+  
+  UI_Event toUI_Event(){
+    UI_Event ui_event = UI_Event(
+      eventName: this.title,
+      category: this.category.toString(),
+      description: this.description,
+      location: this.setting.label,
+      from: event.startTime,
+        to: event.endTime,
+    );
+    return ui_event;
+  }
 }
 
 class Setting {
@@ -113,7 +130,13 @@ class Setting {
         label = data['label'] != 'null' ? data['label'] : '';
 }
 
-class AtCategory {}
+enum EventCategory {
+  Party,
+  Music,
+  Bar,
+  Sports,
+  None,
+}
 
 class Event {
   Event();

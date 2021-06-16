@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:at_event/widgets/category_selector.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/models/event_datatypes.dart';
 
 void main() => runApp(EventCreateScreen());
 
@@ -360,30 +361,38 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         default:
           _eventCategory = EventCategory.None;
       }
-      String _values = _eventTitle +
-          splitter +
-          _eventDesc +
-          splitter +
-          _eventLocation +
-          splitter +
-          _eventCategory.toString() +
-          splitter+
-          _eventDay +
-          splitter +
-          _eventStartTime +
-          splitter +
-          _eventEndTime +
-          splitter;
+
+      Event newEvent = Event()
+      ..date=DateTime.parse(_eventDay)
+      ..startTime=DateTime.parse(_eventDay +" "+_eventStartTime)
+      ..endTime= DateTime.parse(_eventDay+" "+_eventEndTime);
+
+      Setting location = Setting()
+      ..label = _eventLocation;
+
+      EventNotificationModel newEventNotification = EventNotificationModel()
+      ..event= newEvent
+      ..atSignCreator = activeAtSign
+      ..category = _eventCategory
+      ..title = _eventTitle
+      ..description = _eventDesc
+      ..setting = location
+      ..key = " event "+_eventTitle;
 
       AtKey atKey = AtKey();
-      atKey.key =" "+ _eventTitle;
+      atKey.key =newEventNotification.key;
       atKey.namespace = namespace;
       atKey.sharedWith = activeAtSign;
       Metadata metadata = Metadata();
       metadata.ccd = true;
       atKey.metadata=metadata;
       print(atKey.toString());
-      await clientSdkService.put(atKey, _values);
+
+      String storedValue = EventNotificationModel.convertEventNotificationToJson(newEventNotification);
+      await clientSdkService.put(atKey,storedValue);
+    }
+    else {
+      print("Please fill all fields");
     }
   }
 

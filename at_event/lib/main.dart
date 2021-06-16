@@ -8,7 +8,7 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
 import 'package:at_event/screens/onboarding_screen.dart';
 import 'package:flutter/services.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 
 void main() async {
   runApp(Vento());

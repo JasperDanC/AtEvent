@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 
 /*
 Colors and Styles
@@ -91,20 +91,20 @@ const kEventDetailsTextStyle = TextStyle(
   fontSize: 16,
 );
 
-List<Event> kDummyEvents = [
-  Event(
+List<UI_Event> kDummyEvents = [
+  UI_Event(
       eventName: "Test Event 1",
       from: DateTime(2021, 06, 09, 6),
       to: DateTime(2021, 06, 09, 9)),
-  Event(
+  UI_Event(
       eventName: "Test Event 2",
       from: DateTime(2021, 06, 10, 18),
       to: DateTime(2021, 06, 10, 21)),
-  Event(
+  UI_Event(
       eventName: "Test Event 3",
       from: DateTime(2021, 06, 14, 10),
       to: DateTime(2021, 06, 14, 11)),
-  Event(
+  UI_Event(
       eventName: "Test Event 4",
       from: DateTime(2021, 06, 22, 6),
       to: DateTime(2021, 06, 22, 9)),
@@ -113,13 +113,7 @@ List<Event> kDummyEvents = [
 /*
 Important App Data
 */
-enum EventCategory {
-  Party,
-  Music,
-  Bar,
-  Sports,
-  None,
-}
+
 
 /*
  @ Protocol Essentials

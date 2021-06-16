@@ -1,13 +1,13 @@
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
 
 void main() {
   runApp(EventDetailsScreen(
-    event: Event(
+    event: UI_Event(
         eventName: "Lunch with Thomas",
         from: DateTime(2021, 06, 09, 6),
         to: DateTime(2021, 06, 09, 9),
@@ -38,7 +38,7 @@ void main() {
 
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
-  final Event event;
+  final UI_Event event;
 
   @override
   _EventDetailsScreenState createState() => _EventDetailsScreenState();

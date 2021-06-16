@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/widgets/category_selector.dart';
 
 void main() {
   runApp(EventEditScreen(
-    event: Event(
+    event: UI_Event(
         eventName: "Lunch with Thomas",
         from: DateTime(2021, 06, 09, 6),
         to: DateTime(2021, 06, 09, 9),
@@ -37,7 +37,7 @@ void main() {
 
 class EventEditScreen extends StatefulWidget {
   EventEditScreen({this.event});
-  final Event event;
+  final UI_Event event;
 
   @override
   _EventEditScreenState createState() => _EventEditScreenState();

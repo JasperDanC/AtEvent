@@ -5,8 +5,8 @@ import 'package:at_event/utils/constants.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:at_event/models/event.dart';
-import 'package:at_event/models/calendar_event_data_source.dart';
+import 'package:at_event/models/ui_event.dart';
+import 'package:at_event/models/uicalendar_event_data_source.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 
 void main() {
@@ -131,7 +131,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return EventDetailsScreen(
-                              event: Event(
+                              event: UI_Event(
                                   eventName: "Lunch with Thomas",
                                   from: DateTime(2021, 06, 09, 6),
                                   to: DateTime(2021, 06, 09, 9),
@@ -299,8 +299,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     for (AtKey atKey in response) {
 
       String value = await _lookup(atKey);
-      print(atKey.toString());
-      print(value);
+
+      print("Key Value:" + value);
 
       keysFound += 1;
       responseList.add(value);

@@ -3,7 +3,7 @@ import 'package:at_event/screens/calendar_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:at_event/models/event.dart';
+import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/Widgets/reusable_widgets.dart';
 import '../service/client_sdk_service.dart';
 import '../utils/constants.dart';
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           canMarkersOverflow: true,
                         ),
                         eventLoader: (day) {
-                          List<Event> allEvents = [];
+                          List<UI_Event> allEvents = [];
                           for (int i = 0; i < kDummyEvents.length; i++) {
                             if (kDummyEvents[i].from.day == day.day &&
                                 kDummyEvents[i].from.month == day.month &&
