@@ -11,6 +11,7 @@ import 'package:at_event/models/event_type_model_homescreen.dart';
 import 'package:at_event/models/events_model_homescreen.dart';
 import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_event/Widgets/circle_avatar.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -118,23 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         "Let's see what is happening today!",
                                         style: kNormalTextStyle),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: CircleAvatar(
-                                      backgroundColor: kColorStyle1,
-                                      radius: 35,
-                                      child: CircleAvatar(
-                                        backgroundColor: kColorStyle2,
-                                        radius: 30,
-                                        child: CircleAvatar(
-                                          backgroundColor: kColorStyle3,
-                                          radius: 25,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/Profile.jpg'),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  CustomCircleAvatar(),
                                 ],
                               ),
                             ],
