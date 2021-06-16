@@ -128,7 +128,7 @@ class MixedConstants {
   static const String WEBSITE_URL = 'https://atsign.com/';
   // for local server
   static const String ROOT_DOMAIN = 'root.atsign.org';
-  static const String NAMESPACE = 'vento.@bagelconservation';
+  static const String NAMESPACE = '@bagelconservation';
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
 }
@@ -141,5 +141,5 @@ class AppStrings {
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
 
-final String namespace = 'vento.@bagelconservation';
-final String splitter = '@_@';
+final String namespace = '@bagelconservation';
+final String splitter = ':@';

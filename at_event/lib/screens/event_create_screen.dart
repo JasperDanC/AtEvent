@@ -108,7 +108,56 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 SizedBox(
                   height: 10.0,
                 ),
-                CategoryDropDown(dropDownValue: _dropDownValue),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Category:",
+                        style: kEventDetailsTextStyle,
+                      ),
+                    ),
+                    Expanded(
+                      child: DropdownButtonFormField(
+                        onChanged: (value){
+                          _dropDownValue = value;
+                        },
+                        value: _dropDownValue,
+                        items: [
+                          DropdownMenuItem(
+                            child: Text(
+                              "No Category",
+                            ),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Music",
+                            ),
+                            value: 2,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Sports",
+                            ),
+                            value: 3,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Drinks",
+                            ),
+                            value: 4,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Party",
+                            ),
+                            value: 5,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 10,
                 ),
@@ -327,7 +376,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           splitter;
 
       AtKey atKey = AtKey();
-      atKey.key = _eventTitle;
+      atKey.key =" "+ _eventTitle;
       atKey.namespace = namespace;
       atKey.sharedWith = activeAtSign;
       Metadata metadata = Metadata();
