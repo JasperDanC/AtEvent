@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: kBackgroundGrey,
       key: scaffoldKey,
       drawer: Drawer(
         child: ListView(
