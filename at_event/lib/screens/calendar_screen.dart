@@ -10,6 +10,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/models/uicalendar_event_data_source.dart';
 import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/utils/functions.dart';
 
 void main() {
   runApp(CalendarScreen());
@@ -45,7 +46,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     getAtSign();
     scaffoldKey = GlobalKey<ScaffoldState>();
 
-    _scan();
+    scan();
     super.initState();
   }
 
@@ -285,43 +286,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
-  /// Scan for [AtKey] objects with the correct regex.
-  _scan() async {
-    print("started scan");
-    int keysFound = 0;
-    List<AtKey> response;
 
-
-    response = await clientSdkService.getAtKeys();
-
-    // Instantiating a list of strings
-    List<String> responseList = [];
-
-
-    for (AtKey atKey in response) {
-
-
-      String value = await _lookup(atKey);
-      print("Key Value:" + value);
-
-      Map<String, dynamic> jsonValue = json.decode(value);
-      EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
-      globalUIEvents.add(eventModel.toUI_Event());
-      keysFound += 1;
-      responseList.add(value);
-    }
-    print(" found $keysFound keys");
-    return responseList;
-  }
-  /// Look up a value corresponding to an [AtKey] instance.
-  Future<String> _lookup(AtKey atKey) async {
-    // If an AtKey object exists
-    if (atKey != null) {
-      // Simply get the AtKey object utilizing the serverDemoService's get method
-      return await clientSdkService.get(atKey);
-    }
-    return '';
-  }
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
     setState(() {

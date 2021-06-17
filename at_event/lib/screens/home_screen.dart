@@ -12,6 +12,7 @@ import 'package:at_event/models/events_model_homescreen.dart';
 import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_event/Widgets/circle_avatar.dart';
+import 'package:at_event/utils/functions.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getAtSignAndInitContacts();
+    scan();
     scaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
   }
@@ -178,11 +180,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         eventLoader: (day) {
                           List<UI_Event> allEvents = [];
-                          for (int i = 0; i < kDummyEvents.length; i++) {
-                            if (kDummyEvents[i].from.day == day.day &&
-                                kDummyEvents[i].from.month == day.month &&
-                                kDummyEvents[i].from.year == day.year) {
-                              allEvents.add(kDummyEvents[i]);
+                          for (int i = 0; i < globalUIEvents.length; i++) {
+                            if (globalUIEvents[i].from.day == day.day &&
+                                globalUIEvents[i].from.month == day.month &&
+                                globalUIEvents[i].from.year == day.year) {
+                              allEvents.add(globalUIEvents[i]);
                             }
                           }
                           return allEvents;

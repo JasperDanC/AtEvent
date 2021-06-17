@@ -131,6 +131,8 @@ class EventNotificationModel {
       from: event.startTime,
         to: event.endTime,
     );
+    print("UI_Event from: "+ui_event.from.toString());
+    print("UI_Event to: "+ui_event.to.toString());
     return ui_event;
   }
 }
@@ -173,7 +175,7 @@ class Event {
         ? DateTime.parse(data['startTime']).toLocal()
         : null;
     endTime = data['endTime'] != null
-        ? DateTime.parse(data['startTime']).toLocal()
+        ? DateTime.parse(data['endTime']).toLocal()
         : null;
     isRecurring = data['isRecurring'] == 'true' ? true : false;
     if (!isRecurring) {
