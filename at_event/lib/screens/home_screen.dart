@@ -121,7 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         "Let's see what is happening today!",
                                         style: kNormalTextStyle),
                                   ),
-                                  CustomCircleAvatar(),
+                                  CustomCircleAvatar(
+                                    image: 'assets/images/Profile.jpg',
+                                  ),
                                 ],
                               ),
                             ],

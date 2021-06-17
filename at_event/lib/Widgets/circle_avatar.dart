@@ -22,11 +22,21 @@ class CustomCircleAvatar extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: kColorStyle2,
           radius: 30,
-          child: CircleAvatar(
-            backgroundColor: kColorStyle3,
-            radius: 25,
-            backgroundImage: AssetImage('assets/images/Profile.jpg'),
-          ),
+          child: nonAsset
+              ? ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  child: Image.memory(
+                    byteImage,
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.fill,
+                  ),
+                )
+              : CircleAvatar(
+                  backgroundColor: kColorStyle3,
+                  radius: 25,
+                  backgroundImage: AssetImage(image),
+                ),
         ),
       ),
     );
