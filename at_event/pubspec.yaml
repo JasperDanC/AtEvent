@@ -29,6 +29,7 @@ dependencies:
   at_contacts_flutter: ^1.0.2
   at_contact: ^1.0.0
   fluttertoast: ^8.0.7
+  at_location_flutter: ^1.0.3
 
 
 flutter:

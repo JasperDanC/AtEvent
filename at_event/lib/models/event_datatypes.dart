@@ -72,7 +72,7 @@ class EventNotificationModel {
           : '',
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
-      'description':eventNotification.description,
+      'description': eventNotification.description,
       'isUpdate': eventNotification.isUpdating.toString(),
       'atSignCreator': eventNotification.atSignCreator.toString(),
       'category': eventNotification.category.toString(),
@@ -104,15 +104,15 @@ class EventNotificationModel {
     });
     return notification;
   }
-  
-  UI_Event toUI_Event(){
+
+  UI_Event toUI_Event() {
     UI_Event ui_event = UI_Event(
       eventName: this.title,
       category: this.category.toString(),
       description: this.description,
       location: this.setting.label,
       from: event.startTime,
-        to: event.endTime,
+      to: event.endTime,
     );
     return ui_event;
   }
