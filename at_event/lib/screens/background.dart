@@ -33,91 +33,93 @@ class _BackgroundState extends State<Background> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      key: scaffoldKey,
-      resizeToAvoidBottomInset: false,
-      appBar: widget.turnAppbar
-          ? AppBar(
-              toolbarHeight: 65.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(45.0),
-                bottomLeft: Radius.circular(45.0),
-              )),
-              centerTitle: true,
-              backgroundColor: kPrimaryBlue,
-              title: Text(
-                "@Vento",
-                style: TextStyle(
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            )
-          : null,
-      body: Stack(
-        children: <Widget>[
-          Pinned.fromPins(
-            Pin(start: 0.0, end: 0.0),
-            Pin(start: 0.0, end: 0.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment(0.0, -1.0),
-                  end: Alignment(0.0, 1.0),
-                  colors: [
-                    const Color(0xff171616),
-                    const Color(0xff1b1a1a),
-                    const Color(0xff727272),
-                    const Color(0xff808080)
-                  ],
-                  stops: [0.0, 0.0, 0.46, 1.0],
+    return MaterialApp(
+      home: Scaffold(
+        key: scaffoldKey,
+        resizeToAvoidBottomInset: false,
+        appBar: widget.turnAppbar
+            ? AppBar(
+                toolbarHeight: 65.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(45.0),
+                  bottomLeft: Radius.circular(45.0),
+                )),
+                centerTitle: true,
+                backgroundColor: kPrimaryBlue,
+                title: Text(
+                  "@Vento",
+                  style: TextStyle(
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-                border: Border.all(width: 1.0, color: const Color(0xff707070)),
+              )
+            : null,
+        body: Stack(
+          children: <Widget>[
+            Pinned.fromPins(
+              Pin(start: 0.0, end: 0.0),
+              Pin(start: 0.0, end: 0.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment(0.0, -1.0),
+                    end: Alignment(0.0, 1.0),
+                    colors: [
+                      const Color(0xff171616),
+                      const Color(0xff1b1a1a),
+                      const Color(0xff727272),
+                      const Color(0xff808080)
+                    ],
+                    stops: [0.0, 0.0, 0.46, 1.0],
+                  ),
+                  border: Border.all(width: 1.0, color: const Color(0xff707070)),
+                ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              SizedBox(
-                height: widget.turnAppbar ? 120 : 0,
-              ),
-              widget.child
-            ],
-          )
-        ],
-      ),
-      drawer: widget.loggedIn
-          ? Drawer(
-              child: ListView(
-                children: [
-                  ListTile(
-                    title: Text("Your Invitations"),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/InvitationsScreen');
-                    },
-                  ),
-                  ListTile(
-                    title: Text("Contacts"),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => ContactsScreen(),
-                      ));
-                    },
-                  ),
-                  ListTile(
-                    title: Text("Blocked"),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => BlockedScreen(),
-                      ));
-                    },
-                  ),
-                ],
-              ),
+            Column(
+              children: [
+                SizedBox(
+                  height: widget.turnAppbar ? 120 : 0,
+                ),
+                widget.child
+              ],
             )
-          : null,
-      extendBodyBehindAppBar: true,
+          ],
+        ),
+        drawer: widget.loggedIn
+            ? Drawer(
+                child: ListView(
+                  children: [
+                    ListTile(
+                      title: Text("Your Invitations"),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/InvitationsScreen');
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Contacts"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => ContactsScreen(),
+                        ));
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Blocked"),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => BlockedScreen(),
+                        ));
+                      },
+                    ),
+                  ],
+                ),
+              )
+            : null,
+        extendBodyBehindAppBar: true,
+      ),
     );
   }
 

@@ -37,9 +37,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   @override
   void initState() {
     getAtSign();
-    clientSdkService  = ClientSdkService.getInstance();
+    clientSdkService = ClientSdkService.getInstance();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Background(
@@ -119,7 +120,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField(
-                        onChanged: (value){
+                        onChanged: (value) {
                           _dropDownValue = value;
                         },
                         value: _dropDownValue,
@@ -267,7 +268,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                           style: kEventDetailsTextStyle,
                           onChanged: (startTimePicked) {
                             _eventStartTime = startTimePicked;
-                            print(_eventStartTime);
+
                           },
                           decoration: InputDecoration(
                             hintStyle: kEventDetailsTextStyle,
@@ -363,35 +364,36 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       }
 
       Event newEvent = Event()
-      ..date=DateTime.parse(_eventDay)
-      ..startTime=DateTime.parse(_eventDay +" "+_eventStartTime)
-      ..endTime= DateTime.parse(_eventDay+" "+_eventEndTime);
+        ..date = DateTime.parse(_eventDay)
+        ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
+        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
 
-      Setting location = Setting()
-      ..label = _eventLocation;
+      Setting location = Setting()..label = _eventLocation;
 
       EventNotificationModel newEventNotification = EventNotificationModel()
-      ..event= newEvent
-      ..atSignCreator = activeAtSign
-      ..category = _eventCategory
-      ..title = _eventTitle
-      ..description = _eventDesc
-      ..setting = location
-      ..key = " event "+_eventTitle;
+        ..event = newEvent
+        ..atSignCreator = activeAtSign
+        ..category = _eventCategory
+        ..group = null
+        ..title = _eventTitle
+        ..description = _eventDesc
+        ..setting = location
+        ..key = " event " + _eventTitle;
 
       AtKey atKey = AtKey();
-      atKey.key =newEventNotification.key;
+      atKey.key = newEventNotification.key;
       atKey.namespace = namespace;
       atKey.sharedWith = activeAtSign;
       Metadata metadata = Metadata();
       metadata.ccd = true;
-      atKey.metadata=metadata;
+      atKey.metadata = metadata;
       print(atKey.toString());
 
-      String storedValue = EventNotificationModel.convertEventNotificationToJson(newEventNotification);
-      await clientSdkService.put(atKey,storedValue);
-    }
-    else {
+      String storedValue =
+          EventNotificationModel.convertEventNotificationToJson(
+              newEventNotification);
+      await clientSdkService.put(atKey, storedValue);
+    } else {
       print("Please fill all fields");
     }
   }

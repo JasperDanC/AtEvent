@@ -1,3 +1,5 @@
+import 'package:at_event/models/event_datatypes.dart';
+import 'dart:convert';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +50,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   EventDataSource _getEventData() {
-    return EventDataSource(kDummyEvents);
+    return EventDataSource(globalUIEvents);
   }
 
   @override
@@ -127,7 +129,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           widget._controller.view = CalendarView.day;
                         });
                       } else {
-                        if (ctd.appointments.length != null) {
+                        if (ctd.appointments != null || ctd.appointments.length != null) {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return EventDetailsScreen(
@@ -298,10 +300,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     for (AtKey atKey in response) {
 
-      String value = await _lookup(atKey);
 
+      String value = await _lookup(atKey);
       print("Key Value:" + value);
 
+      Map<String, dynamic> jsonValue = json.decode(value);
+      EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
+      globalUIEvents.add(eventModel.toUI_Event());
       keysFound += 1;
       responseList.add(value);
     }

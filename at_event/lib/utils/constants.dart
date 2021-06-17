@@ -111,6 +111,8 @@ List<UI_Event> kDummyEvents = [
       to: DateTime(2021, 06, 22, 9)),
 ];
 
+List<UI_Event> globalUIEvents = [];
+
 /*
 Important App Data
 */
