@@ -17,16 +17,13 @@ void main() {
 }
 
 class CalendarScreen extends StatefulWidget {
-
-
-  CalendarScreen({this.specificDay}){
-    if(specificDay != null){
+  CalendarScreen({this.specificDay}) {
+    if (specificDay != null) {
       switchIndex = 2;
       _controller.displayDate = specificDay;
       _controller.view = CalendarView.day;
     }
   }
-
 
   int switchIndex = 0;
   final DateTime specificDay;
@@ -56,9 +53,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Background(
-
       child: Expanded(
         child: Container(
           decoration: BoxDecoration(
@@ -83,15 +78,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     MaterialButton(
-                        shape: CircleBorder(),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/HomeScreen');
-                        },
-                        child: Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                          size: 50.0,
-                        ),),
+                      shape: CircleBorder(),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/HomeScreen');
+                      },
+                      child: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                        size: 50.0,
+                      ),
+                    ),
                   ],
                 ),
                 ToggleSwitch(
@@ -130,37 +126,37 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           widget._controller.view = CalendarView.day;
                         });
                       } else {
-                        if (ctd.appointments != null || ctd.appointments.length != null) {
+                        if (ctd.appointments != null ||
+                            ctd.appointments.length != null) {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return EventDetailsScreen(
                               event: UI_Event(
-                                  eventName: "Lunch with Thomas",
-                                  from: DateTime(2021, 06, 09, 6),
-                                  to: DateTime(2021, 06, 09, 9),
-                                  location: '123 Street Avenue N.',
-                                  description: 'Lunch at my place!\n\n' +
-                                      'Bring some board games, pops, and some delicious sides\n\n' +
-                                      'We will be eating burgers',
-                                  peopleGoing: [
-                                    '@gerald',
-                                    '@norton',
-                                    '@thomas',
-                                    '@MrSmith',
-                                    '@Harriet',
-                                    '@funkyfrog',
-                                    '@3frogs',
-                                    '@dagoth_ur',
-                                    '@clavicus_vile',
-                                    '@BenjaminButton',
-                                    '@samus',
-                                    '@atom_eve',
-                                    '@buggs',
-                                    '@george',
-                                  ],
-                              category: 'Party',
+                                eventName: "Lunch with Thomas",
+                                from: DateTime(2021, 06, 09, 6),
+                                to: DateTime(2021, 06, 09, 9),
+                                location: '123 Street Avenue N.',
+                                description: 'Lunch at my place!\n\n' +
+                                    'Bring some board games, pops, and some delicious sides\n\n' +
+                                    'We will be eating burgers',
+                                peopleGoing: [
+                                  '@gerald',
+                                  '@norton',
+                                  '@thomas',
+                                  '@MrSmith',
+                                  '@Harriet',
+                                  '@funkyfrog',
+                                  '@3frogs',
+                                  '@dagoth_ur',
+                                  '@clavicus_vile',
+                                  '@BenjaminButton',
+                                  '@samus',
+                                  '@atom_eve',
+                                  '@buggs',
+                                  '@george',
+                                ],
+                                category: 'Party',
                               ),
-
                             );
                           }));
                         }
@@ -260,12 +256,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontWeight: FontWeight.bold, color: Colors.white),
                         backgroundColor: kPrimaryBlue),
                     view: CalendarView.month,
-                    backgroundColor: widget._controller.view == CalendarView.month
-                        ? Colors.transparent
-                        : Colors.white,
-                    cellBorderColor: widget._controller.view == CalendarView.month
-                        ? Colors.white
-                        : Colors.grey[110],
+                    backgroundColor:
+                        widget._controller.view == CalendarView.month
+                            ? Colors.transparent
+                            : Colors.white,
+                    cellBorderColor:
+                        widget._controller.view == CalendarView.month
+                            ? Colors.white
+                            : Colors.grey[110],
                   ),
                 ),
                 Padding(

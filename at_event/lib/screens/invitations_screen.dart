@@ -1,3 +1,4 @@
+import 'package:at_event/Widgets/concurrent_event_request_dialog.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -190,9 +191,11 @@ class InvitationsScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 MaterialButton(
-                                  onPressed: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                      return InviteDetailsScreen(invite: invites[index]);
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return InviteDetailsScreen(
+                                          invite: invites[index]);
                                     }));
                                   },
                                   padding: EdgeInsets.zero,
@@ -205,9 +208,10 @@ class InvitationsScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           invites[index].event.eventName,
-                                          style: kEventDetailsTextStyle.copyWith(
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold),
+                                          style:
+                                              kEventDetailsTextStyle.copyWith(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold),
                                         ),
                                         Text(
                                           DateFormat('yyyy MMMM dd  hh:mm')
@@ -216,7 +220,8 @@ class InvitationsScreen extends StatelessWidget {
                                                   .toString() +
                                               " - " +
                                               DateFormat('hh:mm')
-                                                  .format(invites[index].event.to)
+                                                  .format(
+                                                      invites[index].event.to)
                                                   .toString(),
                                           style: kEventDetailsTextStyle,
                                         ),
@@ -229,7 +234,8 @@ class InvitationsScreen extends StatelessWidget {
                                               '\n' +
                                               'At ' +
                                               invites[index].event.location,
-                                          style: kEventDetailsTextStyle.copyWith(
+                                          style:
+                                              kEventDetailsTextStyle.copyWith(
                                             color: kEventBlue,
                                           ),
                                         ),
@@ -240,7 +246,11 @@ class InvitationsScreen extends StatelessWidget {
                                 Column(
                                   children: [
                                     MaterialButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ConcurrentEventRequest(
+                                          concurrentEvent: null,
+                                        );
+                                      },
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,
                                       color: Colors.green,

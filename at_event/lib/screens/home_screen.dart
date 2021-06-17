@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/ui_event.dart';
-import 'package:at_event/Widgets/reusable_widgets.dart';
+import 'package:at_event/Widgets/event_tiles.dart';
 import '../service/client_sdk_service.dart';
 import '../utils/constants.dart';
 import 'package:at_event/models/event_type_model_homescreen.dart';
