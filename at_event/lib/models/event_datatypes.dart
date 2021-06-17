@@ -19,21 +19,38 @@ class EventNotificationModel {
   EventNotificationModel.fromJson(Map<String, dynamic> data) {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
-    category = data['category'] ?? '';
+    String stringCategory = data['category'] ?? '';
+    switch(stringCategory){
+      case 'EventCategory.None':
+        category = EventCategory.None;
+        break;
+      case 'EventCategory.Party':
+        category = EventCategory.Party;
+        break;
+      case 'EventCategory.Sports':
+        category= EventCategory.Sports;
+        break;
+      case 'EventCategory.Music':
+        category = EventCategory.Music;
+        break;
+      case 'EventCategory.Bar':
+        category = EventCategory.Bar;
+        break;
+    }
     description = data['description'] ?? '';
     atSignCreator = data['atSignCreator' ?? ''];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
     isUpdating = data['isUpdating'] == 'true' ? true : false;
-    if (data['setting'] != null) {
-      Setting.fromJson(jsonDecode(data['setting']));
+    if (data['setting'] != 'null' || data['setting'] == null) {
+      setting = Setting.fromJson(jsonDecode(data['setting']));
     }
-    if (data['event'] != null) {
+    if (data['event'] != 'null' || data['event'] == null ) {
       event = data['event'] != null
           ? Event.fromJson(jsonDecode(data['event']))
           : null;
     }
-    if (data['group'] != null) {
+    if (data['group'] != 'null'|| data['group'] == null ) {
       data['group'] = jsonDecode(data['group']);
       group = AtGroup(data['group']['name']);
 
@@ -78,7 +95,7 @@ class EventNotificationModel {
       'category': eventNotification.category.toString(),
       'key': '${eventNotification.key}',
       'group': json.encode(eventNotification.group),
-      'venue': json.encode({
+      'setting': json.encode({
         'latitude': eventNotification.setting.latitude.toString(),
         'longitude': eventNotification.setting.longitude.toString(),
         'label': eventNotification.setting.label
@@ -100,7 +117,7 @@ class EventNotificationModel {
         'endEventOnDate': eventNotification.event.endEventOnDate.toString(),
         'endEventAfterOccurance':
             eventNotification.event.endEventAfterOccurrence.toString()
-      })
+      }),
     });
     return notification;
   }
@@ -156,7 +173,7 @@ class Event {
         ? DateTime.parse(data['startTime']).toLocal()
         : null;
     endTime = data['endTime'] != null
-        ? DateTime.parse(data['starttime']).toLocal()
+        ? DateTime.parse(data['startTime']).toLocal()
         : null;
     isRecurring = data['isRecurring'] == 'true' ? true : false;
     if (!isRecurring) {
