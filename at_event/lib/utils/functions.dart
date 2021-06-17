@@ -11,8 +11,8 @@ scan() async {
   int keysFound = 0;
   List<AtKey> response;
 
-
-  response = await ClientSdkService.getInstance().getAtKeys();
+  ClientSdkService client = ClientSdkService.getInstance();
+  response = await client.getAtKeys();
 
   // Instantiating a list of strings
   List<String> responseList = [];

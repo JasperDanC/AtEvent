@@ -374,6 +374,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..event = newEvent
         ..atSignCreator = activeAtSign
         ..category = _eventCategory
+        ..peopleGoing = []
         ..group = null
         ..title = _eventTitle
         ..description = _eventDesc

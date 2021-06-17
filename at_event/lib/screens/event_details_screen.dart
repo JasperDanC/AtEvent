@@ -1,3 +1,4 @@
+import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
@@ -31,7 +32,7 @@ void main() {
           '@buggs',
           '@george',
         ],
-      category: 'Party'
+      category: EventCategory.Party
     ),
   ));
 }
@@ -39,6 +40,7 @@ void main() {
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
   final UI_Event event;
+
 
   @override
   _EventDetailsScreenState createState() => _EventDetailsScreenState();
@@ -49,6 +51,24 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String categoryString;
+    switch(widget.event.category){
+      case EventCategory.Party:
+        categoryString = 'Party';
+        break;
+      case EventCategory.Music:
+        categoryString = 'Music';
+        break;
+      case EventCategory.Bar:
+        categoryString = 'Bar';
+        break;
+      case EventCategory.Sports:
+        categoryString = 'Sports';
+        break;
+      case EventCategory.None:
+        categoryString = 'No Category';
+        break;
+    }
     return Background(
       child: Expanded(
         child: Container(
@@ -84,7 +104,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   ],
                 ),
                 Text(
-                  widget.event.category,
+                  categoryString,
                   style: kEventDetailsTextStyle,
                 ),
                 Divider(
@@ -138,6 +158,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: Colors.white,
                 ),
                 Text(
+
                   widget.event.peopleGoing.length.toString() + " going:",
                   style: kEventDetailsTextStyle,
                 ),
