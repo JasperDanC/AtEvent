@@ -246,11 +246,7 @@ class InvitationsScreen extends StatelessWidget {
                                 Column(
                                   children: [
                                     MaterialButton(
-                                      onPressed: () {
-                                        ConcurrentEventRequest(
-                                          concurrentEvent: null,
-                                        );
-                                      },
+                                      onPressed: () {},
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,
                                       color: Colors.green,
