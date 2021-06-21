@@ -10,6 +10,7 @@ class EventNotificationModel {
   String description;
   Setting setting;
   AtGroup group;
+  List<String> peopleGoing;
   EventCategory category;
   Event event;
   String key;
@@ -38,6 +39,8 @@ class EventNotificationModel {
         break;
     }
     description = data['description'] ?? '';
+    peopleGoing = data['peopleGoing'] == '[]' || data['peopleGoing'] == '' ? [] : data['peopleGoing'].split(',') ?? [];
+    print(peopleGoing);
     atSignCreator = data['atSignCreator' ?? ''];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
@@ -90,6 +93,7 @@ class EventNotificationModel {
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
       'description': eventNotification.description,
+      'peopleGoing' : eventNotification.peopleGoing.length > 0 ?eventNotification.peopleGoing.join(',') : '[]',
       'isUpdate': eventNotification.isUpdating.toString(),
       'atSignCreator': eventNotification.atSignCreator.toString(),
       'category': eventNotification.category.toString(),
@@ -125,11 +129,13 @@ class EventNotificationModel {
   UI_Event toUI_Event() {
     UI_Event ui_event = UI_Event(
       eventName: this.title,
-      category: this.category.toString(),
+      category: this.category,
       description: this.description,
       location: this.setting.label,
+      peopleGoing: this.peopleGoing,
       from: event.startTime,
       to: event.endTime,
+      realEvent: this,
     );
     print("UI_Event from: "+ui_event.from.toString());
     print("UI_Event to: "+ui_event.to.toString());
