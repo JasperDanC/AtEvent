@@ -65,6 +65,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Event Title',
+                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -83,6 +84,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     style: kEventDetailsTextStyle,
                     decoration: InputDecoration(
                       hintText: 'Event Description',
+                      hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                       focusedBorder: UnderlineInputBorder(
@@ -98,6 +100,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Location',
+                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -120,6 +123,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField(
+                        style: kEventDetailsTextStyle,
                         onChanged: (value) {
                           _dropDownValue = value;
                         },
@@ -190,6 +194,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         cursorColor: Colors.white,
                         style: kEventDetailsTextStyle,
                         decoration: InputDecoration(
+                          hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                           hintText: 'signs to invite',
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.white)),

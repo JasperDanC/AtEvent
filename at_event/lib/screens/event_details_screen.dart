@@ -5,6 +5,7 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
+import 'calendar_screen.dart';
 
 void main() {
   runApp(EventDetailsScreen(
@@ -51,6 +52,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     String categoryString;
     switch(widget.event.category){
       case EventCategory.Party:
@@ -95,6 +97,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       shape: CircleBorder(),
                       onPressed: () {
                         Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CalendarScreen()
+                          ),
+                        );
                       },
                       child: Icon(
                         Icons.chevron_left,
