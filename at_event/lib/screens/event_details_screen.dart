@@ -6,6 +6,8 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
 import 'calendar_screen.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_commons/at_commons.dart';
 
 void main() {
   runApp(EventDetailsScreen(
@@ -49,6 +51,7 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final ScrollController _scrollController = ScrollController();
+  String activeAtSign = '';
 
   @override
   Widget build(BuildContext context) {
@@ -232,22 +235,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                   ),
                 ),
-                FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EventEditScreen(event: widget.event),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: 'different_tag',
+                      onPressed: () {
+                        _delete(context);
+
+                    },
+                      backgroundColor: Colors.red,
+                      child: Icon(
+                        Icons.delete,
+                        size: 38,
+                        color: Colors.white,
+                      ),),
+                    FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EventEditScreen(event: widget.event),
+                          ),
+                        );
+                      },
+                      backgroundColor: kPrimaryBlue,
+                      child: Icon(
+                        Icons.edit,
+                        size: 38,
+                        color: Colors.white,
                       ),
-                    );
-                  },
-                  backgroundColor: kPrimaryBlue,
-                  child: Icon(
-                    Icons.edit,
-                    size: 38,
-                    color: Colors.white,
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -255,5 +275,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ),
       ),
     );
+  }
+  _delete(BuildContext context) async {
+
+    if (widget.event.eventName != null) {
+
+      AtKey atKey = AtKey();
+
+      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      print('deleting:'+ atKey.key);
+      atKey.sharedWith = activeAtSign;
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      atKey.metadata = metadata;
+      atKey.sharedBy = activeAtSign;
+
+
+      await ClientSdkService.getInstance().delete(atKey);
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CalendarScreen()
+        ),
+      );
+    }
+
+  }
+
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 }
