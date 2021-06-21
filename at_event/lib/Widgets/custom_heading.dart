@@ -12,6 +12,7 @@ class CustomHeading extends StatelessWidget {
       children: [
         heading != null
             ? Text(heading,
+                style: Theme.of(context).brightness == Brightness.light
                 style: Theme.of(context).brightness == Brightness.dark
                     ? kHeadingTextStyle.copyWith(color: Colors.black)
                     : kHeadingTextStyle.copyWith(color: Colors.white))
