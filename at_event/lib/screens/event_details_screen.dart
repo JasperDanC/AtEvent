@@ -5,6 +5,9 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
+import 'calendar_screen.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_commons/at_commons.dart';
 
 void main() {
   runApp(EventDetailsScreen(
@@ -48,9 +51,19 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final ScrollController _scrollController = ScrollController();
+  String activeAtSign = '';
+  ClientSdkService clientSdkService;
+
+  @override
+  void initState() {
+    clientSdkService =  ClientSdkService.getInstance();
+    getAtSign();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     String categoryString;
     switch(widget.event.category){
       case EventCategory.Party:
@@ -95,6 +108,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       shape: CircleBorder(),
                       onPressed: () {
                         Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CalendarScreen()
+                          ),
+                        );
                       },
                       child: Icon(
                         Icons.chevron_left,
@@ -224,22 +243,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                   ),
                 ),
-                FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EventEditScreen(event: widget.event),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: 'different_tag',
+                      onPressed: () {
+                        _delete(context);
+
+                    },
+                      backgroundColor: Colors.red,
+                      child: Icon(
+                        Icons.delete,
+                        size: 38,
+                        color: Colors.white,
+                      ),),
+                    FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EventEditScreen(event: widget.event),
+                          ),
+                        );
+                      },
+                      backgroundColor: kPrimaryBlue,
+                      child: Icon(
+                        Icons.edit,
+                        size: 38,
+                        color: Colors.white,
                       ),
-                    );
-                  },
-                  backgroundColor: kPrimaryBlue,
-                  child: Icon(
-                    Icons.edit,
-                    size: 38,
-                    color: Colors.white,
-                  ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -247,5 +283,29 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ),
       ),
     );
+  }
+  _delete(BuildContext context) async {
+
+    if (widget.event.eventName != null) {
+      ClientSdkService clientSdkService = ClientSdkService.getInstance();
+      AtKey atKey = AtKey();
+      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
+      atKey.sharedWith = activeAtSign;
+
+      print("Deleting key:"+atKey.toString());
+      bool deleteResult = await clientSdkService.delete(atKey);
+
+      print("Delete Result:"+deleteResult.toString());
+      Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
+    }
+
+  }
+
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 }

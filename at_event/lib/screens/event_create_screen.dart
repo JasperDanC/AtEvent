@@ -8,6 +8,7 @@ import 'package:at_event/widgets/category_selector.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'calendar_screen.dart';
 
 void main() => runApp(EventCreateScreen());
 
@@ -65,6 +66,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Event Title',
+                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -83,6 +85,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     style: kEventDetailsTextStyle,
                     decoration: InputDecoration(
                       hintText: 'Event Description',
+                      hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                       focusedBorder: UnderlineInputBorder(
@@ -98,6 +101,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Location',
+                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -120,6 +124,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField(
+                        style: kEventDetailsTextStyle,
                         onChanged: (value) {
                           _dropDownValue = value;
                         },
@@ -190,6 +195,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         cursorColor: Colors.white,
                         style: kEventDetailsTextStyle,
                         decoration: InputDecoration(
+                          hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                           hintText: 'signs to invite',
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.white)),
@@ -320,6 +326,12 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   onPressed: () {
                     _update();
                     Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CalendarScreen()
+                      ),
+                    );
                   },
                   child: Icon(Icons.add),
                 )
@@ -379,21 +391,28 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
-        ..key = " event " + _eventTitle;
+        ..key = "event " + _eventTitle;
 
       AtKey atKey = AtKey();
       atKey.key = newEventNotification.key;
-      atKey.namespace = namespace;
+
       atKey.sharedWith = activeAtSign;
+      atKey.sharedBy = activeAtSign;
       Metadata metadata = Metadata();
       metadata.ccd = true;
+
       atKey.metadata = metadata;
       print(atKey.toString());
 
       String storedValue =
           EventNotificationModel.convertEventNotificationToJson(
               newEventNotification);
-      await clientSdkService.put(atKey, storedValue);
+      try{
+        await clientSdkService.put(atKey, storedValue);
+      } catch (e) {
+        print(e.toString());
+      }
+
     } else {
       print("Please fill all fields");
     }

@@ -1,10 +1,14 @@
+import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/screens/background.dart';
+import 'package:at_event/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/widgets/category_selector.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_commons/at_commons.dart';
 
 void main() {
   runApp(EventEditScreen(
@@ -45,10 +49,42 @@ class EventEditScreen extends StatefulWidget {
 
 class _EventEditScreenState extends State<EventEditScreen> {
   List<String> invites = [];
-  int _dropDownValue = 1;
 
+  int _dropDownValue;
+  ClientSdkService clientSdkService;
+  String _eventTitle;
+  String _eventDesc;
+  String _eventLocation;
+  String _eventDay;
+  String _eventStartTime;
+  String _eventEndTime;
+  EventCategory _eventCategory;
+  String activeAtSign = '';
 
-  final ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    getAtSign();
+    switch (widget.event.category) {
+      case EventCategory.Party:
+        _dropDownValue = 4;
+        break;
+      case EventCategory.Music:
+        _dropDownValue = 1;
+        break;
+      case EventCategory.Bar:
+        _dropDownValue = 3;
+        break;
+      case EventCategory.Sports:
+        _dropDownValue = 2;
+        break;
+      case EventCategory.None:
+        _dropDownValue = 0;
+        break;
+    }
+    final ScrollController _scrollController = ScrollController();
+    clientSdkService = ClientSdkService.getInstance();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +100,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "Editting event: " +widget.event.eventName,
+                  "Editting event: " + widget.event.eventName,
                   style: TextStyle(
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,
@@ -73,8 +109,15 @@ class _EventEditScreenState extends State<EventEditScreen> {
                 TextField(
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
+                  onChanged: (value) {
+                    _eventTitle = value;
+                    setState(() {
+                      widget.event.eventName = value;
+                    });
+                  },
                   decoration: InputDecoration(
-                    hintText: 'Event Title',
+                    hintText: widget.event.eventName,
+                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -85,12 +128,18 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
                     keyboardType: TextInputType.multiline,
-
+                    onChanged: (value) {
+                      _eventDesc = value;
+                      setState(() {
+                        widget.event.description = value;
+                      });
+                    },
                     maxLines: 4,
                     cursorColor: Colors.white,
                     style: kEventDetailsTextStyle,
                     decoration: InputDecoration(
-                      hintText: 'Event Description',
+                      hintText: widget.event.description,
+                      hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                       focusedBorder: UnderlineInputBorder(
@@ -101,15 +150,21 @@ class _EventEditScreenState extends State<EventEditScreen> {
                 TextField(
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
+                  onChanged: (value) {
+                    _eventLocation = value;
+                    setState(() {
+                      widget.event.location = value;
+                    });
+                  },
                   decoration: InputDecoration(
-                    hintText: 'Location',
+                    hintText: widget.event.location,
+                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
                 ),
-
                 Row(
                   children: [
                     Expanded(
@@ -119,8 +174,10 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       ),
                     ),
                     Expanded(
+
                       child: DropdownButtonFormField(
-                        onChanged: (value){
+                        style: kEventDetailsTextStyle,
+                        onChanged: (value) {
                           _dropDownValue = value;
                         },
                         value: _dropDownValue,
@@ -167,6 +224,9 @@ class _EventEditScreenState extends State<EventEditScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
                           dateMask: "MMMM dd",
+                          onChanged: (dayPicked) {
+                            _eventDay = dayPicked;
+                          },
                           style: kEventDetailsTextStyle,
                           decoration: InputDecoration(
                             hintStyle: kEventDetailsTextStyle,
@@ -178,7 +238,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.date,
-                          initialDate: DateTime.now(),
+                          initialDate: widget.event.to,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -188,6 +248,9 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
+                          onChanged: (startTimePicked) {
+                            _eventStartTime = startTimePicked;
+                          },
                           style: kEventDetailsTextStyle,
                           decoration: InputDecoration(
                             hintStyle: kEventDetailsTextStyle,
@@ -199,18 +262,22 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-                          initialDate: DateTime.now(),
+
+                          initialDate: widget.event.to,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
                       ),
                     ),
-                    Text('-',style: kEventDetailsTextStyle),
+                    Text('-', style: kEventDetailsTextStyle),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: DateTimePicker(
                           style: kEventDetailsTextStyle,
+                          onChanged: (endTimePicked) {
+                            _eventEndTime = endTimePicked;
+                          },
                           decoration: InputDecoration(
                             labelStyle: kEventDetailsTextStyle,
                             hintStyle: kEventDetailsTextStyle,
@@ -222,7 +289,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-                          initialDate: DateTime.now(),
+                          initialDate: widget.event.from,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -232,7 +299,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                 ),
                 FloatingActionButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    _update();
                   },
                   child: Icon(Icons.check),
                 )
@@ -243,6 +310,82 @@ class _EventEditScreenState extends State<EventEditScreen> {
       ),
     );
   }
+
+  _update() async {
+
+      switch (_dropDownValue) {
+        case 1:
+          _eventCategory = EventCategory.None;
+          break;
+        case 2:
+          _eventCategory = EventCategory.Music;
+          break;
+        case 3:
+          _eventCategory = EventCategory.Sports;
+          break;
+        case 4:
+          _eventCategory = EventCategory.Bar;
+          break;
+        case 5:
+          _eventCategory = EventCategory.Party;
+          break;
+        default:
+          _eventCategory = EventCategory.None;
+      }
+      EventNotificationModel oldEventModel = widget.event.realEvent;
+      Event newEvent;
+      if(_eventDay == null || _eventStartTime == null || _eventEndTime == null){
+        newEvent = oldEventModel.event;
+      } else {
+        newEvent = Event()
+          ..date = DateTime.parse(_eventDay)
+          ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
+          ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
+      }
+
+
+      Setting location = Setting()..label = _eventLocation!=null ? _eventLocation: widget.event.location;
+
+      EventNotificationModel newEventNotification = EventNotificationModel()
+        ..event = newEvent
+        ..atSignCreator = oldEventModel.atSignCreator
+        ..category = _eventCategory
+        ..peopleGoing = oldEventModel.peopleGoing
+        ..group = null
+        ..title = _eventTitle!=null ? _eventTitle: widget.event.eventName
+        ..description = _eventDesc!=null ? _eventDesc: widget.event.description
+        ..setting = location
+        ..key = oldEventModel.key;
+
+      AtKey atKey = AtKey();
+      atKey.key = newEventNotification.key;
+      atKey.namespace = namespace;
+      atKey.sharedWith = activeAtSign;
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      atKey.metadata = metadata;
+      print(atKey.toString());
+
+      String storedValue =
+          EventNotificationModel.convertEventNotificationToJson(
+              newEventNotification);
+      await clientSdkService.put(atKey, storedValue);
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EventDetailsScreen(
+            event: newEventNotification.toUI_Event(),
+          ),
+        ),
+      );
+
+  }
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+  }
 }
-
-

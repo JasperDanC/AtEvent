@@ -39,6 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
     return MaterialApp(
         home: Scaffold(
       backgroundColor: kBackgroundGrey,

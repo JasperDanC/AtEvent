@@ -23,6 +23,7 @@ scan() async {
 
 
     String value = await lookup(atKey);
+    print("Key:"+atKey.toString());
     print("Key Value:" + value);
 
     Map<String, dynamic> jsonValue = json.decode(value);

@@ -56,7 +56,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
 
+    });
     return Background(
 
       child: Expanded(
