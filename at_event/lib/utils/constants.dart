@@ -104,7 +104,7 @@ const kSubHeadingTextStyle = TextStyle(
 );
 const kNormalTextStyle = TextStyle(
   fontFamily: 'Open Sans',
-  fontSize: 17,
+  fontSize: 14,
   color: Colors.white,
   letterSpacing: 0.7,
   fontWeight: FontWeight.w300,

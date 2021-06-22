@@ -20,7 +20,7 @@ class EventNotificationModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     String stringCategory = data['category'] ?? '';
-    switch(stringCategory){
+    switch (stringCategory) {
       case 'EventCategory.None':
         category = EventCategory.None;
         break;
@@ -28,7 +28,7 @@ class EventNotificationModel {
         category = EventCategory.Party;
         break;
       case 'EventCategory.Sports':
-        category= EventCategory.Sports;
+        category = EventCategory.Sports;
         break;
       case 'EventCategory.Music':
         category = EventCategory.Music;
@@ -45,12 +45,12 @@ class EventNotificationModel {
     if (data['setting'] != 'null' || data['setting'] == null) {
       setting = Setting.fromJson(jsonDecode(data['setting']));
     }
-    if (data['event'] != 'null' || data['event'] == null ) {
+    if (data['event'] != 'null' || data['event'] == null) {
       event = data['event'] != null
           ? Event.fromJson(jsonDecode(data['event']))
           : null;
     }
-    if (data['group'] != 'null'|| data['group'] == null ) {
+    if (data['group'] != 'null' || data['group'] == null) {
       data['group'] = jsonDecode(data['group']);
       group = AtGroup(data['group']['name']);
 
@@ -131,8 +131,8 @@ class EventNotificationModel {
       from: event.startTime,
       to: event.endTime,
     );
-    print("UI_Event from: "+ui_event.from.toString());
-    print("UI_Event to: "+ui_event.to.toString());
+    print("UI_Event from: " + ui_event.from.toString());
+    print("UI_Event to: " + ui_event.to.toString());
     return ui_event;
   }
 }
@@ -294,7 +294,7 @@ String dateToString(DateTime date) {
   return dateString;
 }
 
-List<String> get repeatOccuranceOptions => ['Week', 'Month'];
+List<String> get repeatOccurrenceOptions => ['Week', 'Month'];
 List<String> get occursOnWeekOptions => [
       'Monday',
       'Tuesday',
