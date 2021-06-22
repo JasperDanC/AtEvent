@@ -52,6 +52,14 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final ScrollController _scrollController = ScrollController();
   String activeAtSign = '';
+  ClientSdkService clientSdkService;
+
+  @override
+  void initState() {
+    clientSdkService =  ClientSdkService.getInstance();
+    getAtSign();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -279,23 +287,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   _delete(BuildContext context) async {
 
     if (widget.event.eventName != null) {
-
+      ClientSdkService clientSdkService = ClientSdkService.getInstance();
       AtKey atKey = AtKey();
-
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
-      print('deleting:'+ atKey.key);
-      atKey.sharedBy = activeAtSign;
+      atKey.sharedWith = activeAtSign;
 
-      bool deleteResult = await ClientSdkService.getInstance().delete(atKey);
+      print("Deleting key:"+atKey.toString());
+      bool deleteResult = await clientSdkService.delete(atKey);
 
       print("Delete Result:"+deleteResult.toString());
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CalendarScreen()
-        ),
-      );
+      Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
     }
 
   }
