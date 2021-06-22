@@ -40,7 +40,6 @@ class EventNotificationModel {
     }
     description = data['description'] ?? '';
     peopleGoing = data['peopleGoing'] == '[]' || data['peopleGoing'] == '' ? [] : data['peopleGoing'].split(',') ?? [];
-    print(peopleGoing);
     atSignCreator = data['atSignCreator' ?? ''];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
@@ -137,8 +136,6 @@ class EventNotificationModel {
       to: event.endTime,
       realEvent: this,
     );
-    print("UI_Event from: "+ui_event.from.toString());
-    print("UI_Event to: "+ui_event.to.toString());
     return ui_event;
   }
 }

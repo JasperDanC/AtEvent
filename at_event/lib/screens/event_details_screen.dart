@@ -282,16 +282,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
       AtKey atKey = AtKey();
 
-      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
       print('deleting:'+ atKey.key);
-      atKey.sharedWith = activeAtSign;
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      atKey.metadata = metadata;
       atKey.sharedBy = activeAtSign;
 
+      bool deleteResult = await ClientSdkService.getInstance().delete(atKey);
 
-      await ClientSdkService.getInstance().delete(atKey);
+      print("Delete Result:"+deleteResult.toString());
       Navigator.pop(context);
       Navigator.pushReplacement(
         context,
