@@ -1,4 +1,5 @@
 import 'package:at_event/screens/background.dart';
+import 'package:at_event/screens/recurring_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
@@ -268,7 +269,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                           style: kEventDetailsTextStyle,
                           onChanged: (startTimePicked) {
                             _eventStartTime = startTimePicked;
-
                           },
                           decoration: InputDecoration(
                             hintStyle: kEventDetailsTextStyle,
@@ -316,12 +316,24 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                   ],
                 ),
-                FloatingActionButton(
-                  onPressed: () {
-                    _update();
-                    Navigator.pop(context);
-                  },
-                  child: Icon(Icons.add),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        _update();
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.add),
+                    ),
+                    FloatingActionButton(
+                      heroTag: "Leeroy Jenkins",
+                      onPressed: () {
+                        createRecurring();
+                      },
+                      child: Icon(Icons.repeat),
+                    )
+                  ],
                 )
               ],
             ),
@@ -395,6 +407,60 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       await clientSdkService.put(atKey, storedValue);
     } else {
       print("Please fill all fields");
+    }
+  }
+
+  void createRecurring() {
+    bool filled = _eventTitle != null &&
+        _eventTitle != "" &&
+        _eventLocation != null &&
+        _eventLocation != "" &&
+        _eventDay != null &&
+        _eventDay != "" &&
+        _eventStartTime != null &&
+        _eventStartTime != "" &&
+        _eventEndTime != null &&
+        _eventEndTime != "";
+    if (filled) {
+      switch (_dropDownValue) {
+        case 1:
+          _eventCategory = EventCategory.None;
+          break;
+        case 2:
+          _eventCategory = EventCategory.Music;
+          break;
+        case 3:
+          _eventCategory = EventCategory.Sports;
+          break;
+        case 4:
+          _eventCategory = EventCategory.Bar;
+          break;
+        case 5:
+          _eventCategory = EventCategory.Party;
+          break;
+        default:
+          _eventCategory = EventCategory.None;
+      }
+
+      Event newEvent = Event()
+        ..date = DateTime.parse(_eventDay)
+        ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
+        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
+
+      Setting location = Setting()..label = _eventLocation;
+
+      EventNotificationModel newEventNotification = EventNotificationModel()
+        ..event = newEvent
+        ..atSignCreator = activeAtSign
+        ..category = _eventCategory
+        ..group = null
+        ..title = _eventTitle
+        ..description = _eventDesc
+        ..setting = location
+        ..key = " event " + _eventTitle;
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return RecurringEvent(EventDate: newEventNotification);
+      }));
     }
   }
 
