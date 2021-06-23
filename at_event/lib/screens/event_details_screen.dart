@@ -53,6 +53,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final ScrollController _scrollController = ScrollController();
   String activeAtSign = '';
   ClientSdkService clientSdkService;
+  String _inviteeAtSign;
+  TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -187,7 +189,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     MaterialButton(
                       padding: EdgeInsets.zero,
                       minWidth: 0,
-                      onPressed: () {},
+                      onPressed: () {
+                        if(_inviteeAtSign!= null){
+                          setState(() {
+                            if(!widget.event.peopleGoing.contains(_inviteeAtSign)){
+                              //widget.event.peopleGoing.add(_inviteeAtSign);
+                              widget.event.realEvent.peopleGoing.add(_inviteeAtSign);
+                            }
+                            _controller.clear();
+                            _updateAndInvite();
+                          });
+                        }
+
+                      },
                       shape: CircleBorder(),
                       child: Icon(
                         Icons.add_circle_outline,
@@ -201,6 +215,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                     Expanded(
                       child: TextField(
+                        onChanged: (value){
+                          _inviteeAtSign = value;
+                        },
+                        controller: _controller,
                         cursorColor: Colors.white,
                         style: kEventDetailsTextStyle,
                         decoration: InputDecoration(
@@ -300,7 +318,38 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
 
   }
+  _updateAndInvite() async {
 
+
+      AtKey atKey = AtKey();
+      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      atKey.namespace = namespace;
+      atKey.sharedWith = activeAtSign;
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      atKey.metadata = metadata;
+
+
+      String storedValue =
+      EventNotificationModel.convertEventNotificationToJson(
+          widget.event.realEvent);
+      try{
+        await clientSdkService.put(atKey, storedValue);
+      } catch (e) {
+        print(e.toString());
+      }
+      var sharedMetadata = Metadata()
+        ..ttr = 10*60;
+
+      AtKey sharedKey = AtKey()
+      ..key = atKey.key
+      ..metadata = sharedMetadata
+      ..sharedBy = activeAtSign
+      ..sharedWith = _inviteeAtSign;
+
+      var operation = OperationEnum.update;
+      await ClientSdkService.getInstance().notify(sharedKey, storedValue, operation);
+  }
 
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
