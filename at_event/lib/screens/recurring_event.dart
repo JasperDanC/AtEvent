@@ -30,12 +30,6 @@ class _RecurringEventState extends State<RecurringEvent> {
     super.initState();
     repeatOccurrance = repeatOccurrenceOptions;
     occursOnOptions = occursOnWeekOptions;
-    eventData = EventNotificationModel.fromJson(
-      jsonDecode(
-        EventNotificationModel.convertEventNotificationToJson(
-            EventService().eventNotificationModel),
-      ),
-    );
     if (eventData.event.repeatCycle != null) {
       if (eventData.event.repeatCycle == RepeatCycle.MONTH) {
         repeatsWeekly = false;
