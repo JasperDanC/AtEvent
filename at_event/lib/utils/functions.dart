@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_event/models/invite.dart';
 import 'constants.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 
 
 /// Scan for [AtKey] objects with the correct regex.
-scan() async {
+scan(String activeAtSign) async {
   print("started scan");
   int keysFound = 0;
   List<AtKey> response;
@@ -16,7 +17,9 @@ scan() async {
 
   // Instantiating a list of strings
   List<String> responseList = [];
+
   globalUIEvents.clear();
+  globalInvites.clear();
 
 
   for (AtKey atKey in response) {
@@ -28,8 +31,14 @@ scan() async {
 
     Map<String, dynamic> jsonValue = json.decode(value);
     EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
+    if(atKey.sharedWith == eventModel.atSignCreator){
+      globalUIEvents.add(eventModel.toUI_Event());
+    } else {
+      print("active: "+ activeAtSign + " from: "+ eventModel.atSignCreator );
+      Invite newInvite = Invite(event: eventModel.toUI_Event(),from: eventModel.atSignCreator);
+      globalInvites.add(newInvite);
+    }
 
-    globalUIEvents.add(eventModel.toUI_Event());
     keysFound += 1;
     responseList.add(value);
   }

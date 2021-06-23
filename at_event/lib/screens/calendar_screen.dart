@@ -46,7 +46,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     getAtSign();
     scaffoldKey = GlobalKey<ScaffoldState>();
 
-    scan();
+    scan(activeAtSign);
     super.initState();
   }
 

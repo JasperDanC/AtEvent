@@ -180,7 +180,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 ),
                 Text(
 
-                  widget.event.peopleGoing.length.toString() + " going:",
+                  widget.event.invitees.length.toString() + " invited:",
                   style: kEventDetailsTextStyle,
                 ),
                 Row(
@@ -192,9 +192,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       onPressed: () {
                         if(_inviteeAtSign!= null){
                           setState(() {
-                            if(!widget.event.peopleGoing.contains(_inviteeAtSign)){
-                              //widget.event.peopleGoing.add(_inviteeAtSign);
-                              widget.event.realEvent.peopleGoing.add(_inviteeAtSign);
+                            if(!widget.event.invitees.contains(_inviteeAtSign)){
+                              widget.event.peopleGoing.add(_inviteeAtSign);
+                              widget.event.realEvent.invitees.add(_inviteeAtSign);
                             }
                             _controller.clear();
                             _updateAndInvite();
@@ -247,12 +247,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 12.0),
                             controller: _scrollController,
-                            itemCount: widget.event.peopleGoing.length,
+                            itemCount: widget.event.invitees.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  widget.event.peopleGoing[index],
+                                  widget.event.invitees[index],
                                   style: kEventDetailsTextStyle,
                                 ),
                               );
@@ -306,14 +306,32 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
     if (widget.event.eventName != null) {
       ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
       AtKey atKey = AtKey();
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
       atKey.sharedWith = activeAtSign;
+      atKey.sharedBy = widget.event.realEvent.atSignCreator;
+      Metadata metaData = Metadata()
+      ..ccd = true;
+      atKey.metadata = metaData;
 
       print("Deleting key:"+atKey.toString());
       bool deleteResult = await clientSdkService.delete(atKey);
 
       print("Delete Result:"+deleteResult.toString());
+
+      for(String invitee in widget.event.invitees){
+        AtKey atKey = AtKey();
+        atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
+        atKey.sharedWith = invitee;
+        atKey.sharedBy = widget.event.realEvent.atSignCreator;
+        Metadata metaData = Metadata()
+          ..ccd = true;
+        atKey.metadata = metaData;
+
+        bool deleteResult = await clientSdkService.delete(atKey);
+
+      }
       Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
     }
 
@@ -325,6 +343,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
       atKey.namespace = namespace;
       atKey.sharedWith = activeAtSign;
+      atKey.sharedBy = widget.event.realEvent.atSignCreator;
       Metadata metadata = Metadata();
       metadata.ccd = true;
       atKey.metadata = metadata;
@@ -339,7 +358,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         print(e.toString());
       }
       var sharedMetadata = Metadata()
-        ..ttr = 10*60;
+        ..ttr = 10*60
+        ..ccd = true;
 
       AtKey sharedKey = AtKey()
       ..key = atKey.key
