@@ -62,6 +62,7 @@ class ClientSdkService {
       ..namespace = conf.MixedConstants.NAMESPACE
       ..syncStrategy = SyncStrategy.IMMEDIATE
       ..rootDomain = conf.MixedConstants.ROOT_DOMAIN
+      ..syncRegex = conf.MixedConstants.regex
       ..hiveStoragePath = path;
     return _atClientPreference;
   }
