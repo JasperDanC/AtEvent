@@ -150,9 +150,15 @@ class ClientSdkService {
     return await _getAtClientForAtsign().delete(atKey);
   }
 
-  Future<List<AtKey>> getAtKeys({String sharedBy}) async {
-    return await _getAtClientForAtsign()
-        .getAtKeys(regex: conf.MixedConstants.NAMESPACE, sharedBy: sharedBy);
+  Future<List<AtKey>> getAtKeys({String sharedBy, String regex}) async {
+    if(regex == null){
+      return await _getAtClientForAtsign()
+          .getAtKeys(regex: conf.MixedConstants.NAMESPACE, sharedBy: sharedBy);
+    } else {
+      return await _getAtClientForAtsign()
+          .getAtKeys(regex: regex, sharedBy: sharedBy);
+    }
+
   }
 
   ///Fetches atsign from device keychain.

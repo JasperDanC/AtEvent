@@ -7,6 +7,8 @@ import 'package:at_event/models/ui_event.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'background.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_commons/at_commons.dart';
 
 List<Invite> invites = [
   Invite(
@@ -133,8 +135,19 @@ List<Invite> invites = [
 
 void main() => runApp(InvitationsScreen());
 
-class InvitationsScreen extends StatelessWidget {
-  const InvitationsScreen({Key key}) : super(key: key);
+class InvitationsScreen extends StatefulWidget {
+
+  @override
+  _InvitationsScreenState createState() => _InvitationsScreenState();
+}
+
+class _InvitationsScreenState extends State<InvitationsScreen> {
+  final _clientSdkService = ClientSdkService.getInstance();
+  @override
+  void initState() {
+    _getSharedKeys();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -284,5 +297,36 @@ class InvitationsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Returns the list of Shared Recipes keys.
+  _getSharedKeys() async {
+    ClientSdkService clientSdkService = ClientSdkService.getInstance();
+    return await clientSdkService.getAtKeys(regex:'cached.*'+MixedConstants.NAMESPACE);
+  }
+
+  _getSharedEvents() async {
+    ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
+    List<AtKey> sharedKeysList = await _getSharedKeys();
+
+    Map recipesMap = {};
+
+    AtKey atKey = AtKey();
+    Metadata metadata = Metadata()..isCached = true;
+
+    sharedKeysList.forEach((element) async {
+      atKey
+        ..key = element.key
+        ..sharedWith = element.sharedWith
+        ..sharedBy = element.sharedBy
+        ..metadata = metadata;
+      String response = await clientSdkService.get(atKey);
+      print("Key: "+atKey.key +"\nValue: "+response);
+      if (response != null)
+        recipesMap.putIfAbsent('${element.key}', () => response);
+    });
+    // Return the entire map of shared recipes
+    return recipesMap;
   }
 }
