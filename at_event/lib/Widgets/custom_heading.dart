@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class CustomHeading extends StatelessWidget {
   final String heading, action;
-  CustomHeading({this.heading, this.action});
+  final Function onPressed;
+  CustomHeading({this.heading, this.action, @required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,12 @@ class CustomHeading extends StatelessWidget {
                     ? kHeadingTextStyle.copyWith(color: Colors.black)
                     : kHeadingTextStyle.copyWith(color: Colors.white))
             : SizedBox(),
-        action != null ? Text(action, style: kNormalTextStyle) : SizedBox()
+        action != null
+            ? TextButton(
+                onPressed: onPressed,
+                child: Text(action, style: kNormalTextStyle),
+              )
+            : SizedBox()
       ],
     );
   }
