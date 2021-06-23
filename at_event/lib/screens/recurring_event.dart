@@ -28,7 +28,7 @@ class _RecurringEventState extends State<RecurringEvent> {
   void initState() {
     eventData = widget.eventDate;
     super.initState();
-    repeatOccurrance = repeatOccuranceOptions;
+    repeatOccurrance = repeatOccurrenceOptions;
     occursOnOptions = occursOnWeekOptions;
 
     if (eventData.event.repeatCycle != null) {
