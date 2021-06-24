@@ -1,8 +1,10 @@
 import 'package:at_event/Widgets/concurrent_event_request_dialog.dart';
 import 'package:at_event/utils/constants.dart';
+import 'package:at_event/utils/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
+import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
@@ -22,8 +24,10 @@ class InvitationsScreen extends StatefulWidget {
 
 class _InvitationsScreenState extends State<InvitationsScreen> {
   final _clientSdkService = ClientSdkService.getInstance();
+  String activeAtSign = '';
   @override
   void initState() {
+    getAtSign();
     _getSharedKeys();
     super.initState();
   }
@@ -138,7 +142,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                 Column(
                                   children: [
                                     MaterialButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _sendConfirmation(globalInvites[index].event);
+                                        scan(activeAtSign);
+                                      },
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,
                                       color: Colors.green,
@@ -177,11 +184,51 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       ),
     );
   }
+  _sendConfirmation(UI_Event ui_event) async {
+    ui_event.realEvent.peopleGoing.add(activeAtSign);
+    AtKey atKey = AtKey();
+    atKey.key = 'confirm_'+ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+    atKey.namespace = namespace;
+    atKey.sharedWith = activeAtSign;
+    atKey.sharedBy = ui_event.realEvent.atSignCreator;
+    Metadata metadata = Metadata();
+    metadata.ccd = true;
+    atKey.metadata = metadata;
 
+
+    String storedValue =
+    EventNotificationModel.convertEventNotificationToJson(
+        ui_event.realEvent);
+    try{
+      await ClientSdkService.getInstance().put(atKey, storedValue);
+    } catch (e) {
+      print(e.toString());
+    }
+    var sharedMetadata = Metadata()
+      ..ccd = true;
+
+    AtKey sharedKey = AtKey()
+      ..key = 'confirm_'+atKey.key
+      ..metadata = sharedMetadata
+      ..sharedBy = activeAtSign
+      ..sharedWith = ui_event.realEvent.atSignCreator;
+
+    var operation = OperationEnum.update;
+    await ClientSdkService.getInstance().notify(sharedKey, storedValue, operation);
+
+
+  }
   /// Returns the list of Shared Recipes keys.
   _getSharedKeys() async {
     ClientSdkService clientSdkService = ClientSdkService.getInstance();
     return await clientSdkService.getAtKeys(regex:'cached.*'+MixedConstants.NAMESPACE);
+  }
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 
   _getSharedEvents() async {

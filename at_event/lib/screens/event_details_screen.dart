@@ -193,7 +193,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         if(_inviteeAtSign!= null){
                           setState(() {
                             if(!widget.event.invitees.contains(_inviteeAtSign)){
-                              widget.event.peopleGoing.add(_inviteeAtSign);
+
                               widget.event.realEvent.invitees.add(_inviteeAtSign);
                             }
                             _controller.clear();
@@ -329,7 +329,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ..ccd = true;
         atKey.metadata = metaData;
 
-        bool deleteResult = await clientSdkService.delete(atKey);
 
       }
       Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
@@ -337,7 +336,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   }
   _updateAndInvite() async {
-
 
       AtKey atKey = AtKey();
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");

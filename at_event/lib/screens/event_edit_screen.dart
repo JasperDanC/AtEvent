@@ -370,6 +370,13 @@ class _EventEditScreenState extends State<EventEditScreen> {
           EventNotificationModel.convertEventNotificationToJson(
               newEventNotification);
       await clientSdkService.put(atKey, storedValue);
+
+      for(String invitee in newEventNotification.invitees){
+        atKey.sharedWith = invitee;
+        var operation = OperationEnum.update;
+        await clientSdkService.notify(atKey, storedValue,operation);
+      }
+
       Navigator.pop(context);
       Navigator.pushReplacement(
         context,
