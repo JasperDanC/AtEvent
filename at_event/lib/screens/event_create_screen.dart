@@ -128,6 +128,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField(
+                        dropdownColor: kBackgroundGrey,
                         style: kEventDetailsTextStyle,
                         onChanged: (value) {
                           _dropDownValue = value;
@@ -359,6 +360,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   _update() async {
+    //goes through and makes sure every field was set to something
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
         _eventLocation != null &&
@@ -370,6 +372,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         _eventEndTime != null &&
         _eventEndTime != "";
     if (filled) {
+      //if everything was filled in
+      // use this long switch statement to pick the right event event category from the dropdown value
       switch (_dropDownValue) {
         case 1:
           _eventCategory = EventCategory.None;
@@ -389,14 +393,17 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         default:
           _eventCategory = EventCategory.None;
       }
-
+      //Create an Event Object  with correct times
       Event newEvent = Event()
         ..date = DateTime.parse(_eventDay)
         ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
         ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
 
+      //Create Location object with correct label
+      // map thing will be implemented later
       Setting location = Setting()..label = _eventLocation;
 
+      //create the overarching summary object of everything the event will need
       EventNotificationModel newEventNotification = EventNotificationModel()
         ..event = newEvent
         ..atSignCreator = activeAtSign
@@ -409,26 +416,27 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..setting = location
         ..key = "event " + _eventTitle;
 
+
+      //create the @key
       AtKey atKey = AtKey();
       atKey.key = newEventNotification.key;
-
       atKey.sharedWith = activeAtSign;
       atKey.sharedBy = activeAtSign;
       Metadata metadata = Metadata();
       metadata.ccd = true;
-
       atKey.metadata = metadata;
       print(atKey.toString());
 
+      //set the value to store in the secondary as the json version of the EventNotifications object
       String storedValue =
           EventNotificationModel.convertEventNotificationToJson(
               newEventNotification);
-      try {
-        await clientSdkService.put(atKey, storedValue);
-      } catch (e) {
-        print(e.toString());
-      }
+
+      //put that shiza on the secondary
+      await clientSdkService.put(atKey, storedValue);
+
     } else {
+      //if they did not fill the fields print
       print("Please fill all fields");
     }
   }

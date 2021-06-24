@@ -302,11 +302,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ),
     );
   }
+
+  //only works if the user made the event
+  //which makes sense because we don't want people to delete other people's
+  //events
   _delete(BuildContext context) async {
 
-    if (widget.event.eventName != null) {
+    if (widget.event.eventName != null) { // just a safety check
+
+      //get that client
       ClientSdkService clientSdkService = ClientSdkService.getInstance();
 
+      //create a key
       AtKey atKey = AtKey();
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
       atKey.sharedWith = activeAtSign;
@@ -316,11 +323,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       atKey.metadata = metaData;
 
       print("Deleting key:"+atKey.toString());
+      //delete the key from the secondary
       bool deleteResult = await clientSdkService.delete(atKey);
 
       print("Delete Result:"+deleteResult.toString());
 
+
+      //delete the event for all other invitees
       for(String invitee in widget.event.invitees){
+        //make a key again with the right sharedWith + sharedBy
         AtKey atKey = AtKey();
         atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
         atKey.sharedWith = invitee;
@@ -328,13 +339,16 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         Metadata metaData = Metadata()
           ..ccd = true;
         atKey.metadata = metaData;
-
+        deleteResult = await clientSdkService.delete(atKey);
 
       }
       Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
     }
 
   }
+
+  // at this moment June 24 2021 sometimes this works perfectly and other times
+  // times the invited person never gets the event
   _updateAndInvite() async {
 
       AtKey atKey = AtKey();
@@ -369,6 +383,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       await ClientSdkService.getInstance().notify(sharedKey, storedValue, operation);
   }
 
+  //simple atSign getter
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
     setState(() {

@@ -177,6 +177,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
 
                       child: DropdownButtonFormField(
                         style: kEventDetailsTextStyle,
+                        dropdownColor: kBackgroundGrey,
                         onChanged: (value) {
                           _dropDownValue = value;
                         },

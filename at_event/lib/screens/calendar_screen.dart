@@ -18,18 +18,20 @@ void main() {
 
 class CalendarScreen extends StatefulWidget {
 
-
   CalendarScreen({this.specificDay}){
+    //if the calendar was set to open to a specific day
     if(specificDay != null){
+      //set the view to that date
       switchIndex = 2;
       _controller.displayDate = specificDay;
       _controller.view = CalendarView.day;
     }
   }
 
-
+  //set default calendar view to month view
   int switchIndex = 0;
   final DateTime specificDay;
+  //controller for calendar
   final CalendarController _controller = CalendarController();
 
   @override
@@ -37,30 +39,27 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  GlobalKey<ScaffoldState> scaffoldKey;
+  // saves the sdk service for later
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
 
   String activeAtSign = '';
   @override
   void initState() {
+    //sets activeAtSign to the currently logged in one
     getAtSign();
-    scaffoldKey = GlobalKey<ScaffoldState>();
-
-    scan(activeAtSign);
+    //scans so that the correct information will be displayed
+    scan();
     super.initState();
   }
 
+  //weird and necessary function for syncfusion calendar to work
   EventDataSource _getEventData() {
     return EventDataSource(globalUIEvents);
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-
-    });
     return Background(
-
       child: Expanded(
         child: Container(
           decoration: BoxDecoration(
@@ -273,7 +272,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
-
+  //straightforward getting the logged in at sign function
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
     setState(() {

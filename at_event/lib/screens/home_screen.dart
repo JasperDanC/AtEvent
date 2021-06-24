@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getAtSignAndInitContacts();
-    scan(activeAtSign);
+    scan();
     scaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
   }

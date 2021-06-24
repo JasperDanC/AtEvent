@@ -7,23 +7,26 @@ import 'package:at_event/service/client_sdk_service.dart';
 
 
 /// Scan for [AtKey] objects with the correct regex.
-scan(String activeAtSign) async {
+scan() async {
   print("started scan");
-  int keysFound = 0;
-  List<AtKey> response;
 
+  //counter to keep track of the amount of Key Value pairs stored in the secondary server
+  int keysFound = 0;
+
+  //gets the client sdk service to fill a list with all the atKeys
+  List<AtKey> response;
   ClientSdkService client = ClientSdkService.getInstance();
   response = await client.getAtKeys();
 
-  // Instantiating a list of strings
-  List<String> responseList = [];
-
+  //clears UI lists so that they can be refilled with the updated information
   globalUIEvents.clear();
   globalInvites.clear();
 
 
   for (AtKey atKey in response) {
     //await client.delete(atKey);
+
+    //looks up the key to get the value
     String value = await lookup(atKey);
     print("Key:"+atKey.toString());
     print("Key Value:" + value.toString());
@@ -69,9 +72,15 @@ scan(String activeAtSign) async {
       //delete the confirmation key
       await client.delete(atKey);
 
-    } else {
+    } else if(!atKey.key.startsWith('confirm_')){
+      // if it is not a confirmation key
+
+      //decode the json string into a json map
       Map<String, dynamic> jsonValue = json.decode(value);
+      //make the event Model from the json
       EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
+
+      //if I am going to this event add it to my calendar otherwise add it to my invitation list
       if(atKey.sharedWith == eventModel.atSignCreator || eventModel.peopleGoing.contains(atKey.sharedWith)){
         globalUIEvents.add(eventModel.toUI_Event());
       } else {
@@ -81,12 +90,11 @@ scan(String activeAtSign) async {
       }
     }
 
-
+    //keep track of the amount of my keys for debugging purposes
     keysFound += 1;
-    responseList.add(value);
+
   }
   print(" found $keysFound keys");
-  return responseList;
 }
 /// Look up a value corresponding to an [AtKey] instance.
 Future<String> lookup(AtKey atKey) async {

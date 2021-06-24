@@ -144,7 +144,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                     MaterialButton(
                                       onPressed: () {
                                         _sendConfirmation(globalInvites[index].event);
-                                        scan(activeAtSign);
+                                        scan();
                                       },
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,
