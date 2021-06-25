@@ -188,6 +188,11 @@ class ClientSdkService {
     // var atClientPrefernce;
     // await getAtClientPreference().then((value) => atClientPrefernce = value);
   }
+
+  Future<bool> notify(
+      AtKey atKey, String value, OperationEnum operation) async {
+    return await _getAtClientForAtsign().notify(atKey, value, operation);
+  }
 }
 
 // class BackupKeyConstants {
