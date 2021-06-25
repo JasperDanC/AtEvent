@@ -32,8 +32,9 @@ scan() async {
     print("Key Value:" + value.toString());
 
     //if the received atKey is a confirmation of going to an event
-    if(atKey.key.startsWith('confirm_') && atKey.sharedBy != atKey.sharedWith){
-      print("got event confirmation");
+    if(atKey.key.startsWith('confirm_') &&
+        atKey.sharedBy.replaceFirst("@","") != atKey.sharedWith.replaceFirst("@","")){
+      print("got event confirmation "+ atKey.key);
       //get the key of the real event
       String keyOfEvent = atKey.key.replaceFirst("confirm_","");
 
@@ -48,7 +49,8 @@ scan() async {
       updatedKey.sharedWith = atKey.sharedWith;
       updatedKey.sharedBy = atKey.sharedWith;
       //get the original event
-      String eventValue = await client.get(updatedKey);
+      String eventValue = await lookup(updatedKey);
+      print(eventValue);
       Map<String, dynamic> jsonValue = json.decode(eventValue);
       EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
 
@@ -96,6 +98,9 @@ scan() async {
   }
   print(" found $keysFound keys");
 }
+
+
+
 /// Look up a value corresponding to an [AtKey] instance.
 Future<String> lookup(AtKey atKey) async {
   // If an AtKey object exists

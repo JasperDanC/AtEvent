@@ -208,7 +208,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       ..ccd = true;
 
     AtKey sharedKey = AtKey()
-      ..key = 'confirm_'+atKey.key
+      ..key = atKey.key
       ..metadata = sharedMetadata
       ..sharedBy = activeAtSign
       ..sharedWith = ui_event.realEvent.atSignCreator;

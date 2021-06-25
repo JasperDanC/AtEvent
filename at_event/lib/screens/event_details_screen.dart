@@ -370,7 +370,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         print(e.toString());
       }
       var sharedMetadata = Metadata()
-        ..ttr = 10*60
         ..ccd = true;
 
       AtKey sharedKey = AtKey()
