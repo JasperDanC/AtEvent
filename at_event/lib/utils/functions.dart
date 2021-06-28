@@ -18,6 +18,7 @@ scan() async {
   List<AtKey> response;
   ClientSdkService client = ClientSdkService.getInstance();
   response = await client.getAtKeys();
+  String currentUser = await ClientSdkService.getInstance().getAtSign();
 
   //clears UI lists so that they can be refilled with the updated information
   globalUIEvents.clear();
@@ -84,12 +85,17 @@ scan() async {
       EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
 
       //if I am going to this event add it to my calendar otherwise add it to my invitation list
-      if(atKey.sharedWith == eventModel.atSignCreator || eventModel.peopleGoing.contains(atKey.sharedWith)){
+      if(eventModel.peopleGoing.contains(currentUser) &&
+          !(eventModel.atSignCreator == currentUser && atKey.sharedWith != currentUser)
+      ){
         globalUIEvents.add(eventModel.toUI_Event());
       } else {
         print("active: "+ atKey.sharedWith + " from: "+ eventModel.atSignCreator );
-        Invite newInvite = Invite(event: eventModel.toUI_Event(),from: eventModel.atSignCreator);
-        globalInvites.add(newInvite);
+        if(eventModel.atSignCreator != currentUser){
+          Invite newInvite = Invite(event: eventModel.toUI_Event(),from: eventModel.atSignCreator);
+          globalInvites.add(newInvite);
+        }
+
       }
     }
 
@@ -144,63 +150,64 @@ void _notificationCallback(dynamic response) async {
   realKey.sharedWith = to;
   realKey.metadata = sharedMetadata;
 
-  print("Got key: "+ atKey + "\nTranslated to: "+realKey.toString());
+  print("From: "+ fromAtSign+ "\nTo: " + to+"\nGot key: "+ atKey + "\nTranslated to: "+realKey.toString());
+  if(fromAtSign != to){
+    //lookup that key to add to use the value when needed
+    String value = await lookup(realKey);
+    print("Value: " + value.toString());
+    print('_notificationCallback opeartion $operation');
 
-  //lookup that key to add to use the value when needed
-  String value = await lookup(realKey);
-  print("Value: " + value.toString());
-  print('_notificationCallback opeartion $operation');
 
-
-  //if it is a delete notification delete the event
-  if(operation=='delete'){
-    print('deleting event');
-    await ClientSdkService.getInstance().delete(realKey);
-    return;
-  }
-
-  if(realKey.toString().contains("confirm_")){
-    print("got event confirmation "+ realKey.key);
-    //get the key of the real event
-    String keyOfEvent = atKey.key.replaceFirst("confirm_","");
-
-    //create a replacement atKey to update the peopleGoing
-    AtKey updatedKey = AtKey();
-    updatedKey.key = keyOfEvent;
-    updatedKey.namespace = namespace;
-
-    Metadata metadata = Metadata();
-    metadata.ccd = true;
-    updatedKey.metadata = metadata;
-    updatedKey.sharedWith = realKey.sharedWith;
-    updatedKey.sharedBy = realKey.sharedWith;
-    //get the original event
-    String eventValue = await lookup(updatedKey);
-    print(eventValue);
-    Map<String, dynamic> jsonValue = json.decode(eventValue);
-    EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
-
-    //add the person who confirmed to the event
-    eventModel.peopleGoing.add(realKey.sharedBy);
-
-    //convert to back to string
-    eventValue = EventNotificationModel.convertEventNotificationToJson(
-        eventModel);
-
-    //update on the secondary
-    await ClientSdkService.getInstance().put(updatedKey, eventValue);
-
-    //notify all invitees of the change
-    for(String invitee in eventModel.invitees){
-      updatedKey.sharedWith = invitee;
-      var operation = OperationEnum.update;
-      await ClientSdkService.getInstance().notify(updatedKey, eventValue,operation);
+    //if it is a delete notification delete the event
+    if(operation=='delete'){
+      print('deleting event');
+      await ClientSdkService.getInstance().delete(realKey);
+      return;
     }
 
-    //delete the confirmation key
-    await ClientSdkService.getInstance().delete(realKey);
-    return;
+    if(realKey.toString().contains("confirm_")){
+      print("got event confirmation "+ realKey.key);
+      //get the key of the real event
+      String keyOfEvent = realKey.key.replaceFirst("confirm_","");
+
+      //create a replacement atKey to update the peopleGoing
+      AtKey updatedKey = AtKey();
+      updatedKey.key = keyOfEvent;
+      updatedKey.namespace = namespace;
+
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      updatedKey.metadata = metadata;
+      updatedKey.sharedWith = realKey.sharedWith;
+      updatedKey.sharedBy = realKey.sharedWith;
+      //get the original event
+      String eventValue = await lookup(updatedKey);
+      print(eventValue);
+      Map<String, dynamic> jsonValue = json.decode(eventValue);
+      EventNotificationModel eventModel = EventNotificationModel.fromJson(jsonValue);
+
+      //add the person who confirmed to the event
+      eventModel.peopleGoing.add(realKey.sharedBy);
+
+      //convert to back to string
+      eventValue = EventNotificationModel.convertEventNotificationToJson(
+          eventModel);
+
+      //update on the secondary
+      await ClientSdkService.getInstance().put(updatedKey, eventValue);
+
+      //notify all invitees of the change
+      for(String invitee in eventModel.invitees){
+        updatedKey.sharedWith = invitee;
+        await ClientSdkService.getInstance().put(updatedKey, eventValue);
+      }
+
+      //delete the confirmation key
+      await ClientSdkService.getInstance().delete(realKey);
+      return;
+    }
+
+    await ClientSdkService.getInstance().put(realKey, value);
   }
 
-  await ClientSdkService.getInstance().put(realKey, value);
 }

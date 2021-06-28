@@ -189,32 +189,18 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     AtKey atKey = AtKey();
     atKey.key = 'confirm_'+ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
     atKey.namespace = namespace;
-    atKey.sharedWith = activeAtSign;
-    atKey.sharedBy = ui_event.realEvent.atSignCreator;
+    atKey.sharedWith = ui_event.realEvent.atSignCreator;
+    atKey.sharedBy = activeAtSign;
     Metadata metadata = Metadata();
     metadata.ccd = true;
     atKey.metadata = metadata;
 
-
     String storedValue =
     EventNotificationModel.convertEventNotificationToJson(
         ui_event.realEvent);
-    try{
-      await ClientSdkService.getInstance().put(atKey, storedValue);
-    } catch (e) {
-      print(e.toString());
-    }
-    var sharedMetadata = Metadata()
-      ..ccd = true;
-
-    AtKey sharedKey = AtKey()
-      ..key = atKey.key
-      ..metadata = sharedMetadata
-      ..sharedBy = activeAtSign
-      ..sharedWith = ui_event.realEvent.atSignCreator;
 
     var operation = OperationEnum.update;
-    await ClientSdkService.getInstance().notify(sharedKey, storedValue, operation);
+    await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
 
 
   }
