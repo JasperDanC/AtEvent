@@ -329,7 +329,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       print("Delete Result:"+deleteResult.toString());
 
 
-      //delete the event for all other invitees
+      //delete the event that exists as a invitation to someone else
       for(String invitee in widget.event.invitees){
         //make a key again with the right sharedWith + sharedBy
         AtKey atKey = AtKey();
@@ -340,6 +340,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ..ccd = true;
         atKey.metadata = metaData;
         deleteResult = await clientSdkService.delete(atKey);
+        var operation = OperationEnum.delete;
+        await clientSdkService.notify(atKey, atKey.toString(), operation);
 
       }
       Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
@@ -364,11 +366,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       String storedValue =
       EventNotificationModel.convertEventNotificationToJson(
           widget.event.realEvent);
-      try{
-        await clientSdkService.put(atKey, storedValue);
-      } catch (e) {
-        print(e.toString());
-      }
+
+      await ClientSdkService.getInstance().put(atKey, storedValue);
+
       var sharedMetadata = Metadata()
         ..ccd = true;
 
@@ -379,7 +379,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ..sharedWith = _inviteeAtSign;
 
       var operation = OperationEnum.update;
-      await ClientSdkService.getInstance().notify(sharedKey, storedValue, operation);
+      print(storedValue);
+      await ClientSdkService.getInstance().put(sharedKey, storedValue);
+
   }
 
   //simple atSign getter
