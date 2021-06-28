@@ -364,11 +364,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       String storedValue =
       EventNotificationModel.convertEventNotificationToJson(
           widget.event.realEvent);
-      try{
-        await clientSdkService.put(atKey, storedValue);
-      } catch (e) {
-        print(e.toString());
-      }
+
+      await ClientSdkService.getInstance().put(atKey, storedValue);
+
       var sharedMetadata = Metadata()
         ..ccd = true;
 
@@ -379,6 +377,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ..sharedWith = _inviteeAtSign;
 
       var operation = OperationEnum.update;
+      print(storedValue);
+      await ClientSdkService.getInstance().put(sharedKey, storedValue);
       await ClientSdkService.getInstance().notify(sharedKey, storedValue, operation);
   }
 

@@ -6,6 +6,7 @@ import '../service/client_sdk_service.dart';
 import '../utils/constants.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:at_event/utils/functions.dart';
 import 'home_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -82,7 +83,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       atClientPreference: atClientPreference,
                                       domain: MixedConstants.ROOT_DOMAIN,
                                       appColor: kPrimaryBlue,
-                                      onboard: (value, atsign) {
+                                      onboard: (value, atsign) async {
                                         ClientSdkService.getInstance()
                                             .atClientServiceMap = value;
                                         ClientSdkService.getInstance()
@@ -90,6 +91,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             value[atsign];
                                         _logger.finer(
                                             'Successfully onboarded $atsign');
+                                        await startMonitor(atsign);
                                       },
                                       onError: (error) {
                                         _logger.severe(

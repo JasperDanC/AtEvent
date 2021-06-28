@@ -156,6 +156,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       widget.event.location = value;
                     });
                   },
+
                   decoration: InputDecoration(
                     hintText: widget.event.location,
                     hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),

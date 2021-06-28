@@ -136,6 +136,30 @@ class ClientSdkService {
   //   var keyString = jsonEncode(Map<String, String>.from(aesEncryptedKeys));
   //   return keyString;
   // }
+  Future<bool> startMonitor(currentAtSign, callback) async {
+    var privateKey = await getPrivateKey(currentAtSign);
+
+    // ignore: await_only_futures
+
+    await _getAtClientForAtsign().startMonitor(privateKey, callback);
+    print('Monitor started');
+    return true;
+  }
+
+  ///Fetches privatekey for [atsign] from device keychain.
+  Future<String> getPrivateKey(String atsign) async {
+    return await _getAtClientForAtsign().getPrivateKey(atsign);
+  }
+
+  Future<String> decrypt(String value, String from) async {
+    var decryptedMessage = await _getAtClientForAtsign().encryptionService
+        .decrypt(value, from)
+        .catchError((e) {
+      print('error in decrypting: $e');
+    });
+
+    return decryptedMessage;
+  }
 
   Future<String> get(AtKey atKey) async {
     var result = await _getAtClientForAtsign().get(atKey);
