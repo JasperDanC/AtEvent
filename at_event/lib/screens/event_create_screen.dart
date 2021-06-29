@@ -368,7 +368,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                               ),
                             ],
                           ),
-                          SizeConfig().screenHeight * .04),
+                          SizeConfig().screenHeight * 0.4),
                       child: Icon(Icons.add),
                     ),
                     FloatingActionButton(
