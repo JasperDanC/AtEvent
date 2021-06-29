@@ -6,6 +6,7 @@ import '../service/client_sdk_service.dart';
 import '../utils/constants.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart';
+import 'package:at_event/utils/functions.dart';
 import 'home_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {

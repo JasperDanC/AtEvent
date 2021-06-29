@@ -136,6 +136,30 @@ class ClientSdkService {
   //   var keyString = jsonEncode(Map<String, String>.from(aesEncryptedKeys));
   //   return keyString;
   // }
+  Future<bool> startMonitor(currentAtSign, callback) async {
+    var privateKey = await getPrivateKey(currentAtSign);
+
+    // ignore: await_only_futures
+
+    await _getAtClientForAtsign().startMonitor(privateKey, callback);
+    print('Monitor started');
+    return true;
+  }
+
+  ///Fetches privatekey for [atsign] from device keychain.
+  Future<String> getPrivateKey(String atsign) async {
+    return await _getAtClientForAtsign().getPrivateKey(atsign);
+  }
+
+  Future<String> decrypt(String value, String from) async {
+    var decryptedMessage = await _getAtClientForAtsign().encryptionService
+        .decrypt(value, from)
+        .catchError((e) {
+      print('error in decrypting: $e');
+    });
+
+    return decryptedMessage;
+  }
 
   Future<String> get(AtKey atKey) async {
     var result = await _getAtClientForAtsign().get(atKey);
@@ -150,9 +174,15 @@ class ClientSdkService {
     return await _getAtClientForAtsign().delete(atKey);
   }
 
-  Future<List<AtKey>> getAtKeys({String sharedBy}) async {
-    return await _getAtClientForAtsign()
-        .getAtKeys(regex: conf.MixedConstants.NAMESPACE, sharedBy: sharedBy);
+  Future<List<AtKey>> getAtKeys({String sharedBy, String regex}) async {
+    if(regex == null){
+      return await _getAtClientForAtsign()
+          .getAtKeys(regex: conf.MixedConstants.NAMESPACE, sharedBy: sharedBy);
+    } else {
+      return await _getAtClientForAtsign()
+          .getAtKeys(regex: regex, sharedBy: sharedBy);
+    }
+
   }
 
   ///Fetches atsign from device keychain.
@@ -181,6 +211,11 @@ class ClientSdkService {
 
     // var atClientPrefernce;
     // await getAtClientPreference().then((value) => atClientPrefernce = value);
+  }
+
+  Future<bool> notify(
+      AtKey atKey, String value, OperationEnum operation) async {
+    return await _getAtClientForAtsign().notify(atKey, value, operation);
   }
 }
 

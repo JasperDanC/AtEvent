@@ -1,140 +1,36 @@
 import 'package:at_event/Widgets/concurrent_event_request_dialog.dart';
 import 'package:at_event/utils/constants.dart';
+import 'package:at_event/utils/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
+import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'background.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_commons/at_commons.dart';
 
-List<Invite> invites = [
-  Invite(
-    from: '@bobert',
-    event: UI_Event(
-        eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 6),
-        to: DateTime(2021, 06, 09, 9),
-        location: '123 Street Avenue N.',
-        description: 'Lunch at my place!\n\n' +
-            'Bring some board games, pops, and some delicious sides\n\n' +
-            'We will be eating burgers',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-        ]),
-  ),
-  Invite(
-    from: '@frankyG',
-    event: UI_Event(
-        eventName: "Party Time",
-        from: DateTime(2021, 06, 09, 18),
-        to: DateTime(2021, 06, 09, 22),
-        location: 'FrankyG House, Saskatoon',
-        description: 'we getting wild',
-        peopleGoing: []),
-  ),
-  Invite(
-    from: '@your_boss',
-    event: UI_Event(
-        eventName: "Important Business Meeting",
-        from: DateTime(2021, 06, 09, 14, 30),
-        to: DateTime(2021, 06, 09, 18, 45),
-        location: '56 Business Street',
-        description: 'business',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-        ]),
-  ),
-  Invite(
-    from: '@gerald',
-    event: UI_Event(
-        eventName: "Gerald + Gertrude Wedding",
-        from: DateTime(2021, 06, 09, 12),
-        to: DateTime(2021, 06, 09, 24),
-        location: ' 99 RoadName Boulevard, Prince Albert, Saskatchewan',
-        description: 'I am getting married\n\n' +
-            'pls come\n' +
-            'casual dress is prefered',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-          '@sam',
-          '@5678',
-          '@jaz',
-          '@bagelconservation',
-          '@samantha',
-          '@geralds_mom',
-          '@samuel',
-          '@sammy',
-          '@gertrude',
-          '@frank',
-          '@otherpeople',
-          '@someone',
-          '@buggs2',
-          '@george2'
-        ]),
-  ),
-  Invite(
-    from: '@bobert',
-    event: UI_Event(
-        eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 11),
-        to: DateTime(2021, 06, 09, 13),
-        location: '123 Street Avenue N.',
-        description: 'Lunch at my place!\n\n' +
-            'Bring some board games, pops, and some delicious sides\n\n' +
-            'We will be eating burgers',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-        ]),
-  ),
-];
+
 
 void main() => runApp(InvitationsScreen());
 
-class InvitationsScreen extends StatelessWidget {
-  const InvitationsScreen({Key key}) : super(key: key);
+class InvitationsScreen extends StatefulWidget {
+
+  @override
+  _InvitationsScreenState createState() => _InvitationsScreenState();
+}
+
+class _InvitationsScreenState extends State<InvitationsScreen> {
+  final _clientSdkService = ClientSdkService.getInstance();
+  String activeAtSign = '';
+  @override
+  void initState() {
+    getAtSign();
+    _getSharedKeys();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +52,7 @@ class InvitationsScreen extends StatelessWidget {
                       width: 250,
                       child: Text(
                         'You have ' +
-                            invites.length.toString() +
+                            globalInvites.length.toString() +
                             ' invitations',
                         style: TextStyle(
                             fontSize: 28,
@@ -181,7 +77,7 @@ class InvitationsScreen extends StatelessWidget {
                 Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: invites.length,
+                      itemCount: globalInvites.length,
                       itemBuilder: (context, index) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -195,7 +91,7 @@ class InvitationsScreen extends StatelessWidget {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return InviteDetailsScreen(
-                                          invite: invites[index]);
+                                          invite: globalInvites[index]);
                                     }));
                                   },
                                   padding: EdgeInsets.zero,
@@ -207,7 +103,7 @@ class InvitationsScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          invites[index].event.eventName,
+                                          globalInvites[index].event.eventName,
                                           style:
                                               kEventDetailsTextStyle.copyWith(
                                                   fontSize: 22,
@@ -216,12 +112,12 @@ class InvitationsScreen extends StatelessWidget {
                                         Text(
                                           DateFormat('yyyy MMMM dd  hh:mm')
                                                   .format(
-                                                      invites[index].event.from)
+                                                      globalInvites[index].event.from)
                                                   .toString() +
                                               " - " +
                                               DateFormat('hh:mm')
                                                   .format(
-                                                      invites[index].event.to)
+                                                      globalInvites[index].event.to)
                                                   .toString(),
                                           style: kEventDetailsTextStyle,
                                         ),
@@ -230,10 +126,10 @@ class InvitationsScreen extends StatelessWidget {
                                         ),
                                         Text(
                                           'From ' +
-                                              invites[index].from +
+                                              globalInvites[index].from +
                                               '\n' +
                                               'At ' +
-                                              invites[index].event.location,
+                                              globalInvites[index].event.location,
                                           style:
                                               kEventDetailsTextStyle.copyWith(
                                             color: kEventBlue,
@@ -246,7 +142,10 @@ class InvitationsScreen extends StatelessWidget {
                                 Column(
                                   children: [
                                     MaterialButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _sendConfirmation(globalInvites[index].event);
+                                        scan();
+                                      },
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,
                                       color: Colors.green,
@@ -284,5 +183,62 @@ class InvitationsScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  _sendConfirmation(UI_Event ui_event) async {
+    ui_event.realEvent.peopleGoing.add(activeAtSign);
+    AtKey atKey = AtKey();
+    atKey.key = 'confirm_'+ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+    atKey.namespace = namespace;
+    atKey.sharedWith = ui_event.realEvent.atSignCreator;
+    atKey.sharedBy = activeAtSign;
+    Metadata metadata = Metadata();
+    metadata.ccd = true;
+    atKey.metadata = metadata;
+
+    String storedValue =
+    EventNotificationModel.convertEventNotificationToJson(
+        ui_event.realEvent);
+
+    var operation = OperationEnum.update;
+    await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
+
+
+  }
+  /// Returns the list of Shared Recipes keys.
+  _getSharedKeys() async {
+    ClientSdkService clientSdkService = ClientSdkService.getInstance();
+    return await clientSdkService.getAtKeys(regex:'cached.*'+MixedConstants.NAMESPACE);
+  }
+
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+  }
+
+  _getSharedEvents() async {
+    ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
+    List<AtKey> sharedKeysList = await _getSharedKeys();
+
+    Map recipesMap = {};
+
+    AtKey atKey = AtKey();
+    Metadata metadata = Metadata()..isCached = true;
+
+    sharedKeysList.forEach((element) async {
+      atKey
+        ..key = element.key
+        ..sharedWith = element.sharedWith
+        ..sharedBy = element.sharedBy
+        ..metadata = metadata;
+      String response = await clientSdkService.get(atKey);
+      print("Key: "+atKey.key +"\nValue: "+response);
+      if (response != null)
+        recipesMap.putIfAbsent('${element.key}', () => response);
+    });
+    // Return the entire map of shared recipes
+    return recipesMap;
   }
 }

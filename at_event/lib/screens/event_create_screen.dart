@@ -1,6 +1,7 @@
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/recurring_event.dart';
-import 'package:flutter/foundation.dart';
+import 'package:at_event/screens/select_location.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -10,10 +11,13 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
+import 'package:at_event/Widgets/bottom_sheet.dart';
 
 void main() => runApp(EventCreateScreen());
 
 class EventCreateScreen extends StatefulWidget {
+  Setting setting;
+  TextEditingController locationController =  TextEditingController();
   @override
   _EventCreateScreenState createState() => _EventCreateScreenState();
 }
@@ -26,7 +30,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   ClientSdkService clientSdkService;
   String _eventTitle;
   String _eventDesc;
-  String _eventLocation;
   EventCategory _eventCategory;
   List<String> _invitees;
   String _eventDay;
@@ -45,6 +48,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Background(
       child: Expanded(
         child: Container(
@@ -101,6 +105,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 ),
                 TextField(
                   cursorColor: Colors.white,
+                  controller: widget.locationController,
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Location',
@@ -111,9 +116,12 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
-                  onChanged: (value) {
-                    _eventLocation = value;
-                  },
+                  onTap: () => bottomSheet(
+                      context,
+                      SelectLocation(
+                        createScreen: this.widget,
+                      ),
+                      SizeConfig().screenHeight * 0.9),
                 ),
                 SizedBox(
                   height: 10.0,
@@ -128,6 +136,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     ),
                     Expanded(
                       child: DropdownButtonFormField(
+                        dropdownColor: kBackgroundGrey,
                         style: kEventDetailsTextStyle,
                         onChanged: (value) {
                           _dropDownValue = value;
@@ -359,17 +368,19 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   _update() async {
+    //goes through and makes sure every field was set to something
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
-        _eventLocation != null &&
-        _eventLocation != "" &&
         _eventDay != null &&
         _eventDay != "" &&
         _eventStartTime != null &&
         _eventStartTime != "" &&
         _eventEndTime != null &&
+        widget.setting != null &&
         _eventEndTime != "";
     if (filled) {
+      //if everything was filled in
+      // use this long switch statement to pick the right event event category from the dropdown value
       switch (_dropDownValue) {
         case 1:
           _eventCategory = EventCategory.None;
@@ -389,45 +400,48 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         default:
           _eventCategory = EventCategory.None;
       }
-
+      //Create an Event Object  with correct times
       Event newEvent = Event()
         ..date = DateTime.parse(_eventDay)
         ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
         ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
 
-      Setting location = Setting()..label = _eventLocation;
+      //Create Location object with correct label
+      // map thing will be implemented later
+      Setting location = widget.setting;
 
+      //create the overarching summary object of everything the event will need
       EventNotificationModel newEventNotification = EventNotificationModel()
         ..event = newEvent
         ..atSignCreator = activeAtSign
         ..category = _eventCategory
-        ..peopleGoing = []
+        ..peopleGoing = [activeAtSign]
+        ..invitees = []
         ..group = null
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
         ..key = "event " + _eventTitle;
 
+      //create the @key
       AtKey atKey = AtKey();
       atKey.key = newEventNotification.key;
-
       atKey.sharedWith = activeAtSign;
       atKey.sharedBy = activeAtSign;
       Metadata metadata = Metadata();
       metadata.ccd = true;
-
       atKey.metadata = metadata;
       print(atKey.toString());
 
+      //set the value to store in the secondary as the json version of the EventNotifications object
       String storedValue =
           EventNotificationModel.convertEventNotificationToJson(
               newEventNotification);
-      try {
-        await clientSdkService.put(atKey, storedValue);
-      } catch (e) {
-        print(e.toString());
-      }
+
+      //put that shiza on the secondary
+      await clientSdkService.put(atKey, storedValue);
     } else {
+      //if they did not fill the fields print
       print("Please fill all fields");
     }
   }
@@ -435,8 +449,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   void createRecurring() {
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
-        _eventLocation != null &&
-        _eventLocation != "" &&
         _eventDay != null &&
         _eventDay != "" &&
         _eventStartTime != null &&
@@ -469,7 +481,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
         ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
 
-      Setting location = Setting()..label = _eventLocation;
+      Setting location = widget.setting;
 
       EventNotificationModel newEventNotification = EventNotificationModel()
         ..event = newEvent
@@ -492,4 +504,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       activeAtSign = currentAtSign;
     });
   }
+
+
 }

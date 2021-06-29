@@ -58,6 +58,9 @@ class _RecurringEventState extends State<RecurringEvent> {
                 CustomHeading(
                   heading: 'Recurring Event',
                   action: 'Cancel',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
                 SizedBox(height: 25),
                 Text('Repeat every',

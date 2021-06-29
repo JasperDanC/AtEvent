@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:at_event/models/ui_event.dart';
+import 'package:at_event/models/invite.dart';
 
 /*
 Colors and Styles
@@ -152,9 +153,131 @@ List<UI_Event> kDummyEvents = [
       from: DateTime(2021, 06, 22, 6),
       to: DateTime(2021, 06, 22, 9)),
 ];
+List<Invite> kDummyInvites = [
+  Invite(
+    from: '@bobert',
+    event: UI_Event(
+        eventName: "Lunch with Thomas",
+        from: DateTime(2021, 06, 09, 6),
+        to: DateTime(2021, 06, 09, 9),
+        location: '123 Street Avenue N.',
+        description: 'Lunch at my place!\n\n' +
+            'Bring some board games, pops, and some delicious sides\n\n' +
+            'We will be eating burgers',
+        peopleGoing: [
+          '@gerald',
+          '@norton',
+          '@thomas',
+          '@MrSmith',
+          '@Harriet',
+          '@funkyfrog',
+          '@3frogs',
+          '@dagoth_ur',
+          '@clavicus_vile',
+          '@BenjaminButton',
+          '@samus',
+          '@atom_eve',
+          '@buggs',
+          '@george',
+        ]),
+  ),
+  Invite(
+    from: '@frankyG',
+    event: UI_Event(
+        eventName: "Party Time",
+        from: DateTime(2021, 06, 09, 18),
+        to: DateTime(2021, 06, 09, 22),
+        location: 'FrankyG House, Saskatoon',
+        description: 'we getting wild',
+        peopleGoing: []),
+  ),
+  Invite(
+    from: '@your_boss',
+    event: UI_Event(
+        eventName: "Important Business Meeting",
+        from: DateTime(2021, 06, 09, 14, 30),
+        to: DateTime(2021, 06, 09, 18, 45),
+        location: '56 Business Street',
+        description: 'business',
+        peopleGoing: [
+          '@gerald',
+          '@norton',
+          '@thomas',
+          '@MrSmith',
+        ]),
+  ),
+  Invite(
+    from: '@gerald',
+    event: UI_Event(
+        eventName: "Gerald + Gertrude Wedding",
+        from: DateTime(2021, 06, 09, 12),
+        to: DateTime(2021, 06, 09, 24),
+        location: ' 99 RoadName Boulevard, Prince Albert, Saskatchewan',
+        description: 'I am getting married\n\n' +
+            'pls come\n' +
+            'casual dress is prefered',
+        peopleGoing: [
+          '@gerald',
+          '@norton',
+          '@thomas',
+          '@MrSmith',
+          '@Harriet',
+          '@funkyfrog',
+          '@3frogs',
+          '@dagoth_ur',
+          '@clavicus_vile',
+          '@BenjaminButton',
+          '@samus',
+          '@atom_eve',
+          '@buggs',
+          '@george',
+          '@sam',
+          '@5678',
+          '@jaz',
+          '@bagelconservation',
+          '@samantha',
+          '@geralds_mom',
+          '@samuel',
+          '@sammy',
+          '@gertrude',
+          '@frank',
+          '@otherpeople',
+          '@someone',
+          '@buggs2',
+          '@george2'
+        ]),
+  ),
+  Invite(
+    from: '@bobert',
+    event: UI_Event(
+        eventName: "Lunch with Thomas",
+        from: DateTime(2021, 06, 09, 11),
+        to: DateTime(2021, 06, 09, 13),
+        location: '123 Street Avenue N.',
+        description: 'Lunch at my place!\n\n' +
+            'Bring some board games, pops, and some delicious sides\n\n' +
+            'We will be eating burgers',
+        peopleGoing: [
+          '@gerald',
+          '@norton',
+          '@thomas',
+          '@MrSmith',
+          '@Harriet',
+          '@funkyfrog',
+          '@3frogs',
+          '@dagoth_ur',
+          '@clavicus_vile',
+          '@BenjaminButton',
+          '@samus',
+          '@atom_eve',
+          '@buggs',
+          '@george',
+        ]),
+  ),
+];
 
 List<UI_Event> globalUIEvents = [];
-
+List<Invite> globalInvites = [];
 /*
 Important App Data
 */
