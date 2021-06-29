@@ -53,6 +53,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   final ScrollController _scrollController = ScrollController();
   String activeAtSign = '';
   ClientSdkService clientSdkService;
+  String _inviteeAtSign;
+  TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -178,7 +180,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 ),
                 Text(
 
-                  widget.event.peopleGoing.length.toString() + " going:",
+                  widget.event.invitees.length.toString() + " invited:",
                   style: kEventDetailsTextStyle,
                 ),
                 Row(
@@ -187,7 +189,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     MaterialButton(
                       padding: EdgeInsets.zero,
                       minWidth: 0,
-                      onPressed: () {},
+                      onPressed: () {
+                        if(_inviteeAtSign!= null){
+                          setState(() {
+                            if(!widget.event.invitees.contains(_inviteeAtSign)){
+
+                              widget.event.realEvent.invitees.add(_inviteeAtSign);
+                            }
+                            _controller.clear();
+                            _updateAndInvite();
+                          });
+                        }
+
+                      },
                       shape: CircleBorder(),
                       child: Icon(
                         Icons.add_circle_outline,
@@ -201,6 +215,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                     Expanded(
                       child: TextField(
+                        onChanged: (value){
+                          _inviteeAtSign = value;
+                        },
+                        controller: _controller,
                         cursorColor: Colors.white,
                         style: kEventDetailsTextStyle,
                         decoration: InputDecoration(
@@ -229,12 +247,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             padding: EdgeInsets.symmetric(
                                 vertical: 0, horizontal: 12.0),
                             controller: _scrollController,
-                            itemCount: widget.event.peopleGoing.length,
+                            itemCount: widget.event.invitees.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
-                                  widget.event.peopleGoing[index],
+                                  widget.event.invitees[index],
                                   style: kEventDetailsTextStyle,
                                 ),
                               );
@@ -284,24 +302,89 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ),
     );
   }
+
+  //only works if the user made the event
+  //which makes sense because we don't want people to delete other people's
+  //events
   _delete(BuildContext context) async {
 
-    if (widget.event.eventName != null) {
+    if (widget.event.eventName != null) { // just a safety check
+
+      //get that client
       ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
+      //create a key
       AtKey atKey = AtKey();
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
       atKey.sharedWith = activeAtSign;
+      atKey.sharedBy = widget.event.realEvent.atSignCreator;
+      Metadata metaData = Metadata()
+      ..ccd = true;
+      atKey.metadata = metaData;
 
       print("Deleting key:"+atKey.toString());
+      //delete the key from the secondary
       bool deleteResult = await clientSdkService.delete(atKey);
 
       print("Delete Result:"+deleteResult.toString());
+
+
+      //delete the event that exists as a invitation to someone else
+      for(String invitee in widget.event.invitees){
+        //make a key again with the right sharedWith + sharedBy
+        AtKey atKey = AtKey();
+        atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
+        atKey.sharedWith = invitee;
+        atKey.sharedBy = widget.event.realEvent.atSignCreator;
+        Metadata metaData = Metadata()
+          ..ccd = true;
+        atKey.metadata = metaData;
+        deleteResult = await clientSdkService.delete(atKey);
+        var operation = OperationEnum.delete;
+        await clientSdkService.notify(atKey, atKey.toString(), operation);
+
+      }
       Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
     }
 
   }
 
+  // at this moment June 24 2021 sometimes this works perfectly and other times
+  // times the invited person never gets the event
+  _updateAndInvite() async {
 
+      AtKey atKey = AtKey();
+      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      atKey.namespace = namespace;
+      atKey.sharedWith = activeAtSign;
+      atKey.sharedBy = widget.event.realEvent.atSignCreator;
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      atKey.metadata = metadata;
+
+
+      String storedValue =
+      EventNotificationModel.convertEventNotificationToJson(
+          widget.event.realEvent);
+
+      await ClientSdkService.getInstance().put(atKey, storedValue);
+
+      var sharedMetadata = Metadata()
+        ..ccd = true;
+
+      AtKey sharedKey = AtKey()
+      ..key = atKey.key
+      ..metadata = sharedMetadata
+      ..sharedBy = activeAtSign
+      ..sharedWith = _inviteeAtSign;
+
+      var operation = OperationEnum.update;
+      print(storedValue);
+      await ClientSdkService.getInstance().put(sharedKey, storedValue);
+
+  }
+
+  //simple atSign getter
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
     setState(() {

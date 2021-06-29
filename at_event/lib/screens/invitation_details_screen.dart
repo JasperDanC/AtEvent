@@ -165,7 +165,10 @@ class InviteDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       MaterialButton(
-                        onPressed: () {},
+                        onPressed: () {
+
+
+                        },
                         minWidth: 0,
                         padding: EdgeInsets.zero,
                         color: Colors.green,
@@ -198,4 +201,6 @@ class InviteDetailsScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }

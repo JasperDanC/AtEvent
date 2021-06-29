@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<EventTypeModel> eventsType = getEventTypes();
   List<EventsModel> events = getEvents();
 
+
   @override
   void initState() {
     getAtSignAndInitContacts();
@@ -146,12 +147,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         return isSameDay(_selectedDay, day);
                       },
                       onPageChanged: (focusedDay) {
+
                         _focusedDay = focusedDay;
                       },
                       onFormatChanged: (format) {
+
                         Navigator.pushNamed(context, '/CalendarScreen');
                       },
                       onDaySelected: (selectedDay, today) {
+
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return CalendarScreen(specificDay: selectedDay);

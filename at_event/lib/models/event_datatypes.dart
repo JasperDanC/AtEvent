@@ -11,6 +11,7 @@ class EventNotificationModel {
   Setting setting;
   AtGroup group;
   List<String> peopleGoing;
+  List<String> invitees;
   EventCategory category;
   Event event;
   String key;
@@ -21,7 +22,7 @@ class EventNotificationModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     String stringCategory = data['category'] ?? '';
-    switch (stringCategory) {
+    switch(stringCategory){
       case 'EventCategory.None':
         category = EventCategory.None;
         break;
@@ -29,7 +30,7 @@ class EventNotificationModel {
         category = EventCategory.Party;
         break;
       case 'EventCategory.Sports':
-        category = EventCategory.Sports;
+        category= EventCategory.Sports;
         break;
       case 'EventCategory.Music':
         category = EventCategory.Music;
@@ -42,6 +43,8 @@ class EventNotificationModel {
     peopleGoing = data['peopleGoing'] == '[]' || data['peopleGoing'] == ''
         ? []
         : data['peopleGoing'].split(',') ?? [];
+
+    invitees = data['invitees'] == '[]' || data['invitees'] == '' ? [] : data['invitees'].split(',') ?? [];
     atSignCreator = data['atSignCreator' ?? ''];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
@@ -94,6 +97,8 @@ class EventNotificationModel {
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
       'description': eventNotification.description,
+
+      'invitees' : eventNotification.invitees.length > 0 ?eventNotification.invitees.join(',') : '[]',
       'peopleGoing': eventNotification.peopleGoing.length > 0
           ? eventNotification.peopleGoing.join(',')
           : '[]',
@@ -136,12 +141,12 @@ class EventNotificationModel {
       description: this.description,
       location: this.setting.label,
       peopleGoing: this.peopleGoing,
+      invitees: this.invitees,
       from: event.startTime,
       to: event.endTime,
       realEvent: this,
     );
-    print("UI_Event from: " + ui_event.from.toString());
-    print("UI_Event to: " + ui_event.to.toString());
+
     return ui_event;
   }
 }

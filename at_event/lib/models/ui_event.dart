@@ -12,6 +12,7 @@ class UI_Event {
       @required this.to,
       this.location,
       this.peopleGoing,
+        this.invitees,
       this.category,
       this.realEvent});
 
@@ -20,6 +21,7 @@ class UI_Event {
   DateTime to;
   String description;
   List<String> peopleGoing;
+  List<String> invitees;
   String location;
   EventCategory category;
   EventNotificationModel realEvent;
