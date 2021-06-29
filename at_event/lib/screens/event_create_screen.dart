@@ -2,6 +2,7 @@ import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/recurring_event.dart';
 import 'package:at_event/screens/select_location.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'package:at_event/widgets/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -11,13 +12,14 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
-import 'package:at_event/Widgets/bottom_sheet.dart';
+
+import 'package:at_event/widgets/custom_toast.dart';
 
 void main() => runApp(EventCreateScreen());
 
 class EventCreateScreen extends StatefulWidget {
   Setting setting;
-  TextEditingController locationController =  TextEditingController();
+  TextEditingController locationController = TextEditingController();
   @override
   _EventCreateScreenState createState() => _EventCreateScreenState();
 }
@@ -36,6 +38,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   String _eventStartTime;
   String _eventEndTime;
   String activeAtSign = '';
+
 
   TextEditingController _inviteTextController;
 
@@ -251,103 +254,121 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   ),
                 ),
                 Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 60,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DateTimePicker(
-                          dateMask: "MMMM dd",
-                          onChanged: (dayPicked) {
-                            _eventDay = dayPicked;
-                          },
-                          style: kEventDetailsTextStyle,
-                          decoration: InputDecoration(
-                            hintStyle: kEventDetailsTextStyle,
-                            hintText: 'Date',
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(color: Colors.white)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white)),
-                          ),
-                          type: DateTimePickerType.date,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 100,
-                      height: 60,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DateTimePicker(
-                          style: kEventDetailsTextStyle,
-                          onChanged: (startTimePicked) {
-                            _eventStartTime = startTimePicked;
-                          },
-                          decoration: InputDecoration(
-                            hintStyle: kEventDetailsTextStyle,
-                            hintText: 'Start',
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(color: Colors.white)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white)),
-                          ),
-                          type: DateTimePickerType.time,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        ),
-                      ),
-                    ),
-                    Text('-', style: kEventDetailsTextStyle),
-                    Container(
-                      width: 100,
-                      height: 60,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: DateTimePicker(
-                          style: kEventDetailsTextStyle,
-                          onChanged: (endTimePicked) {
-                            _eventEndTime = endTimePicked;
-                          },
-                          decoration: InputDecoration(
-                            labelStyle: kEventDetailsTextStyle,
-                            hintStyle: kEventDetailsTextStyle,
-                            hintText: 'End',
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(color: Colors.white)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white)),
-                          ),
-                          type: DateTimePickerType.time,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FloatingActionButton(
-                      onPressed: () {
-                        _update();
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
+                      onPressed: () => bottomSheet(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => CalendarScreen()),
-                        );
-                      },
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 100,
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DateTimePicker(
+                                        dateMask: "MMMM dd",
+                                        onChanged: (dayPicked) {
+                                          _eventDay = dayPicked;
+                                        },
+                                        style: kEventDetailsTextStyle,
+                                        decoration: InputDecoration(
+                                          hintStyle: kEventDetailsTextStyle,
+                                          hintText: 'Date',
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                        ),
+                                        type: DateTimePickerType.date,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2100),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 100,
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DateTimePicker(
+                                        style: kEventDetailsTextStyle,
+                                        onChanged: (startTimePicked) {
+                                          _eventStartTime = startTimePicked;
+                                        },
+                                        decoration: InputDecoration(
+                                          hintStyle: kEventDetailsTextStyle,
+                                          hintText: 'Start',
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                        ),
+                                        type: DateTimePickerType.time,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2100),
+                                      ),
+                                    ),
+                                  ),
+                                  Text('-', style: kEventDetailsTextStyle),
+                                  Container(
+                                    width: 100,
+                                    height: 60,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DateTimePicker(
+                                        style: kEventDetailsTextStyle,
+                                        onChanged: (endTimePicked) {
+                                          _eventEndTime = endTimePicked;
+                                        },
+                                        decoration: InputDecoration(
+                                          labelStyle: kEventDetailsTextStyle,
+                                          hintStyle: kEventDetailsTextStyle,
+                                          hintText: 'End',
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                        ),
+                                        type: DateTimePickerType.time,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(2000),
+                                        lastDate: DateTime(2100),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              FloatingActionButton(
+                                onPressed: () {
+                                  _update();
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CalendarScreen()),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          SizeConfig().screenHeight * .04),
                       child: Icon(Icons.add),
                     ),
                     FloatingActionButton(
@@ -442,19 +463,16 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       await clientSdkService.put(atKey, storedValue);
     } else {
       //if they did not fill the fields print
-      print("Please fill all fields");
+      CustomToast()
+          .show('Please fill all fields before creating the event', context);
     }
   }
 
   void createRecurring() {
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
-        _eventDay != null &&
-        _eventDay != "" &&
-        _eventStartTime != null &&
-        _eventStartTime != "" &&
-        _eventEndTime != null &&
-        _eventEndTime != "";
+        widget.setting!= null;
+
     if (filled) {
       switch (_dropDownValue) {
         case 1:
@@ -476,22 +494,20 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           _eventCategory = EventCategory.None;
       }
 
-      Event newEvent = Event()
-        ..date = DateTime.parse(_eventDay)
-        ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
-        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
-
       Setting location = widget.setting;
 
       EventNotificationModel newEventNotification = EventNotificationModel()
-        ..event = newEvent
+        ..event = Event()
         ..atSignCreator = activeAtSign
         ..category = _eventCategory
+        ..peopleGoing = [activeAtSign]
+        ..invitees = []
         ..group = null
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
-        ..key = " event " + _eventTitle;
+        ..key = "event " + _eventTitle;
+
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return RecurringEvent(eventDate: newEventNotification);
       }));
@@ -504,6 +520,4 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       activeAtSign = currentAtSign;
     });
   }
-
-
 }

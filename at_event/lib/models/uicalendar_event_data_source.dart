@@ -7,7 +7,12 @@ import 'ui_event.dart';
 
 class EventDataSource extends CalendarDataSource {
   EventDataSource(List<UI_Event> source){
-    appointments = source;
+    appointments = [];
+    for(UI_Event ui_event in source){
+      if(ui_event.from!= null){
+        appointments.add(ui_event);
+      }
+    }
   }
 
   @override

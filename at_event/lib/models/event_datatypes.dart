@@ -176,7 +176,7 @@ class Event {
 
   bool isRecurring;
   DateTime date, endDate;
-  DateTime startTime, endTime; // one dat event
+  DateTime startTime, endTime; // one day event
   int repeatDuration;
   RepeatCycle repeatCycle;
   Week occursOn;
