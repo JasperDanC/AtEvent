@@ -156,10 +156,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       textAlign: TextAlign.end,
                       style: kEventDetailsTextStyle,
                     ),
-                    Text(
-                      widget.event.location,
-                      textAlign: TextAlign.end,
-                      style: kEventDetailsTextStyle,
+                    Expanded(
+                      child: Text(
+                        widget.event.location,
+                        textAlign: TextAlign.end,
+                        style: kEventDetailsTextStyle,
+                      ),
                     )
                   ],
                 ),

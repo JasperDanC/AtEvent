@@ -9,12 +9,14 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:latlong/latlong.dart';
+import 'event_create_screen.dart';
 
 class SelectedLocation extends StatefulWidget {
   final LatLng point;
-  final String displayName;
+  String displayName;
+  final EventCreateScreen createScreen;
 
-  SelectedLocation({this.displayName, this.point});
+  SelectedLocation({this.displayName, this.point, @required this.createScreen});
 
   @override
   _SelectedLocationState createState() => _SelectedLocationState();
@@ -28,7 +30,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
       child: Scaffold(
         body: Stack(
           children: <Widget>[
-            ShowLocation(UniqueKey(), location: LatLng(20, 30)),
+            ShowLocation(UniqueKey(), location: LatLng(widget.point.latitude, widget.point.longitude)),
             Positioned(
               top: 0,
               left: 0,
@@ -91,11 +93,9 @@ class _SelectedLocationState extends State<SelectedLocation> {
                       width: 321.toWidth,
                       hintText: 'Save this address as',
                       // TODO: Set Initial Value to setting
-                      initialValue:
-                          EventService().eventNotificationModel.setting.label,
+                      initialValue: widget.displayName,
                       value: (String val) {
-                        EventService().eventNotificationModel.setting.label =
-                            val;
+                        widget.displayName = val;
                       },
                     ),
                   ],
@@ -108,26 +108,16 @@ class _SelectedLocationState extends State<SelectedLocation> {
                 child: CustomButton(
                     buttonText: 'Save',
                     onPressed: () {
-                      if ((EventService()
-                                  .eventNotificationModel
-                                  .setting
-                                  .label !=
-                              null) &&
-                          (EventService()
-                              .eventNotificationModel
-                              .setting
-                              .label
-                              .isNotEmpty)) {
-                        EventService().eventNotificationModel.setting.latitude =
-                            widget.point.latitude;
+                      if ((widget.displayName != null) && widget.displayName.isNotEmpty) {
+                        Setting setting = Setting()
+                        ..label = widget.displayName
+                        ..latitude = widget.point.latitude
+                        ..longitude = widget.point.longitude;
+                        setState(() {
+                          widget.createScreen.setting = setting;
+                          widget.createScreen.locationController.text=setting.label;
+                        });
 
-                        EventService()
-                            .eventNotificationModel
-                            .setting
-                            .longitude = widget.point.longitude;
-
-                        EventService().update(
-                            eventData: EventService().eventNotificationModel);
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       } else {

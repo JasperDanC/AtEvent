@@ -16,6 +16,8 @@ import 'package:at_event/Widgets/bottom_sheet.dart';
 void main() => runApp(EventCreateScreen());
 
 class EventCreateScreen extends StatefulWidget {
+  Setting setting;
+  TextEditingController locationController =  TextEditingController();
   @override
   _EventCreateScreenState createState() => _EventCreateScreenState();
 }
@@ -28,7 +30,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   ClientSdkService clientSdkService;
   String _eventTitle;
   String _eventDesc;
-  String _eventLocation;
   EventCategory _eventCategory;
   List<String> _invitees;
   String _eventDay;
@@ -104,6 +105,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 ),
                 TextField(
                   cursorColor: Colors.white,
+                  controller: widget.locationController,
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Location',
@@ -114,7 +116,11 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
-                  onTap: () => bottomSheet(context, SelectLocation(),
+                  onTap: () => bottomSheet(
+                      context,
+                      SelectLocation(
+                        createScreen: this.widget,
+                      ),
                       SizeConfig().screenHeight * 0.9),
                 ),
                 SizedBox(
@@ -365,13 +371,12 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     //goes through and makes sure every field was set to something
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
-        _eventLocation != null &&
-        _eventLocation != "" &&
         _eventDay != null &&
         _eventDay != "" &&
         _eventStartTime != null &&
         _eventStartTime != "" &&
         _eventEndTime != null &&
+        widget.setting != null &&
         _eventEndTime != "";
     if (filled) {
       //if everything was filled in
@@ -403,7 +408,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
       //Create Location object with correct label
       // map thing will be implemented later
-      Setting location = Setting()..label = _eventLocation;
+      Setting location = widget.setting;
 
       //create the overarching summary object of everything the event will need
       EventNotificationModel newEventNotification = EventNotificationModel()
@@ -417,7 +422,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..description = _eventDesc
         ..setting = location
         ..key = "event " + _eventTitle;
-
 
       //create the @key
       AtKey atKey = AtKey();
@@ -436,7 +440,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
-
     } else {
       //if they did not fill the fields print
       print("Please fill all fields");
@@ -446,8 +449,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   void createRecurring() {
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
-        _eventLocation != null &&
-        _eventLocation != "" &&
         _eventDay != null &&
         _eventDay != "" &&
         _eventStartTime != null &&
@@ -480,7 +481,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
         ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
 
-      Setting location = Setting()..label = _eventLocation;
+      Setting location = widget.setting;
 
       EventNotificationModel newEventNotification = EventNotificationModel()
         ..event = newEvent
@@ -503,4 +504,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       activeAtSign = currentAtSign;
     });
   }
+
+
 }
