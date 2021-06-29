@@ -21,8 +21,9 @@ class Vento extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData.dark().copyWith(
-            primaryColor: kForegroundGrey,
-            scaffoldBackgroundColor: kBackgroundGrey),
+          primaryColor: kForegroundGrey,
+          scaffoldBackgroundColor: kBackgroundGrey,
+        ),
         routes: <String, WidgetBuilder>{
           '/': (BuildContext context) => WelcomeScreen(),
           '/OnboardingScreen': (BuildContext context) => OnboardingScreen(),

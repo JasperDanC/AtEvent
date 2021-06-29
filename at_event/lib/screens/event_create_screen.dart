@@ -1,6 +1,7 @@
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/recurring_event.dart';
-import 'package:flutter/foundation.dart';
+import 'package:at_event/screens/select_location.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
@@ -10,6 +11,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
+import 'package:at_event/Widgets/bottom_sheet.dart';
 
 void main() => runApp(EventCreateScreen());
 
@@ -45,6 +47,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Background(
       child: Expanded(
         child: Container(
@@ -111,9 +114,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                   ),
-                  onChanged: (value) {
-                    _eventLocation = value;
-                  },
+                  onTap: () => bottomSheet(context, SelectLocation(),
+                      SizeConfig().screenHeight * 0.9),
                 ),
                 SizedBox(
                   height: 10.0,
