@@ -407,9 +407,9 @@ class _RecurringEventState extends State<RecurringEvent> {
     bool filled = widget.eventDate.event != null &&
     widget.eventDate.event.repeatCycle != null;
     if (filled) {
-
-
-
+      if(widget.eventDate.event.endsOn == null) {
+        widget.eventDate.event.endsOn = EndsOn.NEVER;
+      }
       //create the @key
       AtKey atKey = AtKey();
       atKey.key = widget.eventDate.key;

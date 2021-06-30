@@ -27,7 +27,7 @@ class EventDataSource extends CalendarDataSource {
 
   @override
   String getRecurrenceRule(int index) {
-    print(appointments[index].recurrenceRule);
+
     return appointments[index].recurrenceRule;
   }
 
