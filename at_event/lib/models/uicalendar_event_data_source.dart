@@ -7,12 +7,7 @@ import 'ui_event.dart';
 
 class EventDataSource extends CalendarDataSource {
   EventDataSource(List<UI_Event> source){
-    appointments = [];
-    for(UI_Event ui_event in source){
-      if(ui_event.from!= null){
-        appointments.add(ui_event);
-      }
-    }
+    appointments = source;
   }
 
   @override
@@ -29,6 +24,13 @@ class EventDataSource extends CalendarDataSource {
   bool isAllDay(int index) {
     return false;
   }
+
+  @override
+  String getRecurrenceRule(int index) {
+    print(appointments[index].recurrenceRule);
+    return appointments[index].recurrenceRule;
+  }
+
 
   @override
   String getSubject(int index) {
