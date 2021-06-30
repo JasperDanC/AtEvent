@@ -7,26 +7,37 @@ import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/service/event_services.dart';
+import 'package:at_event/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:at_commons/at_commons.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'calendar_screen.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
-  final eventDate;
+  final EventNotificationModel eventDate;
   @override
   _RecurringEventState createState() => _RecurringEventState();
 }
 
 class _RecurringEventState extends State<RecurringEvent> {
+  ClientSdkService clientSdkService;
   List<String> repeatOccurrance;
   List<String> occursOnOptions;
+  String activeAtSign = '';
   bool repeatsWeekly;
   EventNotificationModel eventData;
   var occursonDate;
+  TextEditingController startTimeController = TextEditingController();
 
   @override
   void initState() {
+    getAtSign();
+    clientSdkService = ClientSdkService.getInstance();
     eventData = widget.eventDate;
+    eventData.event.isRecurring = true;
+
     super.initState();
     repeatOccurrance = repeatOccurrenceOptions;
     occursOnOptions = occursOnWeekOptions;
@@ -118,6 +129,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                             switch (selectedOption) {
                               case 'Week':
                                 eventData.event.repeatCycle = RepeatCycle.WEEK;
+                                eventData.event.date = DateTime.now();
                                 repeatsWeekly = true;
                                 break;
 
@@ -187,8 +199,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                           );
 
                           if (datePicked != null) {
-                            eventData.event.date = datePicked;
-                            setState(() {});
+
+                            setState(() {
+                              eventData.event.date = datePicked;
+                            });
                           }
                         },
                         value: (val) {},
@@ -200,32 +214,40 @@ class _RecurringEventState extends State<RecurringEvent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    CustomInputField(
+                    InputField(
                       width: 155.toWidth,
                       height: 50.toHeight,
                       isReadOnly: true,
                       hintText: 'Start',
+                      controller: startTimeController,
                       icon: Icons.access_time,
-                      initialValue: eventData.event.startTime != null
-                          ? timeOfDayToString(eventData.event.startTime)
+                      initialValue: eventData.event.date != null
+                          ? timeOfDayToString(eventData.event.date)
                           : '',
+                      value:(value) => timeOfDayToString(eventData.event.date),
                       onTap: () async {
+                        print("opened picker");
                         final timePicked = await showTimePicker(
                             context: context,
-                            initialTime: eventData.event.startTime != null
+                            initialTime: widget.eventDate.event.date != null
                                 ? TimeOfDay.fromDateTime(
-                                    eventData.event.startTime)
+                                    eventData.event.date)
                                 : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
 
-                        if (eventData.event.date == null) {
-                          eventData.event.date = DateTime(
-                              eventData.event.date.year,
-                              eventData.event.date.month,
-                              eventData.event.date.day,
-                              timePicked.hour,
-                              timePicked.minute);
-                          setState(() {});
+                        if (timePicked != null) {
+                          print("time picked not null");
+
+                          setState(() {
+                            widget.eventDate.event.date = DateTime(
+                                eventData.event.date.year,
+                                eventData.event.date.month,
+                                eventData.event.date.day,
+                                timePicked.hour,
+                                timePicked.minute);
+                            print(timeOfDayToString(eventData.event.date));
+
+                          });
                         }
                       },
                     ),
@@ -235,31 +257,34 @@ class _RecurringEventState extends State<RecurringEvent> {
                       isReadOnly: true,
                       hintText: 'Stop',
                       icon: Icons.access_time,
-                      initialValue: eventData.event.endTime != null
-                          ? timeOfDayToString(eventData.event.endTime)
+                      initialValue: eventData.event.endDate != null
+                          ? timeOfDayToString(eventData.event.endDate)
                           : '',
+                      value:(value) => timeOfDayToString(eventData.event.endDate),
                       onTap: () async {
                         final timePicked = await showTimePicker(
                             context: context,
-                            initialTime: eventData.event.endTime != null
+                            initialTime: eventData.event.endDate != null
                                 ? TimeOfDay.fromDateTime(
-                                    eventData.event.endTime)
+                                    eventData.event.endDate)
                                 : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
 
-                        if (eventData.event.endDate == null) {
+                        if (eventData.event.date == null) {
                           CustomToast()
                               .show('Select start time first', context);
                           return;
                         }
                         if (timePicked != null) {
-                          eventData.event.endTime = DateTime(
-                              eventData.event.date.year,
-                              eventData.event.date.month,
-                              eventData.event.date.day,
-                              timePicked.hour,
-                              timePicked.minute);
-                          setState(() {});
+
+                          setState(() {
+                            eventData.event.endDate = DateTime(
+                                eventData.event.date.year,
+                                eventData.event.date.month,
+                                eventData.event.date.day,
+                                timePicked.hour,
+                                timePicked.minute);
+                          });
                         }
                       },
                     ),
@@ -271,7 +296,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Never',
+                    Text('After A Specific Day ',
                         style: kNormalTextStyle.copyWith(fontSize: 12)),
                     Radio(
                       groupValue: eventData.event.endsOn,
@@ -314,7 +339,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('After',
+                    Text('After a Number of Times',
                         style: kNormalTextStyle.copyWith(fontSize: 12)),
                     Radio(
                       groupValue: eventData.event.endsOn,
@@ -331,10 +356,11 @@ class _RecurringEventState extends State<RecurringEvent> {
                 SizedBox(
                   height: 6.toHeight,
                 ),
-                CustomInputField(
+                InputField(
                     width: 350.toWidth,
                     height: 50.toHeight,
-                    hintText: 'Start',
+                    hintText: 'Amount of Times Event Occurs',
+                    keyStyle: TextInputType.number,
                     initialValue:
                         eventData.event.endEventAfterOccurrence != null
                             ? eventData.event.endEventAfterOccurrence.toString()
@@ -349,9 +375,17 @@ class _RecurringEventState extends State<RecurringEvent> {
                 Center(
                   child: CustomButton(
                     onPressed: () {
+                      _update();
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CalendarScreen()),
+                      );
                       // TODO: Implement a confirmation request that will update our event to become a recurring event
                       // For now it will just pop back to the other screen.
-                      Navigator.of(context).pop();
+
                     },
                     buttonText: 'Done',
                     width: 164.toWidth,
@@ -367,5 +401,42 @@ class _RecurringEventState extends State<RecurringEvent> {
       ),
       turnAppbar: true,
     );
+  }
+  _update() async {
+    //goes through and makes sure every field was set to something
+    bool filled = widget.eventDate.event != null &&
+    widget.eventDate.event.repeatCycle != null;
+    if (filled) {
+      if(widget.eventDate.event.endsOn == null) {
+        widget.eventDate.event.endsOn = EndsOn.NEVER;
+      }
+      //create the @key
+      AtKey atKey = AtKey();
+      atKey.key = widget.eventDate.key;
+      atKey.sharedWith = activeAtSign;
+      atKey.sharedBy = activeAtSign;
+      Metadata metadata = Metadata();
+      metadata.ccd = true;
+      atKey.metadata = metadata;
+
+      //set the value to store in the secondary as the json version of the EventNotifications object
+      String storedValue =
+      EventNotificationModel.convertEventNotificationToJson(
+          widget.eventDate);
+      print(atKey.toString());
+      print(storedValue);
+      //put that shiza on the secondary
+      await clientSdkService.put(atKey, storedValue);
+    } else {
+      //if they did not fill the fields print
+      CustomToast()
+          .show('Please fill all fields before creating the event', context);
+    }
+  }
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 }
