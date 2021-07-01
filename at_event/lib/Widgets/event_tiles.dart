@@ -69,7 +69,7 @@ class _PopularEventTileState extends State<PopularEventTile> {
                 children: <Widget>[
                   Text(
                     widget.desc,
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 6,
@@ -80,7 +80,7 @@ class _PopularEventTileState extends State<PopularEventTile> {
                       SizedBox(width: 8),
                       Text(
                         widget.date,
-                        style: TextStyle(color: Colors.white, fontSize: 10),
+                        style:kEventDetailsTextStyle,
                       ),
                     ],
                   ),
@@ -91,7 +91,7 @@ class _PopularEventTileState extends State<PopularEventTile> {
                       SizedBox(width: 8),
                       Text(
                         widget.address,
-                        style: TextStyle(color: Colors.white, fontSize: 10),
+                        style:kEventDetailsTextStyle.copyWith(fontSize: 14),
                       ),
                     ],
                   ),
@@ -99,16 +99,16 @@ class _PopularEventTileState extends State<PopularEventTile> {
               ),
             ),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
-            child: Image.asset(
-              widget.imgAssetPath,
-              height: 100,
-              width: 120,
-              fit: BoxFit.cover,
-            ),
-          ),
+          // ClipRRect(
+          //   borderRadius: BorderRadius.only(
+          //       topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
+          //   child: Image.asset(
+          //     widget.imgAssetPath,
+          //     height: 100,
+          //     width: 120,
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
         ],
       ),
     );

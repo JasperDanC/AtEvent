@@ -17,7 +17,7 @@ import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/utils/functions.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/group_cardUI.dart';
-import 'package:at_common_flutter/services/size_config.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
