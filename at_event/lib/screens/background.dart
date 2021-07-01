@@ -10,7 +10,6 @@ class Background extends StatefulWidget {
   final bool turnAppbar;
   final bool loggedIn;
 
-
   @override
   _BackgroundState createState() => _BackgroundState();
 }
@@ -23,7 +22,7 @@ class _BackgroundState extends State<Background> {
   GlobalKey<ScaffoldState> scaffoldKey;
   @override
   void initState() {
-    if(widget.loggedIn) {
+    if (widget.loggedIn) {
       getAtSignAndInitContacts();
     }
     scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,7 +31,6 @@ class _BackgroundState extends State<Background> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: Scaffold(
         key: scaffoldKey,
@@ -72,9 +70,10 @@ class _BackgroundState extends State<Background> {
                       const Color(0xff727272),
                       const Color(0xff808080)
                     ],
-                    stops: [0.0, 0.0, 0.46, 1.0],
+                    stops: [0.1, 0.4, 0.7, 4.0],
                   ),
-                  border: Border.all(width: 1.0, color: const Color(0xff707070)),
+                  border:
+                      Border.all(width: 1.0, color: const Color(0xff707070)),
                 ),
               ),
             ),

@@ -16,6 +16,8 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/utils/functions.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:at_event/models/group_cardUI.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -48,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     setState(() {});
+    SizeConfig().init(context);
     return MaterialApp(
         home: Scaffold(
       backgroundColor: kBackgroundGrey,
@@ -154,12 +157,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         return isSameDay(_selectedDay, day);
                       },
                       onPageChanged: (focusedDay) {
+
                         _focusedDay = focusedDay;
                       },
                       onFormatChanged: (format) {
+
                         Navigator.pushNamed(context, '/CalendarScreen');
                       },
                       onDaySelected: (selectedDay, today) {
+
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return CalendarScreen(specificDay: selectedDay);
@@ -190,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       eventLoader: (day) {
                         List<UI_Event> allEvents = [];
                         for (int i = 0; i < globalUIEvents.length; i++) {
-                          if (globalUIEvents[i].from != null) {
+                          if(globalUIEvents[i].from != null){
                             if (globalUIEvents[i].from.day == day.day &&
                                 globalUIEvents[i].from.month == day.month &&
                                 globalUIEvents[i].from.year == day.year) {
@@ -205,11 +211,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Text(
-                "Event List",
+                "Today's Events",
                 style: kSubHeadingTextStyle,
               ),
+              SizedBox(
+                height: 10,
+              ),
               Container(
-                height: SizeConfig().screenHeight * 0.42,
+                height: SizeConfig().screenHeight * 0.36,
                 child: events.length>0 ?ListView.builder(
                     padding: EdgeInsets.only(top: 8),
                     shrinkWrap: true,
@@ -237,6 +246,46 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0),
+                      gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [0.4, 0.9],
+                          colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.blueGrey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 2))
+                      ],
+                      backgroundBlendMode: BlendMode.modulate),
+                  child: Center(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: <Widget>[
+                          GroupCard(),
+                          GroupCard(),
+                          GroupCard(),
+                          GroupCard(),
+                          GroupCard(),
+                          GroupCard(),
+                          GroupCard(),
+                          GroupCard(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
