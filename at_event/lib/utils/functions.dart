@@ -119,8 +119,6 @@ Future<String> lookup(AtKey atKey) async {
 }
 
 Future<bool> startMonitor(currentAtSign) async {
-
-
   await ClientSdkService.getInstance().startMonitor(currentAtSign, _notificationCallback);
   print('Monitor started');
   return true;
@@ -204,10 +202,12 @@ void _notificationCallback(dynamic response) async {
 
       //delete the confirmation key
       await ClientSdkService.getInstance().delete(realKey);
+      scan();
       return;
     }
 
     await ClientSdkService.getInstance().put(realKey, value);
+    scan();
   }
 
 }

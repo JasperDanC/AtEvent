@@ -35,7 +35,7 @@ void main() {
           '@buggs',
           '@george',
         ],
-      category: EventCategory.Party
+      category: EventCategory.Class
     ),
   ));
 }
@@ -68,20 +68,26 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
     String categoryString;
     switch(widget.event.category){
-      case EventCategory.Party:
+      case EventCategory.Class:
         categoryString = 'Party';
         break;
-      case EventCategory.Music:
-        categoryString = 'Music';
-        break;
-      case EventCategory.Bar:
-        categoryString = 'Bar';
-        break;
-      case EventCategory.Sports:
-        categoryString = 'Sports';
+      case EventCategory.Tutorial:
+        categoryString = 'Tutorial';
         break;
       case EventCategory.None:
         categoryString = 'No Category';
+        break;
+      case EventCategory.StudySession:
+        categoryString = 'Study Session';
+        break;
+      case EventCategory.Hangout:
+        categoryString = 'Hangout';
+        break;
+      case EventCategory.Lab:
+        categoryString = 'Lab';
+        break;
+      case EventCategory.StudentClubEvent:
+        categoryString = 'Student Club Event';
         break;
     }
     return Background(

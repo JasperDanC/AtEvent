@@ -65,20 +65,26 @@ class _EventEditScreenState extends State<EventEditScreen> {
   void initState() {
     getAtSign();
     switch (widget.event.category) {
-      case EventCategory.Party:
-        _dropDownValue = 4;
-        break;
-      case EventCategory.Music:
-        _dropDownValue = 1;
-        break;
-      case EventCategory.Bar:
-        _dropDownValue = 3;
-        break;
-      case EventCategory.Sports:
+      case EventCategory.Class:
         _dropDownValue = 2;
         break;
+      case EventCategory.Tutorial:
+        _dropDownValue = 3;
+        break;
+      case EventCategory.StudySession:
+        _dropDownValue = 4;
+        break;
+      case EventCategory.Hangout:
+        _dropDownValue = 5;
+        break;
+      case EventCategory.Lab:
+        _dropDownValue = 6;
+        break;
+      case EventCategory.StudentClubEvent:
+        _dropDownValue = 7;
+        break;
       case EventCategory.None:
-        _dropDownValue = 0;
+        _dropDownValue = 1;
         break;
     }
     final ScrollController _scrollController = ScrollController();
@@ -117,7 +123,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   },
                   decoration: InputDecoration(
                     hintText: widget.event.eventName,
-                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
+                    hintStyle: kEventDetailsTextStyle.copyWith(
+                        color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -139,7 +146,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
                     style: kEventDetailsTextStyle,
                     decoration: InputDecoration(
                       hintText: widget.event.description,
-                      hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
+                      hintStyle: kEventDetailsTextStyle.copyWith(
+                          color: Colors.grey[400]),
                       enabledBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white)),
                       focusedBorder: UnderlineInputBorder(
@@ -156,10 +164,10 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       widget.event.location = value;
                     });
                   },
-
                   decoration: InputDecoration(
                     hintText: widget.event.location,
-                    hintStyle: kEventDetailsTextStyle.copyWith(color: Colors.grey[400]),
+                    hintStyle: kEventDetailsTextStyle.copyWith(
+                        color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white)),
                     focusedBorder: UnderlineInputBorder(
@@ -175,7 +183,6 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       ),
                     ),
                     Expanded(
-
                       child: DropdownButtonFormField(
                         style: kEventDetailsTextStyle,
                         dropdownColor: kBackgroundGrey,
@@ -192,27 +199,39 @@ class _EventEditScreenState extends State<EventEditScreen> {
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Music",
+                              "Class",
                             ),
                             value: 2,
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Sports",
+                              "Tutorial",
                             ),
                             value: 3,
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Drinks",
+                              "Study Session",
                             ),
                             value: 4,
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Party",
+                              "Hangout",
                             ),
                             value: 5,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Lab",
+                            ),
+                            value: 6,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Student Club Event",
+                            ),
+                            value: 7,
                           ),
                         ],
                       ),
@@ -264,7 +283,6 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-
                           initialDate: widget.event.to,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
@@ -314,81 +332,84 @@ class _EventEditScreenState extends State<EventEditScreen> {
   }
 
   _update() async {
+    switch (_dropDownValue) {
+      case 1:
+        _eventCategory = EventCategory.None;
+        break;
+      case 2:
+        _eventCategory = EventCategory.Class;
+        break;
+      case 3:
+        _eventCategory = EventCategory.Tutorial;
+        break;
+      case 4:
+        _eventCategory = EventCategory.StudySession;
+        break;
+      case 5:
+        _eventCategory = EventCategory.Hangout;
+        break;
+      case 6:
+        _eventCategory = EventCategory.Lab;
+        break;
+      case 7:
+        _eventCategory = EventCategory.StudentClubEvent;
+        break;
+      default:
+        _eventCategory = EventCategory.None;
+    }
+    EventNotificationModel oldEventModel = widget.event.realEvent;
+    Event newEvent;
+    if (_eventDay == null || _eventStartTime == null || _eventEndTime == null) {
+      newEvent = oldEventModel.event;
+    } else {
+      newEvent = Event()
+        ..date = DateTime.parse(_eventDay)
+        ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
+        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
+    }
 
-      switch (_dropDownValue) {
-        case 1:
-          _eventCategory = EventCategory.None;
-          break;
-        case 2:
-          _eventCategory = EventCategory.Music;
-          break;
-        case 3:
-          _eventCategory = EventCategory.Sports;
-          break;
-        case 4:
-          _eventCategory = EventCategory.Bar;
-          break;
-        case 5:
-          _eventCategory = EventCategory.Party;
-          break;
-        default:
-          _eventCategory = EventCategory.None;
-      }
-      EventNotificationModel oldEventModel = widget.event.realEvent;
-      Event newEvent;
-      if(_eventDay == null || _eventStartTime == null || _eventEndTime == null){
-        newEvent = oldEventModel.event;
-      } else {
-        newEvent = Event()
-          ..date = DateTime.parse(_eventDay)
-          ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
-          ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
-      }
+    Setting location = Setting()
+      ..label = _eventLocation != null ? _eventLocation : widget.event.location;
 
+    EventNotificationModel newEventNotification = EventNotificationModel()
+      ..event = newEvent
+      ..atSignCreator = oldEventModel.atSignCreator
+      ..category = _eventCategory
+      ..peopleGoing = oldEventModel.peopleGoing
+      ..group = null
+      ..title = _eventTitle != null ? _eventTitle : widget.event.eventName
+      ..description = _eventDesc != null ? _eventDesc : widget.event.description
+      ..setting = location
+      ..key = oldEventModel.key;
 
-      Setting location = Setting()..label = _eventLocation!=null ? _eventLocation: widget.event.location;
+    AtKey atKey = AtKey();
+    atKey.key = newEventNotification.key;
+    atKey.namespace = namespace;
+    atKey.sharedWith = activeAtSign;
+    Metadata metadata = Metadata();
+    metadata.ccd = true;
+    atKey.metadata = metadata;
+    print(atKey.toString());
 
-      EventNotificationModel newEventNotification = EventNotificationModel()
-        ..event = newEvent
-        ..atSignCreator = oldEventModel.atSignCreator
-        ..category = _eventCategory
-        ..peopleGoing = oldEventModel.peopleGoing
-        ..group = null
-        ..title = _eventTitle!=null ? _eventTitle: widget.event.eventName
-        ..description = _eventDesc!=null ? _eventDesc: widget.event.description
-        ..setting = location
-        ..key = oldEventModel.key;
+    String storedValue = EventNotificationModel.convertEventNotificationToJson(
+        newEventNotification);
+    await clientSdkService.put(atKey, storedValue);
 
-      AtKey atKey = AtKey();
-      atKey.key = newEventNotification.key;
-      atKey.namespace = namespace;
-      atKey.sharedWith = activeAtSign;
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      atKey.metadata = metadata;
-      print(atKey.toString());
+    for (String invitee in newEventNotification.invitees) {
+      atKey.sharedWith = invitee;
+      var operation = OperationEnum.update;
+      await clientSdkService.notify(atKey, storedValue, operation);
+    }
 
-      String storedValue =
-          EventNotificationModel.convertEventNotificationToJson(
-              newEventNotification);
-      await clientSdkService.put(atKey, storedValue);
-
-      for(String invitee in newEventNotification.invitees){
-        atKey.sharedWith = invitee;
-        var operation = OperationEnum.update;
-        await clientSdkService.notify(atKey, storedValue,operation);
-      }
-
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EventDetailsScreen(
-            event: newEventNotification.toUI_Event(),
-          ),
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EventDetailsScreen(
+          event: newEventNotification.toUI_Event(),
         ),
-      );
-
+      ),
+    );
   }
 
   getAtSign() async {

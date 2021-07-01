@@ -154,27 +154,39 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Music",
+                              "Class",
                             ),
                             value: 2,
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Sports",
+                              "Tutorial",
                             ),
                             value: 3,
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Drinks",
+                              "Study Session",
                             ),
                             value: 4,
                           ),
                           DropdownMenuItem(
                             child: Text(
-                              "Party",
+                              "Hangout",
                             ),
                             value: 5,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Lab",
+                            ),
+                            value: 6,
+                          ),
+                          DropdownMenuItem(
+                            child: Text(
+                              "Student Club Event",
+                            ),
+                            value: 7,
                           ),
                         ],
                       ),
@@ -407,16 +419,22 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           _eventCategory = EventCategory.None;
           break;
         case 2:
-          _eventCategory = EventCategory.Music;
+          _eventCategory = EventCategory.Class;
           break;
         case 3:
-          _eventCategory = EventCategory.Sports;
+          _eventCategory = EventCategory.Tutorial;
           break;
         case 4:
-          _eventCategory = EventCategory.Bar;
+          _eventCategory = EventCategory.StudySession;
           break;
         case 5:
-          _eventCategory = EventCategory.Party;
+          _eventCategory = EventCategory.Hangout;
+          break;
+        case 6:
+          _eventCategory = EventCategory.Lab;
+          break;
+        case 7:
+          _eventCategory = EventCategory.StudentClubEvent;
           break;
         default:
           _eventCategory = EventCategory.None;
@@ -479,16 +497,22 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           _eventCategory = EventCategory.None;
           break;
         case 2:
-          _eventCategory = EventCategory.Music;
+          _eventCategory = EventCategory.Class;
           break;
         case 3:
-          _eventCategory = EventCategory.Sports;
+          _eventCategory = EventCategory.Tutorial;
           break;
         case 4:
-          _eventCategory = EventCategory.Bar;
+          _eventCategory = EventCategory.StudySession;
           break;
         case 5:
-          _eventCategory = EventCategory.Party;
+          _eventCategory = EventCategory.Hangout;
+          break;
+        case 6:
+          _eventCategory = EventCategory.Lab;
+          break;
+        case 7:
+          _eventCategory = EventCategory.StudentClubEvent;
           break;
         default:
           _eventCategory = EventCategory.None;

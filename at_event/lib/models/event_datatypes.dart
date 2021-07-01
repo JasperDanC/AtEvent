@@ -26,18 +26,20 @@ class EventNotificationModel {
       case 'EventCategory.None':
         category = EventCategory.None;
         break;
-      case 'EventCategory.Party':
-        category = EventCategory.Party;
+      case 'EventCategory.Class':
+        category = EventCategory.Class;
         break;
-      case 'EventCategory.Sports':
-        category= EventCategory.Sports;
+      case 'EventCategory.Hangout':
+        category= EventCategory.Hangout;
         break;
-      case 'EventCategory.Music':
-        category = EventCategory.Music;
+      case 'EventCategory.Lab':
+        category = EventCategory.Lab;
         break;
-      case 'EventCategory.Bar':
-        category = EventCategory.Bar;
+      case 'EventCategory.Tutorial':
+        category = EventCategory.Tutorial;
         break;
+      case 'EventCategory.StudentClubEvent':
+        category = EventCategory.StudentClubEvent;
     }
     description = data['description'] ?? '';
     peopleGoing = data['peopleGoing'] == '[]' || data['peopleGoing'] == ''
@@ -165,10 +167,12 @@ class Setting {
 }
 
 enum EventCategory {
-  Party,
-  Music,
-  Bar,
-  Sports,
+  Class,
+  Tutorial,
+  StudySession,
+  Hangout,
+  Lab,
+  StudentClubEvent,
   None,
 }
 

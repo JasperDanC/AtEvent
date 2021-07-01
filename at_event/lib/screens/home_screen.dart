@@ -1,5 +1,6 @@
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
+import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -7,12 +8,14 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/Widgets/event_tiles.dart';
 import '../service/client_sdk_service.dart';
 import '../utils/constants.dart';
+import 'package:intl/intl.dart';
 import 'package:at_event/models/event_type_model_homescreen.dart';
 import 'package:at_event/models/events_model_homescreen.dart';
 import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/utils/functions.dart';
+import 'package:at_event/models/event_datatypes.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -27,14 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<ScaffoldState> scaffoldKey;
 
   List<EventTypeModel> eventsType = getEventTypes();
-  List<EventsModel> events = getEvents();
-
+  List<UI_Event> events = [];
 
   @override
   void initState() {
     getAtSignAndInitContacts();
     scan();
     scaffoldKey = GlobalKey<ScaffoldState>();
+    for(UI_Event e in globalUIEvents){
+      if(isToday(e)){
+        events.add(e);
+      }
+    }
     super.initState();
   }
 
@@ -147,15 +154,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         return isSameDay(_selectedDay, day);
                       },
                       onPageChanged: (focusedDay) {
-
                         _focusedDay = focusedDay;
                       },
                       onFormatChanged: (format) {
-
                         Navigator.pushNamed(context, '/CalendarScreen');
                       },
                       onDaySelected: (selectedDay, today) {
-
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return CalendarScreen(specificDay: selectedDay);
@@ -186,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       eventLoader: (day) {
                         List<UI_Event> allEvents = [];
                         for (int i = 0; i < globalUIEvents.length; i++) {
-                          if(globalUIEvents[i].from != null){
+                          if (globalUIEvents[i].from != null) {
                             if (globalUIEvents[i].from.day == day.day &&
                                 globalUIEvents[i].from.month == day.month &&
                                 globalUIEvents[i].from.year == day.year) {
@@ -205,18 +209,34 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: kSubHeadingTextStyle,
               ),
               Container(
-                child: ListView.builder(
+                height: SizeConfig().screenHeight * 0.42,
+                child: events.length>0 ?ListView.builder(
                     padding: EdgeInsets.only(top: 8),
                     shrinkWrap: true,
                     itemCount: events.length,
                     itemBuilder: (context, index) {
                       return PopularEventTile(
-                        desc: events[index].desc,
-                        imgAssetPath: events[index].imgeAssetPath,
-                        address: events[index].address,
-                        date: events[index].date,
+                        desc: events[index].eventName,
+                        address: events[index].location,
+                        date: DateFormat('hh:MM a').format(events[index].from),
                       );
-                    }),
+                    }):
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          width: 250,
+                          child: Text(
+
+                            'Seems that you have no events today',
+                            style: kSubHeadingTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
               ),
             ],
           ),
@@ -233,5 +253,83 @@ class _HomeScreenState extends State<HomeScreen> {
 
     initializeContactsService(clientSdkService.atClientInstance, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
+  }
+
+  int calculateDifference(DateTime date) {
+    DateTime now = DateTime.now();
+    return DateTime(date.year, date.month, date.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+  }
+
+  bool isToday(UI_Event ui_event) {
+    if (!ui_event.isRecurring) {
+      return calculateDifference(ui_event.from) == 0;
+    } else {
+      if (ui_event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+        int currentWeekday;
+        switch (ui_event.realEvent.event.occursOn) {
+          case Week.SUNDAY:
+            currentWeekday = 7;
+            break;
+          case Week.MONDAY:
+            currentWeekday = 1;
+            break;
+          case Week.TUESDAY:
+            currentWeekday = 2;
+            break;
+          case Week.WEDNESDAY:
+            currentWeekday = 3;
+            break;
+          case Week.THURSDAY:
+            currentWeekday = 4;
+            break;
+          case Week.FRIDAY:
+            currentWeekday = 5;
+            break;
+          case Week.SATURDAY:
+            currentWeekday = 6;
+            break;
+        }
+        return DateTime.now().isAfter(ui_event.from) &&
+            DateTime.now().weekday == currentWeekday &&
+            (
+                (
+                    ui_event.realEvent.event.endsOn == EndsOn.NEVER
+                )
+                    ||
+                (
+                    ui_event.realEvent.event.endsOn == EndsOn.AFTER &&
+                        (DateTime.now().difference(ui_event.from).inDays / 7) * ui_event.realEvent.event.repeatDuration <
+                        ui_event.realEvent.event.endEventAfterOccurrence
+                )
+                    ||
+                (
+                    ui_event.realEvent.event.endsOn == EndsOn.ON &&
+                    DateTime.now()
+                        .isBefore(ui_event.realEvent.event.endEventOnDate)
+                )
+            );
+      } else {
+        return DateTime.now().day ==ui_event.to.day &&
+            (
+                (
+                    ui_event.realEvent.event.endsOn == EndsOn.NEVER
+                )
+                    ||
+                    (
+                        ui_event.realEvent.event.endsOn == EndsOn.AFTER &&
+                            DateTime.now().difference(ui_event.from).inDays / 30.436875 <
+                                ui_event.realEvent.event.endEventAfterOccurrence
+                    )
+                    ||
+                    (
+                        ui_event.realEvent.event.endsOn == EndsOn.ON &&
+                            DateTime.now()
+                                .isBefore(ui_event.realEvent.event.endEventOnDate)
+                    )
+            );
+      }
+    }
   }
 }
