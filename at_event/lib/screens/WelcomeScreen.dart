@@ -97,12 +97,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Live your life stress free!\nwith us! ',
+                              'Attend your classes\nstress free!',
                               style: kTitleTextStyle.copyWith(fontSize: 26),
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              'Never miss a class update ever again!\nWith @Vento, we got you covered.\n\nAll your important class info at the palm of your hand.',
                               style: kNormalTextStyle.copyWith(fontSize: 16),
                             ),
                           ],
@@ -130,7 +130,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Hangout with people!\naround Campus',
+                              'Hangout with people\naround Campus!',
                               style: kTitleTextStyle.copyWith(fontSize: 26),
                             ),
                             SizedBox(height: 15.0),
@@ -165,12 +165,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Prepare with classmates!\nplanning was never easier',
+                              'Prepare with classmates!\nPlanning was never easier',
                               style: kTitleTextStyle.copyWith(fontSize: 26),
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              "Creating and organizing a group study session is a breeze!\nDon't waste any time planning, dive straight into studying!",
                               style: kNormalTextStyle.copyWith(fontSize: 16),
                             ),
                           ],
@@ -202,7 +202,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              'Hard work pays off!\nWe are here to celebrate your accomplishments with you. Get all your friends together to commemorate your success!',
                               style: kNormalTextStyle.copyWith(fontSize: 16),
                             ),
                           ],
@@ -229,12 +229,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Access your info\nnever forget',
+                              'All the class info you need neatly organized for you',
                               style: kTitleTextStyle.copyWith(fontSize: 26),
                             ),
                             SizedBox(height: 15.0),
                             Text(
-                              'Lorem ipsum dolor sit amet, consect adipiscing elit, sed do eiusmod tempor incididunt ut labore et.',
+                              'User friendly layout so that you can access everything with just a couple of taps.',
                               style: kNormalTextStyle.copyWith(fontSize: 16),
                             ),
                           ],
