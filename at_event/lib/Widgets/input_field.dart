@@ -38,7 +38,13 @@ class InputField extends StatelessWidget {
   /// makes the input field to be read only.
   final bool isReadOnly;
 
-  TextEditingController textController = TextEditingController();
+  final TextInputType keyStyle;
+
+  final TextEditingController controller;
+
+
+
+  TextEditingController textController;
 
   InputField(
       {this.hintText = '',
@@ -50,11 +56,13 @@ class InputField extends StatelessWidget {
       this.onIconTap,
       this.value,
       this.initialValue = '',
-      this.onSubmitted,
-      this.isReadOnly = false});
+      this.onSubmitted, this.keyStyle,
+      this.isReadOnly = false,
+      this.controller,});
 
   @override
   Widget build(BuildContext context) {
+    textController = controller != null ? controller : TextEditingController();
     textController = TextEditingController.fromValue(TextEditingValue(
         text: initialValue != null ? initialValue : '',
         selection: TextSelection.collapsed(
@@ -72,6 +80,7 @@ class InputField extends StatelessWidget {
           Expanded(
             child: TextField(
               readOnly: isReadOnly,
+              keyboardType: keyStyle,
               style: TextStyle(fontSize: 15.toFont, color: Colors.black),
               decoration: InputDecoration(
                 hintText: hintText,

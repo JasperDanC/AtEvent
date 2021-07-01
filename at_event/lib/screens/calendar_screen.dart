@@ -192,6 +192,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       DateTime now = DateTime.now();
                       DateTime today = DateTime(now.year, now.month, now.day);
 
+                      int numAppointments = 0;
+                      List<String> seen = [];
+                      for(UI_Event app in details.appointments){
+                        if(!seen.contains(app.eventName)){
+                          seen.add(app.eventName);
+                          numAppointments +=1;
+                        }
+                      }
+
                       return Container(
                         decoration: BoxDecoration(
                           color: details.date == today
@@ -221,10 +230,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               CircleAvatar(
                                 backgroundColor: kEventBlue,
                                 radius:
-                                    details.appointments.length != 0 ? 15 : 0,
+                                    numAppointments!= 0 ? 15 : 0,
                                 child: Text(
-                                  details.appointments.length != 0
-                                      ? details.appointments.length.toString()
+                                  numAppointments != 0
+                                      ? numAppointments.toString()
                                       : "",
                                   style: TextStyle(
                                       color: Colors.white,

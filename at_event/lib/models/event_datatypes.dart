@@ -144,6 +144,7 @@ class EventNotificationModel {
       invitees: this.invitees,
       from: event.startTime,
       to: event.endTime,
+      isRecurring: this.event.isRecurring,
       realEvent: this,
     );
 
@@ -176,7 +177,7 @@ class Event {
 
   bool isRecurring;
   DateTime date, endDate;
-  DateTime startTime, endTime; // one dat event
+  DateTime startTime, endTime; // one day event
   int repeatDuration;
   RepeatCycle repeatCycle;
   Week occursOn;
@@ -197,6 +198,9 @@ class Event {
       endDate =
           data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
     } else {
+      date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
+      endDate =
+      data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
       repeatDuration = data['repeatDuration'] != 'null'
           ? int.parse(data['repeatDuration'])
           : null;

@@ -185,10 +185,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       eventLoader: (day) {
                         List<UI_Event> allEvents = [];
                         for (int i = 0; i < globalUIEvents.length; i++) {
-                          if (globalUIEvents[i].from.day == day.day &&
-                              globalUIEvents[i].from.month == day.month &&
-                              globalUIEvents[i].from.year == day.year) {
-                            allEvents.add(globalUIEvents[i]);
+                          if(globalUIEvents[i].from != null){
+                            if (globalUIEvents[i].from.day == day.day &&
+                                globalUIEvents[i].from.month == day.month &&
+                                globalUIEvents[i].from.year == day.year) {
+                              allEvents.add(globalUIEvents[i]);
+                            }
                           }
                         }
                         return allEvents;
