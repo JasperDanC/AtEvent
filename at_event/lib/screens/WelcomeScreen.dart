@@ -264,12 +264,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         atClientPreference: atClientPreference,
                         domain: MixedConstants.ROOT_DOMAIN,
                         appColor: kPrimaryBlue,
-                        onboard: (value, atsign) {
+                        onboard: (value, atsign) async {
                           ClientSdkService.getInstance().atClientServiceMap =
                               value;
                           ClientSdkService.getInstance()
                               .atClientServiceInstance = value[atsign];
                           _logger.finer('Successfully onboarded $atsign');
+                          await startMonitor(atsign);
                         },
                         onError: (error) {
                           _logger.severe('Onboarding throws $error error');

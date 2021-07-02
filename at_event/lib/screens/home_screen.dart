@@ -9,6 +9,8 @@ import 'package:at_event/Widgets/event_tiles.dart';
 import '../service/client_sdk_service.dart';
 import '../utils/constants.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/models/event_type_model_homescreen.dart';
 import 'package:at_event/models/events_model_homescreen.dart';
 import 'package:at_event/data/data_homescreen.dart';
@@ -37,9 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getAtSignAndInitContacts();
-    scan();
+    scan(context);
     scaffoldKey = GlobalKey<ScaffoldState>();
-    for(UI_Event e in globalUIEvents){
+    for(UI_Event e in Provider.of<UIData>(context,listen: false).events){
       if(isToday(e)){
         events.add(e);
       }
@@ -195,12 +197,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       eventLoader: (day) {
                         List<UI_Event> allEvents = [];
-                        for (int i = 0; i < globalUIEvents.length; i++) {
-                          if(globalUIEvents[i].from != null){
-                            if (globalUIEvents[i].from.day == day.day &&
-                                globalUIEvents[i].from.month == day.month &&
-                                globalUIEvents[i].from.year == day.year) {
-                              allEvents.add(globalUIEvents[i]);
+
+                        for (int i = 0; i < Provider.of<UIData>(context).eventsLength; i++) {
+                          if(Provider.of<UIData>(context).getEvent(i).from != null){
+                            if (Provider.of<UIData>(context).getEvent(i).from.day == day.day &&
+                                Provider.of<UIData>(context).getEvent(i).from.month == day.month &&
+                                Provider.of<UIData>(context).getEvent(i).from.year == day.year) {
+                              allEvents.add(Provider.of<UIData>(context).getEvent(i));
                             }
                           }
                         }

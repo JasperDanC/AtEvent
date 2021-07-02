@@ -35,15 +35,13 @@ void main() {
           '@buggs',
           '@george',
         ],
-      category: EventCategory.Class
-    ),
+        category: EventCategory.Class),
   ));
 }
 
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
   final UI_Event event;
-
 
   @override
   _EventDetailsScreenState createState() => _EventDetailsScreenState();
@@ -58,18 +56,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   void initState() {
-    clientSdkService =  ClientSdkService.getInstance();
+    clientSdkService = ClientSdkService.getInstance();
     getAtSign();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     String categoryString;
-    switch(widget.event.category){
+    switch (widget.event.category) {
       case EventCategory.Class:
-        categoryString = 'Party';
+        categoryString = 'Class';
         break;
       case EventCategory.Tutorial:
         categoryString = 'Tutorial';
@@ -119,19 +116,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CalendarScreen()
-                          ),
+                              builder: (context) => CalendarScreen()),
                         );
                       },
                       child: Icon(
                         Icons.chevron_left,
                         color: Colors.white,
                         size: 50.0,
-                      ),),
+                      ),
+                    ),
                   ],
                 ),
                 Text(
-                  categoryString,
+                  categoryString != null ? categoryString : "",
                   style: kEventDetailsTextStyle,
                 ),
                 Divider(
@@ -187,7 +184,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: Colors.white,
                 ),
                 Text(
-
                   widget.event.invitees.length.toString() + " invited:",
                   style: kEventDetailsTextStyle,
                 ),
@@ -198,17 +194,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       padding: EdgeInsets.zero,
                       minWidth: 0,
                       onPressed: () {
-                        if(_inviteeAtSign!= null){
+                        if (_inviteeAtSign != null) {
                           setState(() {
-                            if(!widget.event.invitees.contains(_inviteeAtSign)){
-
-                              widget.event.realEvent.invitees.add(_inviteeAtSign);
+                            if (!widget.event.invitees
+                                .contains(_inviteeAtSign)) {
+                              widget.event.realEvent.invitees
+                                  .add(_inviteeAtSign);
                             }
                             _controller.clear();
                             _updateAndInvite();
                           });
                         }
-
                       },
                       shape: CircleBorder(),
                       child: Icon(
@@ -223,7 +219,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                     Expanded(
                       child: TextField(
-                        onChanged: (value){
+                        onChanged: (value) {
                           _inviteeAtSign = value;
                         },
                         controller: _controller,
@@ -276,14 +272,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       heroTag: 'different_tag',
                       onPressed: () {
                         _delete(context);
-
-                    },
+                      },
                       backgroundColor: Colors.red,
                       child: Icon(
                         Icons.delete,
                         size: 38,
                         color: Colors.white,
-                      ),),
+                      ),
+                    ),
                     FloatingActionButton(
                       onPressed: () {
                         Navigator.push(
@@ -315,8 +311,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   //which makes sense because we don't want people to delete other people's
   //events
   _delete(BuildContext context) async {
-
-    if (widget.event.eventName != null) { // just a safety check
+    if (widget.event.eventName != null) {
+      // just a safety check
 
       //get that client
       ClientSdkService clientSdkService = ClientSdkService.getInstance();
@@ -326,70 +322,67 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
       atKey.sharedWith = activeAtSign;
       atKey.sharedBy = widget.event.realEvent.atSignCreator;
-      Metadata metaData = Metadata()
-      ..ccd = true;
+      Metadata metaData = Metadata()..ccd = true;
       atKey.metadata = metaData;
 
-      print("Deleting key:"+atKey.toString());
+      print("Deleting key:" + atKey.toString());
       //delete the key from the secondary
       bool deleteResult = await clientSdkService.delete(atKey);
 
-      print("Delete Result:"+deleteResult.toString());
-
+      print("Delete Result:" + deleteResult.toString());
 
       //delete the event that exists as a invitation to someone else
-      for(String invitee in widget.event.invitees){
+      for (String invitee in widget.event.invitees) {
         //make a key again with the right sharedWith + sharedBy
         AtKey atKey = AtKey();
-        atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
+        atKey.key =
+            widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
         atKey.sharedWith = invitee;
         atKey.sharedBy = widget.event.realEvent.atSignCreator;
-        Metadata metaData = Metadata()
-          ..ccd = true;
+        Metadata metaData = Metadata()..ccd = true;
         atKey.metadata = metaData;
         deleteResult = await clientSdkService.delete(atKey);
         var operation = OperationEnum.delete;
         await clientSdkService.notify(atKey, atKey.toString(), operation);
-
       }
-      Navigator.of(context).pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
     }
-
   }
 
   // at this moment June 24 2021 sometimes this works perfectly and other times
   // times the invited person never gets the event
   _updateAndInvite() async {
+    AtKey atKey = AtKey();
+    atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+    atKey.namespace = namespace;
+    atKey.sharedWith = activeAtSign;
+    atKey.sharedBy = widget.event.realEvent.atSignCreator;
+    Metadata metadata = Metadata();
+    metadata.ccd = true;
+    atKey.metadata = metadata;
 
-      AtKey atKey = AtKey();
-      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
-      atKey.namespace = namespace;
-      atKey.sharedWith = activeAtSign;
-      atKey.sharedBy = widget.event.realEvent.atSignCreator;
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      atKey.metadata = metadata;
+    String storedValue = EventNotificationModel.convertEventNotificationToJson(
+        widget.event.realEvent);
 
+    await ClientSdkService.getInstance().put(atKey, storedValue);
 
-      String storedValue =
-      EventNotificationModel.convertEventNotificationToJson(
-          widget.event.realEvent);
+    var sharedMetadata = Metadata()
+      ..ccd = true
+      ..ttr = 40
+      ..isCached = true;
 
-      await ClientSdkService.getInstance().put(atKey, storedValue);
-
-      var sharedMetadata = Metadata()
-        ..ccd = true;
-
-      AtKey sharedKey = AtKey()
+    AtKey sharedKey = AtKey()
       ..key = atKey.key
       ..metadata = sharedMetadata
       ..sharedBy = activeAtSign
       ..sharedWith = _inviteeAtSign;
 
-      var operation = OperationEnum.update;
-      print(storedValue);
-      await ClientSdkService.getInstance().put(sharedKey, storedValue);
-
+    var operation = OperationEnum.update;
+    print(storedValue);
+    await ClientSdkService.getInstance().put(sharedKey, storedValue);
+    await ClientSdkService.getInstance()
+        .notify(sharedKey, storedValue, operation);
   }
 
   //simple atSign getter

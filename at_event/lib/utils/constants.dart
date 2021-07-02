@@ -278,8 +278,6 @@ List<Invite> kDummyInvites = [
   ),
 ];
 
-List<UI_Event> globalUIEvents = [];
-List<Invite> globalInvites = [];
 /*
 Important App Data
 */

@@ -1,16 +1,23 @@
 import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/models/invite.dart';
+import 'package:at_event/models/ui_data.dart';
+import 'package:flutter/cupertino.dart';
 import 'constants.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 
-
+BuildContext globalContext;
 /// Scan for [AtKey] objects with the correct regex.
-scan() async {
+scan(BuildContext context) async {
   print("started scan");
-
+  if(context==null){
+    context = globalContext;
+  } else {
+    globalContext = context;
+  }
   //counter to keep track of the amount of Key Value pairs stored in the secondary server
   int keysFound = 0;
 
@@ -21,8 +28,8 @@ scan() async {
   String currentUser = await ClientSdkService.getInstance().getAtSign();
 
   //clears UI lists so that they can be refilled with the updated information
-  globalUIEvents.clear();
-  globalInvites.clear();
+  Provider.of<UIData>(context,listen: false).clear();
+
 
 
   for (AtKey atKey in response) {
@@ -88,12 +95,12 @@ scan() async {
       if(eventModel.peopleGoing.contains(currentUser) &&
           !(eventModel.atSignCreator == currentUser && atKey.sharedWith != currentUser)
       ){
-        globalUIEvents.add(eventModel.toUI_Event());
+        Provider.of<UIData>(context,listen: false).addEvent(eventModel.toUI_Event());
       } else {
         print("active: "+ atKey.sharedWith + " from: "+ eventModel.atSignCreator );
         if(eventModel.atSignCreator != currentUser){
           Invite newInvite = Invite(event: eventModel.toUI_Event(),from: eventModel.atSignCreator);
-          globalInvites.add(newInvite);
+          Provider.of<UIData>(context,listen: false).addInvite(newInvite);
         }
 
       }
@@ -202,12 +209,12 @@ void _notificationCallback(dynamic response) async {
 
       //delete the confirmation key
       await ClientSdkService.getInstance().delete(realKey);
-      scan();
+      scan(globalContext);
       return;
     }
 
     await ClientSdkService.getInstance().put(realKey, value);
-    scan();
+    scan(globalContext);
   }
 
 }

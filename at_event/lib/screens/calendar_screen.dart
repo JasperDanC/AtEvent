@@ -1,4 +1,5 @@
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:at_event/models/ui_data.dart';
 import 'dart:convert';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/event_details_screen.dart';
@@ -8,6 +9,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/models/ui_event.dart';
+import 'package:provider/provider.dart';
 import 'package:at_event/models/uicalendar_event_data_source.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/utils/functions.dart';
@@ -48,13 +50,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
     //sets activeAtSign to the currently logged in one
     getAtSign();
     //scans so that the correct information will be displayed
-    scan();
+    scan(context);
     super.initState();
   }
 
   //weird and necessary function for syncfusion calendar to work
   EventDataSource _getEventData() {
-    return EventDataSource(globalUIEvents);
+    return EventDataSource(Provider.of<UIData>(context).events);
   }
 
   @override
@@ -133,7 +135,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       } else {
                         if (ctd.appointments != null || ctd.appointments.length != null) {
                           UI_Event foundEvent;
-                          for(UI_Event e in globalUIEvents){
+                          for(UI_Event e in Provider.of<UIData>(context,listen: false).events){
                             if(ctd.appointments[0].from == e.from && ctd.appointments[0].to == e.to){
                               foundEvent = e;
                             }

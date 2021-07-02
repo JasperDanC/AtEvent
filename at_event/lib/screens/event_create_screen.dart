@@ -1,3 +1,4 @@
+import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/recurring_event.dart';
 import 'package:at_event/screens/select_location.dart';
@@ -13,6 +14,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
+import 'package:provider/provider.dart';
 
 import 'package:at_event/widgets/custom_toast.dart';
 
@@ -379,12 +381,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                                 ),
                                 onPressed: () {
                                   _update();
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CalendarScreen()),
-                                  );
+
                                 },
                               ),
                             ],
@@ -452,7 +449,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       Event newEvent = Event()
         ..date = DateTime.parse(_eventDay)
         ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
-        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
+        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime)
+      ..isRecurring=false;
+
 
       //Create Location object with correct label
       // map thing will be implemented later
@@ -488,6 +487,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
+      Provider.of<UIData>(context,listen: false).addEvent(newEventNotification.toUI_Event());
+      //back to the calendar
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CalendarScreen()),
+      );
     } else {
       //if they did not fill the fields print
       CustomToast()
