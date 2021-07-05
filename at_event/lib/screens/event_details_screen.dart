@@ -369,7 +369,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
     var sharedMetadata = Metadata()
       ..ccd = true
-      ..ttr = 40
       ..isCached = true;
 
     AtKey sharedKey = AtKey()
@@ -381,8 +380,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     var operation = OperationEnum.update;
     print(storedValue);
     await ClientSdkService.getInstance().put(sharedKey, storedValue);
-    await ClientSdkService.getInstance()
-        .notify(sharedKey, storedValue, operation);
+    // await ClientSdkService.getInstance()
+    //     .notify(sharedKey, storedValue, operation);
   }
 
   //simple atSign getter

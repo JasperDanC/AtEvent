@@ -160,7 +160,7 @@ void _notificationCallback(dynamic response) async {
     //lookup that key to add to use the value when needed
     String value = await lookup(realKey);
     print("Value: " + value.toString());
-    print('_notificationCallback opeartion $operation');
+    print('_notificationCallback operation $operation');
 
 
     //if it is a delete notification delete the event

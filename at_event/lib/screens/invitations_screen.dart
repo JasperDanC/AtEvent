@@ -145,7 +145,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        _sendConfirmation(Provider.of<UIData>(context).invites[index].event);
+                                        _sendConfirmation(Provider.of<UIData>(context,listen: false).invites[index].event);
                                         scan(context);
                                       },
                                       minWidth: 0,
