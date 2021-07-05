@@ -163,8 +163,8 @@ class _OverlappingContactsState extends State<OverlappingContacts> {
                             isSelected: widget.selectedList
                                 .contains(widget.selectedList[index]),
                             onRemove: () {
-                              EventService().removeSelectedContact(index);
-                              EventService().update();
+                              //EventService().removeSelectedContact(index);
+                              //EventService().update();
                             },
                             name: widget.selectedList[index].tags != null &&
                                     widget.selectedList[index].tags['name'] !=

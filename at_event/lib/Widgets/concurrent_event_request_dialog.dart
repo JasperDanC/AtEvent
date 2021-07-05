@@ -68,8 +68,8 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                             setState(() {
                               isLoader = true;
                             });
-                            await EventService().createEvent(
-                                isEventOverlap: true, context: context);
+                            //await EventService().createEvent(
+                            //    isEventOverlap: true, context: context);
                             if (mounted) {
                               setState(() {
                                 isLoader = true;
