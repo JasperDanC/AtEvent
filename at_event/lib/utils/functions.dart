@@ -98,13 +98,15 @@ scan(BuildContext context) async {
         Provider.of<UIData>(context,listen: false).addEvent(eventModel.toUI_Event());
       } else {
         print("active: "+ atKey.sharedWith + " from: "+ eventModel.atSignCreator );
-        if(eventModel.atSignCreator != currentUser){
+        if(atKey.sharedWith.replaceAll("@", "") != atKey.sharedBy.replaceAll("@", "")){
           Invite newInvite = Invite(event: eventModel.toUI_Event(),from: eventModel.atSignCreator);
           Provider.of<UIData>(context,listen: false).addInvite(newInvite);
         }
 
       }
     }
+
+
 
     //keep track of the amount of my keys for debugging purposes
     keysFound += 1;

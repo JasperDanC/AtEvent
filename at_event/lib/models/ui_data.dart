@@ -22,6 +22,10 @@ class UIData extends ChangeNotifier {
     _invites.clear();
     notifyListeners();
   }
+
+  void clearDuplicateInvites(){
+
+  }
   UI_Event getEvent(int index) => _uiEvents[index];
   Invite getInvite(int index) => _invites[index];
 
