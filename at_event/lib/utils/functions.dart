@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:at_event/models/ui_event.dart';
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/models/invite.dart';
@@ -98,13 +99,15 @@ scan(BuildContext context) async {
         Provider.of<UIData>(context,listen: false).addEvent(eventModel.toUI_Event());
       } else {
         print("active: "+ atKey.sharedWith + " from: "+ eventModel.atSignCreator );
-        if(eventModel.atSignCreator != currentUser){
+        if(atKey.sharedWith.replaceAll("@", "") != atKey.sharedBy.replaceAll("@", "") && currentUser.replaceAll("@", "") !=eventModel.atSignCreator.replaceAll("@", "")){
           Invite newInvite = Invite(event: eventModel.toUI_Event(),from: eventModel.atSignCreator);
           Provider.of<UIData>(context,listen: false).addInvite(newInvite);
         }
 
       }
     }
+
+
 
     //keep track of the amount of my keys for debugging purposes
     keysFound += 1;
@@ -160,13 +163,24 @@ void _notificationCallback(dynamic response) async {
     //lookup that key to add to use the value when needed
     String value = await lookup(realKey);
     print("Value: " + value.toString());
-    print('_notificationCallback opeartion $operation');
+    print('_notificationCallback operation $operation');
 
 
     //if it is a delete notification delete the event
     if(operation=='delete'){
-      print('deleting event');
-      await ClientSdkService.getInstance().delete(realKey);
+      List<String> names = [];
+      for(UI_Event e in Provider.of<UIData>(globalContext,listen: false).events){
+        if(e.realEvent.atSignCreator == realKey.sharedWith){
+          names.add(e.eventName);
+        }
+      }
+      if(names.contains(realKey.key.replaceAll("event", ""))){
+        print('deleting event');
+        String temp = realKey.sharedBy;
+        realKey.sharedBy = realKey.sharedWith;
+        realKey.sharedWith = temp;
+        await ClientSdkService.getInstance().delete(realKey);
+      }
       return;
     }
 

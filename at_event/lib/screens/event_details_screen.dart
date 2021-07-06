@@ -350,9 +350,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
-  // at this moment June 24 2021 sometimes this works perfectly and other times
-  // times the invited person never gets the event
+
   _updateAndInvite() async {
+
+    //create and update the event in the secondary so that the invitee added
+    //is kept track of in the secondary as well
     AtKey atKey = AtKey();
     atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
     atKey.namespace = namespace;
@@ -367,22 +369,25 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
     await ClientSdkService.getInstance().put(atKey, storedValue);
 
+
+    //metadata for the shared key
     var sharedMetadata = Metadata()
       ..ccd = true
-      ..ttr = 40
+      ..ttr = 10
       ..isCached = true;
 
+
+    //key that comes from me and is shared with the added invitee
     AtKey sharedKey = AtKey()
       ..key = atKey.key
       ..metadata = sharedMetadata
       ..sharedBy = activeAtSign
-      ..sharedWith = _inviteeAtSign;
+      ..sharedWith = _inviteeAtSign; //important: shared with is the person invited
 
-    var operation = OperationEnum.update;
+    //share that key and value
     print(storedValue);
     await ClientSdkService.getInstance().put(sharedKey, storedValue);
-    await ClientSdkService.getInstance()
-        .notify(sharedKey, storedValue, operation);
+
   }
 
   //simple atSign getter

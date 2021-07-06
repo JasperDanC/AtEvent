@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:at_contact/at_contact.dart';
 import 'ui_event.dart';
+import 'group_model.dart';
 
 class EventNotificationModel {
   EventNotificationModel();
@@ -9,7 +10,7 @@ class EventNotificationModel {
   String title;
   String description;
   Setting setting;
-  AtGroup group;
+  GroupModel group;
   List<String> peopleGoing;
   List<String> invitees;
   EventCategory category;
@@ -51,42 +52,16 @@ class EventNotificationModel {
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
     isUpdating = data['isUpdating'] == 'true' ? true : false;
-    if (data['setting'] != 'null' || data['setting'] == null) {
+    if (data['setting'] != 'null' && data['setting'] != null) {
       setting = Setting.fromJson(jsonDecode(data['setting']));
     }
-    if (data['event'] != 'null' || data['event'] == null) {
+    if (data['event'] != 'null' && data['event'] != null) {
       event = data['event'] != null
           ? Event.fromJson(jsonDecode(data['event']))
-          : null;
+          : 'null';
     }
-    if (data['group'] != 'null' || data['group'] == null) {
-      data['group'] = jsonDecode(data['group']);
-      group = AtGroup(data['group']['name']);
-
-      data['group']['members'].forEach((contact) {
-        var newContact = AtContact(atSign: contact['atSign']);
-        newContact.tags = {};
-        newContact.tags['isAccepted'] = contact['tags']['isAccepted'];
-        newContact.tags['isSharing'] = contact['tags']['isSharing'];
-        newContact.tags['isExited'] = contact['tags']['isExited'];
-        newContact.tags['shareFrom'] = contact['tags']['shareFrom'] != null &&
-                contact['tags']['shareFrom'] != 'null'
-            ? contact['tags']['shareFrom']
-            : -1;
-        newContact.tags['shareTo'] = contact['tags']['shareTo'] != null &&
-                contact['tags']['shareTo'] != 'null'
-            ? contact['tags']['shareTo']
-            : -1;
-        newContact.tags['lat'] =
-            contact['tags']['lat'] != null && contact['tags']['lat'] != 'null'
-                ? contact['tags']['lat']
-                : 0;
-        newContact.tags['long'] =
-            contact['tags']['long'] != null && contact['tags']['long'] != 'null'
-                ? contact['tags']['long']
-                : 0;
-        group.members.add(newContact);
-      });
+    if (data['group'] != 'null' && data['group'] != null) {
+      data['group'] = GroupModel.fromJson(jsonDecode(data['group']));
     }
   }
 
@@ -108,7 +83,7 @@ class EventNotificationModel {
       'atSignCreator': eventNotification.atSignCreator.toString(),
       'category': eventNotification.category.toString(),
       'key': '${eventNotification.key}',
-      'group': json.encode(eventNotification.group),
+      'group': eventNotification.group!= null? GroupModel.convertGroupToJson(eventNotification.group): 'null',
       'setting': json.encode({
         'latitude': eventNotification.setting.latitude.toString(),
         'longitude': eventNotification.setting.longitude.toString(),

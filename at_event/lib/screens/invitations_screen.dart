@@ -30,7 +30,6 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   @override
   void initState() {
     getAtSign();
-    _getSharedKeys();
     super.initState();
   }
 
@@ -145,7 +144,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        _sendConfirmation(Provider.of<UIData>(context).invites[index].event);
+                                        _sendConfirmation(Provider.of<UIData>(context,listen: false).invites[index].event);
                                         scan(context);
                                       },
                                       minWidth: 0,
@@ -158,7 +157,9 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       ),
                                     ),
                                     MaterialButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _deleteInvitation(Provider.of<UIData>(context,listen: false).invites[index].event);
+                                      },
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,
                                       color: Colors.red,
@@ -206,11 +207,27 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
 
   }
-  /// Returns the list of Shared Recipes keys.
-  _getSharedKeys() async {
+  _deleteInvitation(UI_Event ui_event) async {
     ClientSdkService clientSdkService = ClientSdkService.getInstance();
-    return await clientSdkService.getAtKeys(regex:'cached.*'+MixedConstants.NAMESPACE);
-  }
+  AtKey atKey = AtKey();
+  atKey.key = ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+  atKey.namespace = namespace;
+  atKey.sharedWith = activeAtSign;
+  atKey.sharedBy = activeAtSign.replaceAll("@", "");
+  Metadata metadata = Metadata();
+  metadata.ccd = true;
+  atKey.metadata = metadata;
+
+  String storedValue =
+  EventNotificationModel.convertEventNotificationToJson(
+      ui_event.realEvent);
+
+  await ClientSdkService.getInstance().delete(atKey);
+  atKey.sharedWith=ui_event.realEvent.atSignCreator;
+  var operation = OperationEnum.delete;
+  await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
+  scan(context);
+}
 
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
@@ -219,28 +236,4 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     });
   }
 
-  _getSharedEvents() async {
-    ClientSdkService clientSdkService = ClientSdkService.getInstance();
-
-    List<AtKey> sharedKeysList = await _getSharedKeys();
-
-    Map recipesMap = {};
-
-    AtKey atKey = AtKey();
-    Metadata metadata = Metadata()..isCached = true;
-
-    sharedKeysList.forEach((element) async {
-      atKey
-        ..key = element.key
-        ..sharedWith = element.sharedWith
-        ..sharedBy = element.sharedBy
-        ..metadata = metadata;
-      String response = await clientSdkService.get(atKey);
-      print("Key: "+atKey.key +"\nValue: "+response);
-      if (response != null)
-        recipesMap.putIfAbsent('${element.key}', () => response);
-    });
-    // Return the entire map of shared recipes
-    return recipesMap;
-  }
 }
