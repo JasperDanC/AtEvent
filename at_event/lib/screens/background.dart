@@ -10,7 +10,6 @@ class Background extends StatefulWidget {
   final Widget child;
   final bool turnAppbar;
   final bool loggedIn;
-
   @override
   _BackgroundState createState() => _BackgroundState();
 }

@@ -27,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  Color scaffoldColor;
   DateTime _selectedDay;
   DateTime _focusedDay = DateTime.now();
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
@@ -302,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             margin: EdgeInsets.all(8),
                             height: 85,
-                            width: 85,
+                            width: 25,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -311,7 +312,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
-                                          builder: (BuildContext context) => GroupCreateScreen(),
+                                          builder: (BuildContext context) =>
+                                              GroupCreateScreen(),
                                         ),
                                       );
                                     },
