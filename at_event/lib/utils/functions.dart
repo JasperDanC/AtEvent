@@ -11,6 +11,7 @@ import 'constants.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 
 BuildContext globalContext;
+
 /// Scan for [AtKey] objects with the correct regex.
 scan(BuildContext context) async {
   print("started scan");
@@ -133,9 +134,7 @@ deleteAll(BuildContext context) async {
   String currentUser = await ClientSdkService.getInstance().getAtSign();
 
   //clears UI lists so that they can be refilled with the updated information
-  Provider.of<UIData>(context,listen: false).clear();
-
-
+  Provider.of<UIData>(context, listen: false).clear();
 
   for (AtKey atKey in response) {
     await client.delete(atKey);
@@ -196,9 +195,8 @@ void _notificationCallback(dynamic response) async {
     //lookup that key to add to use the value when needed
     print('_notificationCallback operation $operation');
 
-
     //if it is a delete notification delete the event
-    if(operation=='delete'){
+    if (operation == 'delete') {
       await ClientSdkService.getInstance().delete(realKey);
       List<String> names = [];
       for (UI_Event e
