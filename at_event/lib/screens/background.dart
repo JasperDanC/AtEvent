@@ -70,7 +70,7 @@ class _BackgroundState extends State<Background> {
                       const Color(0xff727272),
                       const Color(0xff808080)
                     ],
-                    stops: [0.1, 0.4, 0.7, 4.0],
+                    stops: [0.1, 0.2, 0.4, 0.8],
                   ),
                   border:
                       Border.all(width: 1.0, color: const Color(0xff707070)),
