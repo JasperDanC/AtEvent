@@ -6,6 +6,10 @@ import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
+import 'package:at_event/utils/functions.dart';
+import 'package:provider/provider.dart';
+import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/models/ui_data.dart';
 
 import 'event_tiles.dart';
 
@@ -17,7 +21,17 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
+  String activeAtSign;
+  @override
+  void initState() {
+    getAtSign();
+    scan(context);
 
+    for(UI_Event e in Provider.of<UIData>(context,listen: false).events){
+      events.add(e);
+    }
+    super.initState();
+  }
   final topAppBar = AppBar(
     elevation: 0.1,
     backgroundColor: kColorStyle1,
@@ -111,5 +125,11 @@ class _ListPageState extends State<ListPage> {
               ),
       ),
     );
+  }
+  getAtSign() async {
+    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
   }
 }

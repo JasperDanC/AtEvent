@@ -70,6 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text("Contacts"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => HomeScreen(),
+                ));
+                Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => ContactsScreen(),
                 ));
               },

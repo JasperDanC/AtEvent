@@ -1,6 +1,7 @@
 import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:at_event/screens/group_details.dart';
 import 'dart:math';
 
 class GroupCard extends StatefulWidget {
@@ -31,17 +32,26 @@ class _GroupCardState extends State<GroupCard> {
   @override
   Widget build(BuildContext context) {
     index = changeIndexColor();
-    return Container(
-      margin: EdgeInsets.all(8),
-      height: 85,
-      width: 85,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: CustomCircleAvatar(image: 'assets/images/group_icon.jpg'),
-          ),
-        ],
+    return MaterialButton(
+      onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>
+        GroupDetails()));
+      },
+      shape: CircleBorder(),
+      padding: EdgeInsets.zero,
+      minWidth: 0,
+      child: Container(
+        margin: EdgeInsets.all(8),
+        height: 85,
+        width: 85,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: CustomCircleAvatar(image: 'assets/images/group_icon.jpg'),
+            ),
+          ],
+        ),
       ),
     );
   }
