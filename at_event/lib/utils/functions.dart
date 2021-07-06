@@ -109,9 +109,9 @@ scan(BuildContext context) async {
                 atKey.sharedBy.replaceAll("@", "") &&
             currentUser.replaceAll("@", "") !=
                 eventModel.atSignCreator.replaceAll("@", "")) {
-          Invite newInvite = Invite(
+          EventInvite newInvite = EventInvite(
               event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
-          Provider.of<UIData>(context, listen: false).addInvite(newInvite);
+          Provider.of<UIData>(context, listen: false).addEventInvite(newInvite);
         }
       }
     } else if (atKey.key.startsWith('group_')){

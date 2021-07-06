@@ -155,8 +155,8 @@ List<UI_Event> kDummyEvents = [
       from: DateTime(2021, 06, 22, 6),
       to: DateTime(2021, 06, 22, 9)),
 ];
-List<Invite> kDummyInvites = [
-  Invite(
+List<EventInvite> kDummyInvites = [
+  EventInvite(
     from: '@bobert',
     event: UI_Event(
         eventName: "Lunch with Thomas",
@@ -183,7 +183,7 @@ List<Invite> kDummyInvites = [
           '@george',
         ]),
   ),
-  Invite(
+  EventInvite(
     from: '@frankyG',
     event: UI_Event(
         eventName: "Party Time",
@@ -193,7 +193,7 @@ List<Invite> kDummyInvites = [
         description: 'we getting wild',
         peopleGoing: []),
   ),
-  Invite(
+  EventInvite(
     from: '@your_boss',
     event: UI_Event(
         eventName: "Important Business Meeting",
@@ -208,7 +208,7 @@ List<Invite> kDummyInvites = [
           '@MrSmith',
         ]),
   ),
-  Invite(
+  EventInvite(
     from: '@gerald',
     event: UI_Event(
         eventName: "Gerald + Gertrude Wedding",
@@ -249,7 +249,7 @@ List<Invite> kDummyInvites = [
           '@george2'
         ]),
   ),
-  Invite(
+  EventInvite(
     from: '@bobert',
     event: UI_Event(
         eventName: "Lunch with Thomas",

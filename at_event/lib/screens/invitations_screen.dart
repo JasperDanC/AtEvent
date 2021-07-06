@@ -53,7 +53,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                       width: 250,
                       child: Text(
                         'You have ' +
-                            Provider.of<UIData>(context).invites.length.toString() +
+                            Provider.of<UIData>(context).eventInvites.length.toString() +
                             ' invitations',
                         style: TextStyle(
                             fontSize: 28,
@@ -78,7 +78,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                 Expanded(
                   child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      itemCount: Provider.of<UIData>(context).invites.length,
+                      itemCount: Provider.of<UIData>(context).eventInvites.length,
                       itemBuilder: (context, index) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -92,7 +92,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return InviteDetailsScreen(
-                                          invite: Provider.of<UIData>(context).invites[index]);
+                                          invite: Provider.of<UIData>(context).eventInvites[index]);
                                     }));
                                   },
                                   padding: EdgeInsets.zero,
@@ -104,7 +104,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          Provider.of<UIData>(context).invites[index].event.eventName,
+                                          Provider.of<UIData>(context).eventInvites[index].event.eventName,
                                           style:
                                               kEventDetailsTextStyle.copyWith(
                                                   fontSize: 22,
@@ -113,12 +113,12 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         Text(
                                           DateFormat('yyyy MMMM dd  hh:mm')
                                                   .format(
-                                                      Provider.of<UIData>(context).invites[index].event.from)
+                                                      Provider.of<UIData>(context).eventInvites[index].event.from)
                                                   .toString() +
                                               " - " +
                                               DateFormat('hh:mm')
                                                   .format(
-                                                      Provider.of<UIData>(context).invites[index].event.to)
+                                                      Provider.of<UIData>(context).eventInvites[index].event.to)
                                                   .toString(),
                                           style: kEventDetailsTextStyle,
                                         ),
@@ -127,10 +127,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         ),
                                         Text(
                                           'From ' +
-                                              Provider.of<UIData>(context).invites[index].from +
+                                              Provider.of<UIData>(context).eventInvites[index].from +
                                               '\n' +
                                               'At ' +
-                                              Provider.of<UIData>(context).invites[index].event.location,
+                                              Provider.of<UIData>(context).eventInvites[index].event.location,
                                           style:
                                               kEventDetailsTextStyle.copyWith(
                                             color: kEventBlue,
@@ -144,7 +144,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        _sendConfirmation(Provider.of<UIData>(context,listen: false).invites[index].event);
+                                        _sendConfirmation(Provider.of<UIData>(context,listen: false).eventInvites[index].event);
                                         scan(context);
                                       },
                                       minWidth: 0,
@@ -158,7 +158,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                     ),
                                     MaterialButton(
                                       onPressed: () {
-                                        _deleteInvitation(Provider.of<UIData>(context,listen: false).invites[index].event);
+                                        _deleteInvitation(Provider.of<UIData>(context,listen: false).eventInvites[index].event);
                                       },
                                       minWidth: 0,
                                       padding: EdgeInsets.zero,

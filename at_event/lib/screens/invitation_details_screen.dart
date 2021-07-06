@@ -7,7 +7,7 @@ import 'background.dart';
 import 'package:at_event/models/ui_event.dart';
 
 void main() => runApp(InviteDetailsScreen(
-  invite:  Invite(
+  invite:  EventInvite(
     from: '@bobert',
     event: UI_Event(
         eventName: "Lunch with Thomas",
@@ -39,7 +39,7 @@ void main() => runApp(InviteDetailsScreen(
 
 class InviteDetailsScreen extends StatelessWidget {
   InviteDetailsScreen({@required this.invite});
-  final Invite invite;
+  final EventInvite invite;
 
   @override
   Widget build(BuildContext context) {

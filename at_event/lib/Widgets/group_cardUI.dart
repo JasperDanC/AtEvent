@@ -1,6 +1,7 @@
 import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:at_event/screens/group_details.dart';
 import 'dart:math';
 
 class GroupCard extends StatefulWidget {

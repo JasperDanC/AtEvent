@@ -5,7 +5,8 @@ import 'group_model.dart';
 
 class UIData extends ChangeNotifier {
   List<UI_Event> _uiEvents=[];
-  List<Invite> _invites =[];
+  List<EventInvite> _eventInvites =[];
+  List<GroupInvite> _groupInvites =[];
   List<GroupModel> _groups = [];
 
 
@@ -18,24 +19,34 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addInvite(Invite invite){
-    _invites.add(invite);
+  void addEventInvite(EventInvite invite){
+    _eventInvites.add(invite);
     notifyListeners();
   }
 
+  void addGroupInvite(EventInvite invite){
+    _eventInvites.add(invite);
+    notifyListeners();
+  }
   void clear(){
     _uiEvents.clear();
-    _invites.clear();
+    _eventInvites.clear();
+    _groupInvites.clear();
+    _groups.clear();
     notifyListeners();
   }
 
   UI_Event getEvent(int index) => _uiEvents[index];
-  Invite getInvite(int index) => _invites[index];
+  EventInvite getEventInvite(int index) => _eventInvites[index];
+  GroupInvite getGroupInvite(int index) => _groupInvites[index];
+  GroupModel getGroup(int index) => _groups[index];
 
   List<UI_Event> get events => _uiEvents;
-  List<Invite> get invites => _invites;
+  List<EventInvite> get eventInvites => _eventInvites;
+  List<GroupInvite> get groupInvites => _groupInvites;
+  List<GroupModel> get groups => _groups;
   int get eventsLength => _uiEvents.length;
-  int get invitesLength => _invites.length;
-
-
+  int get eventInvitesLength => _eventInvites.length;
+  int get groupInvitesLength => _groupInvites.length;
+  int get groupsLength => _groups.length;
 }

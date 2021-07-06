@@ -15,6 +15,7 @@ import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:at_event/models/group_model.dart';
 
 import 'package:at_event/widgets/custom_toast.dart';
 
@@ -29,7 +30,10 @@ class EventCreateScreen extends StatefulWidget {
 
 class _EventCreateScreenState extends State<EventCreateScreen> {
   List<String> invites = [];
-  int _dropDownValue = 1;
+  List<DropdownMenuItem> groupDropDownItems = [];
+  Map<int, GroupModel> groupValueMap = {0:null};
+  int _categoryDropDownValue = 1;
+  int _groupDropDownValue = 0;
 
   final ScrollController _scrollController = ScrollController();
   ClientSdkService clientSdkService;
@@ -41,7 +45,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   String _eventStartTime;
   String _eventEndTime;
   String activeAtSign = '';
-
 
   TextEditingController _inviteTextController;
 
@@ -55,6 +58,21 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    List<GroupModel> groups = Provider.of<UIData>(context).groups;
+    groupDropDownItems.clear();
+    groupDropDownItems.add(DropdownMenuItem(
+      child: Text("No Group"),
+      value: 0,
+    ));
+    int nextValue = 1;
+    for (GroupModel g in groups) {
+      groupDropDownItems.add(DropdownMenuItem(
+        child: Text(g.title),
+        value: nextValue,
+      ));
+      groupValueMap[nextValue] = g;
+      nextValue += 1;
+    }
     return Background(
       child: Expanded(
         child: Container(
@@ -63,6 +81,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           child: Padding(
             padding: const EdgeInsets.all(35.0),
             child: Column(
+
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
@@ -71,6 +90,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
+                ),
+                SizedBox(
+                  height: 25.0,
                 ),
                 TextField(
                   cursorColor: Colors.white,
@@ -87,6 +109,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   onChanged: (value) {
                     _eventTitle = value;
                   },
+                ),
+                SizedBox(
+                  height: 25.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -109,6 +134,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                     },
                   ),
                 ),
+                SizedBox(
+                  height: 25.0,
+                ),
                 TextField(
                   cursorColor: Colors.white,
                   controller: widget.locationController,
@@ -130,7 +158,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       SizeConfig().screenHeight * 0.9),
                 ),
                 SizedBox(
-                  height: 10.0,
+                  height: 25.0,
                 ),
                 Row(
                   children: [
@@ -145,9 +173,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                         dropdownColor: kBackgroundGrey,
                         style: kEventDetailsTextStyle,
                         onChanged: (value) {
-                          _dropDownValue = value;
+                          _categoryDropDownValue = value;
                         },
-                        value: _dropDownValue,
+                        value: _categoryDropDownValue,
                         items: [
                           DropdownMenuItem(
                             child: Text(
@@ -197,77 +225,89 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 25,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    MaterialButton(
-                      padding: EdgeInsets.zero,
-                      minWidth: 0,
-                      onPressed: () {
-                        _invitees.add(_inviteTextController.value.toString());
-                        _inviteTextController.clear();
-                      },
-                      shape: CircleBorder(),
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                        size: 33,
-                      ),
-                    ),
-                    Text(
-                      '@',
-                      style: TextStyle(color: Color(0xFFaae5e6), fontSize: 22),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: _inviteTextController,
-                        cursorColor: Colors.white,
-                        style: kEventDetailsTextStyle,
-                        decoration: InputDecoration(
-                          hintStyle: kEventDetailsTextStyle.copyWith(
-                              color: Colors.grey[400]),
-                          hintText: 'signs to invite',
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     MaterialButton(
+                //       padding: EdgeInsets.zero,
+                //       minWidth: 0,
+                //       onPressed: () {
+                //         _invitees.add(_inviteTextController.value.toString());
+                //         _inviteTextController.clear();
+                //       },
+                //       shape: CircleBorder(),
+                //       child: Icon(
+                //         Icons.add_circle_outline,
+                //         color: Colors.white,
+                //         size: 33,
+                //       ),
+                //     ),
+                //     Text(
+                //       '@',
+                //       style: TextStyle(color: Color(0xFFaae5e6), fontSize: 22),
+                //     ),
+                //     Expanded(
+                //       child: TextField(
+                //         controller: _inviteTextController,
+                //         cursorColor: Colors.white,
+                //         style: kEventDetailsTextStyle,
+                //         decoration: InputDecoration(
+                //           hintStyle: kEventDetailsTextStyle.copyWith(
+                //               color: Colors.grey[400]),
+                //           hintText: 'signs to invite',
+                //           enabledBorder: UnderlineInputBorder(
+                //               borderSide: BorderSide(color: Colors.white)),
+                //           focusedBorder: UnderlineInputBorder(
+                //               borderSide: BorderSide(color: Colors.white)),
+                //         ),
+                //       ),
+                //     )
+                //   ],
+                // ),
+                // Expanded(
+                //   child: Padding(
+                //     padding: const EdgeInsets.symmetric(
+                //         horizontal: 8.0, vertical: 20.0),
+                //     child: Container(
+                //       decoration: BoxDecoration(
+                //           color: kForegroundGrey,
+                //           borderRadius:
+                //               BorderRadius.all(Radius.circular(40.0))),
+                //       child: Padding(
+                //         padding: const EdgeInsets.all(8.0),
+                //         child: ListView.builder(
+                //             shrinkWrap: true,
+                //             padding: EdgeInsets.symmetric(
+                //                 vertical: 0, horizontal: 12.0),
+                //             controller: _scrollController,
+                //             itemCount: invites.length,
+                //             itemBuilder: (context, index) {
+                //               return Padding(
+                //                 padding: const EdgeInsets.all(4.0),
+                //                 child: Text(
+                //                   invites[index],
+                //                   style: kEventDetailsTextStyle,
+                //                 ),
+                //               );
+                //             }),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 20.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: kForegroundGrey,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(40.0))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 12.0),
-                            controller: _scrollController,
-                            itemCount: invites.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  invites[index],
-                                  style: kEventDetailsTextStyle,
-                                ),
-                              );
-                            }),
-                      ),
-                    ),
-                  ),
-                ),
+                    child: DropdownButtonFormField(
+                  items: groupDropDownItems,
+                  value: _groupDropDownValue,
+                  dropdownColor: kBackgroundGrey,
+                  style: kEventDetailsTextStyle,
+                  onChanged: (value) {
+                    setState(() {
+                      _groupDropDownValue = value;
+                    });
+                  },
+                )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -381,7 +421,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                                 ),
                                 onPressed: () {
                                   _update();
-
                                 },
                               ),
                             ],
@@ -420,7 +459,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     if (filled) {
       //if everything was filled in
       // use this long switch statement to pick the right event event category from the dropdown value
-      switch (_dropDownValue) {
+      switch (_categoryDropDownValue) {
         case 1:
           _eventCategory = EventCategory.None;
           break;
@@ -450,8 +489,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..date = DateTime.parse(_eventDay)
         ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
         ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime)
-      ..isRecurring=false;
-
+        ..isRecurring = false;
 
       //Create Location object with correct label
       // map thing will be implemented later
@@ -464,7 +502,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..category = _eventCategory
         ..peopleGoing = [activeAtSign]
         ..invitees = []
-        ..group = null
+        ..group = groupValueMap[_groupDropDownValue]
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
@@ -487,13 +525,13 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
-      Provider.of<UIData>(context,listen: false).addEvent(newEventNotification.toUI_Event());
+      Provider.of<UIData>(context, listen: false)
+          .addEvent(newEventNotification.toUI_Event());
       //back to the calendar
       Navigator.pop(context);
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) => CalendarScreen()),
+        MaterialPageRoute(builder: (context) => CalendarScreen()),
       );
     } else {
       //if they did not fill the fields print
@@ -503,12 +541,11 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   void createRecurring() {
-    bool filled = _eventTitle != null &&
-        _eventTitle != "" &&
-        widget.setting!= null;
+    bool filled =
+        _eventTitle != null && _eventTitle != "" && widget.setting != null;
 
     if (filled) {
-      switch (_dropDownValue) {
+      switch (_categoryDropDownValue) {
         case 1:
           _eventCategory = EventCategory.None;
           break;
@@ -542,7 +579,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..category = _eventCategory
         ..peopleGoing = [activeAtSign]
         ..invitees = []
-        ..group = null
+        ..group = groupValueMap[_groupDropDownValue]
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
