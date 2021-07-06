@@ -82,6 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ));
               },
             ),
+            ListTile(
+              title: Text("Delete All Info on Secondary"),
+              onTap: () {
+                deleteAll(context);
+              },
+            ),
           ],
         ),
       ),

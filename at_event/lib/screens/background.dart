@@ -3,6 +3,7 @@ import 'package:adobe_xd/pinned.dart';
 import 'package:at_event/utils/constants.dart';
 import '../service/client_sdk_service.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:at_event/utils/functions.dart';
 
 class Background extends StatefulWidget {
   Background({this.child, this.turnAppbar = true, this.loggedIn = true});
@@ -111,6 +112,12 @@ class _BackgroundState extends State<Background> {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => BlockedScreen(),
                         ));
+                      },
+                    ),
+                    ListTile(
+                      title: Text("Delete All Info on Secondary"),
+                      onTap: () {
+                        deleteAll(context);
                       },
                     ),
                   ],
