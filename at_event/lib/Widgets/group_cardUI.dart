@@ -1,5 +1,4 @@
 import 'package:at_event/Widgets/circle_avatar.dart';
-import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';

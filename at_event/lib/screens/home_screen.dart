@@ -69,6 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text("Contacts"),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => HomeScreen(),
+                ));
+                Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => ContactsScreen(),
                 ));
               },
@@ -79,6 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => BlockedScreen(),
                 ));
+              },
+            ),
+            ListTile(
+              title: Text("Delete All Info on Secondary"),
+              onTap: () {
+                deleteAll(context);
               },
             ),
           ],

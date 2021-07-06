@@ -11,7 +11,6 @@ import 'constants.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 
 BuildContext globalContext;
-
 /// Scan for [AtKey] objects with the correct regex.
 scan(BuildContext context) async {
   print("started scan");
@@ -121,6 +120,30 @@ scan(BuildContext context) async {
   print(" found $keysFound keys");
 }
 
+deleteAll(BuildContext context) async {
+  print("started deletion");
+  globalContext = context;
+  //counter to keep track of the amount of Key Value pairs stored in the secondary server
+  int keysFound = 0;
+
+  //gets the client sdk service to fill a list with all the atKeys
+  List<AtKey> response;
+  ClientSdkService client = ClientSdkService.getInstance();
+  response = await client.getAtKeys();
+  String currentUser = await ClientSdkService.getInstance().getAtSign();
+
+  //clears UI lists so that they can be refilled with the updated information
+  Provider.of<UIData>(context,listen: false).clear();
+
+
+
+  for (AtKey atKey in response) {
+    await client.delete(atKey);
+    keysFound++;
+  }
+  print("Deleted $keysFound keys");
+}
+
 /// Look up a value corresponding to an [AtKey] instance.
 Future<String> lookup(AtKey atKey) async {
   // If an AtKey object exists
@@ -171,12 +194,12 @@ void _notificationCallback(dynamic response) async {
       realKey.toString());
   if (fromAtSign != to) {
     //lookup that key to add to use the value when needed
-    String value = await lookup(realKey);
-    print("Value: " + value.toString());
     print('_notificationCallback operation $operation');
 
+
     //if it is a delete notification delete the event
-    if (operation == 'delete') {
+    if(operation=='delete'){
+      await ClientSdkService.getInstance().delete(realKey);
       List<String> names = [];
       for (UI_Event e
           in Provider.of<UIData>(globalContext, listen: false).events) {
@@ -190,6 +213,7 @@ void _notificationCallback(dynamic response) async {
         realKey.sharedBy = realKey.sharedWith;
         realKey.sharedWith = temp;
         await ClientSdkService.getInstance().delete(realKey);
+        scan(globalContext);
       }
       return;
     }
@@ -237,7 +261,9 @@ void _notificationCallback(dynamic response) async {
       scan(globalContext);
       return;
     }
-
+    String value = await lookup(realKey);
+    print("Value: " + value.toString());
+    print('_notificationCallback operation $operation');
     await ClientSdkService.getInstance().put(realKey, value);
     scan(globalContext);
   }
