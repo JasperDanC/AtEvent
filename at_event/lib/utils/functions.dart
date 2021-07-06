@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:at_event/models/group_model.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:provider/provider.dart';
 import 'package:at_commons/at_commons.dart';
@@ -84,8 +85,8 @@ scan(BuildContext context) async {
 
       //delete the confirmation key
       await client.delete(atKey);
-    } else if (!atKey.key.startsWith('confirm_')) {
-      // if it is not a confirmation key
+    } else if (!atKey.key.startsWith('confirm_') && !atKey.key.startsWith('group_')) {
+      // if it is not a confirmation key or a group
 
       //decode the json string into a json map
       Map<String, dynamic> jsonValue = json.decode(value);
@@ -113,6 +114,13 @@ scan(BuildContext context) async {
           Provider.of<UIData>(context, listen: false).addInvite(newInvite);
         }
       }
+    } else if (atKey.key.startsWith('group_')){
+
+      //decode the json string into a json map
+      Map<String, dynamic> jsonValue = json.decode(value);
+      //make the event Model from the json
+      GroupModel groupModel = GroupModel.fromJson(jsonValue);
+      Provider.of<UIData>(context,listen:  false).addGroup(groupModel);
     }
 
     //keep track of the amount of my keys for debugging purposes

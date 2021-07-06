@@ -19,6 +19,7 @@ import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/utils/functions.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/Widgets/group_cardUI.dart';
+import 'package:at_event/screens/group_create.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -298,6 +299,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.all(8),
+                            height: 85,
+                            width: 85,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Center(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) => GroupCreateScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           GroupCard(),
                           GroupCard(),
                           GroupCard(),
