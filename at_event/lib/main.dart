@@ -1,6 +1,7 @@
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
+import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/screens/home_screen.dart';
 import 'package:at_event/screens/invitations_screen.dart';
 import 'package:at_event/screens/recurring_event.dart';
@@ -22,7 +23,7 @@ class Vento extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<UIData>(
-      create: (context)=>UIData(),
+      create: (context) => UIData(),
       child: MaterialApp(
           theme: ThemeData.dark().copyWith(
             primaryColor: kForegroundGrey,
@@ -36,6 +37,7 @@ class Vento extends StatelessWidget {
             '/EventCreateScreen': (BuildContext context) => EventCreateScreen(),
             '/InvitationsScreen': (BuildContext context) => InvitationsScreen(),
             '/RecurringEvent': (BuildContext context) => RecurringEvent(),
+            '/GroupEvents': (BuildContext context) => GroupDetails(),
           }),
     );
   }
