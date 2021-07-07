@@ -19,6 +19,28 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void acceptGroupInvite(GroupInvite invite){
+    deleteGroupInvite(invite);
+    _groups.add(invite.group);
+    notifyListeners();
+  }
+
+  void deleteGroupInvite(GroupInvite invite){
+    _groupInvites.remove(invite);
+    notifyListeners();
+  }
+
+  void acceptEventInvite(EventInvite invite){
+    deleteEventInvite(invite);
+    _uiEvents.add(invite.event);
+    notifyListeners();
+  }
+
+  void deleteEventInvite(EventInvite invite){
+    _eventInvites.remove(invite);
+    notifyListeners();
+  }
+
   void addEventInvite(EventInvite invite){
     _eventInvites.add(invite);
     notifyListeners();

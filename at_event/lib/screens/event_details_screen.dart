@@ -183,7 +183,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: Colors.white,
                 ),
                 Text(
-                  widget.event.invitees.length.toString() + " invited:",
+                  widget.event.realEvent.invitees.length.toString() + " invited:",
                   style: kEventDetailsTextStyle,
                 ),
                 InviteBox(
@@ -275,6 +275,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   _updateAndInvite() async {
+    setState(() {
+
+    });
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();

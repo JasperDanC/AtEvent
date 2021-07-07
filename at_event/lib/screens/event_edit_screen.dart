@@ -106,7 +106,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "Editting event: " + widget.event.eventName,
+                  "Editing event: " + widget.event.eventName,
                   style: TextStyle(
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,
@@ -398,7 +398,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
     for (String invitee in newEventNotification.invitees) {
       atKey.sharedWith = invitee;
       var operation = OperationEnum.update;
-      await clientSdkService.notify(atKey, storedValue, operation);
+      await clientSdkService.put(atKey, storedValue);
     }
 
     Navigator.pop(context);
