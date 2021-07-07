@@ -351,10 +351,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       atKey.key =
           'confirm_' + eventInvite.event.realEvent.key.toLowerCase().replaceAll(" ", "");
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
+      Provider.of<UIData>(context, listen: false).acceptEventInvite(eventInvite);
+
     } else {
       groupInvite.group.atSignMembers.add(activeAtSign);
       atKey.key = 'confirm_' + groupInvite.group.key.toLowerCase().replaceAll(" ", "");
       atKey.sharedWith = groupInvite.group.atSignCreator;
+      Provider.of<UIData>(context, listen: false).acceptGroupInvite(groupInvite);
     }
 
     atKey.namespace = namespace;
@@ -381,10 +384,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     if (isEvent) {
       atKey.key =
           eventInvite.event.realEvent.key.toLowerCase().replaceAll(" ", "");
-      Provider.of<UIData>(context).deleteEventInvite(eventInvite);
+      Provider.of<UIData>(context,listen: false).deleteEventInvite(eventInvite);
 
     } else {
       atKey.key = groupInvite.group.key.toLowerCase().replaceAll(" ", "");
+      Provider.of<UIData>(context, listen: false).deleteGroupInvite(groupInvite);
     }
 
     atKey.namespace = namespace;
@@ -411,7 +415,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     var operation = OperationEnum.delete;
     await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
-    scan(context);
+
   }
 
   getAtSign() async {

@@ -8,7 +8,6 @@ import 'package:at_event/screens/recurring_event.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
-import 'package:at_event/screens/onboarding_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/ui_event.dart';
@@ -31,7 +30,6 @@ class Vento extends StatelessWidget {
           ),
           routes: <String, WidgetBuilder>{
             '/': (BuildContext context) => WelcomeScreen(),
-            '/OnboardingScreen': (BuildContext context) => OnboardingScreen(),
             '/HomeScreen': (BuildContext context) => HomeScreen(),
             '/CalendarScreen': (BuildContext context) => CalendarScreen(),
             '/EventCreateScreen': (BuildContext context) => EventCreateScreen(),

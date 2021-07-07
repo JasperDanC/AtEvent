@@ -250,8 +250,8 @@ void _notificationCallback(dynamic response) async {
       }
 
       //delete the confirmation key
-      await ClientSdkService.getInstance().delete(realKey);
-      scan(globalContext);
+      //await ClientSdkService.getInstance().delete(realKey);
+
       //don't do more code we have dealt with the notification
       return;
     }
@@ -263,7 +263,7 @@ void _notificationCallback(dynamic response) async {
       print("Value: " + value.toString());
       print('_notificationCallback operation $operation');
       await ClientSdkService.getInstance().put(realKey, value);
-      scan(globalContext);
+      //scan(globalContext);
     }
 
   }
