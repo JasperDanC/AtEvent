@@ -39,7 +39,7 @@ class _InviteBoxState extends State<InviteBox> {
                             .add(_inviteeAtSign);
                       }
                       _controller.clear();
-                      widget.onAdd(_inviteeAtSign);
+                      widget.onAdd();
                     });
                   }
                 },

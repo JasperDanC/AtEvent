@@ -165,7 +165,7 @@ void _notificationCallback(dynamic response) async {
       atKey +
       "\nTranslated to: " +
       realKey.toString());
-  if (fromAtSign != to) {
+  if (fromAtSign != to && fromAtSign != null && fromAtSign != 'null' ) {
     //lookup that key to add to use the value when needed
     print('_notificationCallback operation $operation');
 
