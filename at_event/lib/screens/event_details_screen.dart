@@ -274,7 +274,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
-  _updateAndInvite(String _invitee) async {
+  _updateAndInvite() async {
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();
@@ -296,18 +296,19 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ..ccd = true
       ..ttr = 10
       ..isCached = true;
+    for(String invitee in widget.event.invitees){
+      //key that comes from me and is shared with the added invitee
+      AtKey sharedKey = AtKey()
+        ..key = atKey.key
+        ..metadata = sharedMetadata
+        ..sharedBy = activeAtSign
+        ..sharedWith =
+            invitee; //important: shared with is the person invited
 
-    //key that comes from me and is shared with the added invitee
-    AtKey sharedKey = AtKey()
-      ..key = atKey.key
-      ..metadata = sharedMetadata
-      ..sharedBy = activeAtSign
-      ..sharedWith =
-          _invitee; //important: shared with is the person invited
+      //share that key and value
+      await ClientSdkService.getInstance().put(sharedKey, storedValue);
+    }
 
-    //share that key and value
-    print(storedValue);
-    await ClientSdkService.getInstance().put(sharedKey, storedValue);
   }
 
   //simple atSign getter

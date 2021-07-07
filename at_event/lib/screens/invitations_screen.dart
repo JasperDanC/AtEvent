@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
@@ -13,19 +14,17 @@ import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
-
-
+import 'package:at_event/models/group_model.dart';
 
 void main() => runApp(InvitationsScreen());
 
 class InvitationsScreen extends StatefulWidget {
-
   @override
   _InvitationsScreenState createState() => _InvitationsScreenState();
 }
 
 class _InvitationsScreenState extends State<InvitationsScreen> {
-  final _clientSdkService = ClientSdkService.getInstance();
+  int switchIndex = 0;
   String activeAtSign = '';
   @override
   void initState() {
@@ -53,7 +52,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                       width: 250,
                       child: Text(
                         'You have ' +
-                            Provider.of<UIData>(context).eventInvites.length.toString() +
+                            (Provider.of<UIData>(context)
+                                .eventInvitesLength + Provider.of<UIData>(context)
+                                .groupInvitesLength)
+                                .toString() +
                             ' invitations',
                         style: TextStyle(
                             fontSize: 28,
@@ -75,111 +77,268 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                   ],
                 ),
                 Divider(color: Colors.white),
+                ToggleSwitch(
+                  minWidth: 125,
+                  totalSwitches: 2,
+                  labels: ["Event Invites", "Group Invites"],
+                  initialLabelIndex: switchIndex,
+                  onToggle: (index) {
+                    setState(() {
+                      switchIndex = index;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 8,
+                ),
                 Expanded(
-                  child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: Provider.of<UIData>(context).eventInvites.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: switchIndex == 0
+                      ? ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount:
+                              Provider.of<UIData>(context).eventInvitesLength,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                MaterialButton(
-                                  onPressed: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return InviteDetailsScreen(
-                                          invite: Provider.of<UIData>(context).eventInvites[index]);
-                                    }));
-                                  },
-                                  padding: EdgeInsets.zero,
-                                  minWidth: 0,
-                                  child: Container(
-                                    width: 300,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          Provider.of<UIData>(context).eventInvites[index].event.eventName,
-                                          style:
-                                              kEventDetailsTextStyle.copyWith(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          DateFormat('yyyy MMMM dd  hh:mm')
-                                                  .format(
-                                                      Provider.of<UIData>(context).eventInvites[index].event.from)
-                                                  .toString() +
-                                              " - " +
-                                              DateFormat('hh:mm')
-                                                  .format(
-                                                      Provider.of<UIData>(context).eventInvites[index].event.to)
-                                                  .toString(),
-                                          style: kEventDetailsTextStyle,
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          'From ' +
-                                              Provider.of<UIData>(context).eventInvites[index].from +
-                                              '\n' +
-                                              'At ' +
-                                              Provider.of<UIData>(context).eventInvites[index].event.location,
-                                          style:
-                                              kEventDetailsTextStyle.copyWith(
-                                            color: kEventBlue,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Column(
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        _sendConfirmation(Provider.of<UIData>(context,listen: false).eventInvites[index].event);
-                                        scan(context);
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return InviteDetailsScreen(
+                                              invite:
+                                                  Provider.of<UIData>(context)
+                                                      .eventInvites[index]);
+                                        }));
                                       },
-                                      minWidth: 0,
                                       padding: EdgeInsets.zero,
-                                      color: Colors.green,
-                                      shape: CircleBorder(),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
+                                      minWidth: 0,
+                                      child: Container(
+                                        width: 300,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              Provider.of<UIData>(context)
+                                                  .eventInvites[index]
+                                                  .event
+                                                  .eventName,
+                                              style: kEventDetailsTextStyle
+                                                  .copyWith(
+                                                      fontSize: 22,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Text(
+                                              DateFormat('yyyy MMMM dd  hh:mm')
+                                                      .format(Provider.of<
+                                                              UIData>(context)
+                                                          .eventInvites[index]
+                                                          .event
+                                                          .from)
+                                                      .toString() +
+                                                  " - " +
+                                                  DateFormat('hh:mm')
+                                                      .format(Provider.of<
+                                                              UIData>(context)
+                                                          .eventInvites[index]
+                                                          .event
+                                                          .to)
+                                                      .toString(),
+                                              style: kEventDetailsTextStyle,
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'From ' +
+                                                  Provider.of<UIData>(context)
+                                                      .eventInvites[index]
+                                                      .from +
+                                                  '\n' +
+                                                  'At ' +
+                                                  Provider.of<UIData>(context)
+                                                      .eventInvites[index]
+                                                      .event
+                                                      .location,
+                                              style: kEventDetailsTextStyle
+                                                  .copyWith(
+                                                color: kEventBlue,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        _deleteInvitation(Provider.of<UIData>(context,listen: false).eventInvites[index].event);
-                                      },
-                                      minWidth: 0,
-                                      padding: EdgeInsets.zero,
-                                      color: Colors.red,
-                                      shape: CircleBorder(),
-                                      child: Icon(
-                                        Icons.cancel,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    Column(
+                                      children: [
+                                        MaterialButton(
+                                          onPressed: () {
+                                            _sendConfirmation(
+                                                ui_event: Provider.of<UIData>(
+                                                        context,
+                                                        listen: false)
+                                                    .eventInvites[index]
+                                                    .event,
+                                                isEvent: true);
+                                            scan(context);
+                                          },
+                                          minWidth: 0,
+                                          padding: EdgeInsets.zero,
+                                          color: Colors.green,
+                                          shape: CircleBorder(),
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            _deleteInvitation(
+                                                ui_event: Provider.of<UIData>(
+                                                    context,
+                                                    listen: false)
+                                                    .eventInvites[index]
+                                                    .event,
+                                                isEvent: true);
+                                          },
+                                          minWidth: 0,
+                                          padding: EdgeInsets.zero,
+                                          color: Colors.red,
+                                          shape: CircleBorder(),
+                                          child: Icon(
+                                            Icons.cancel,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
+                                ),
+                                Divider(
+                                  color: Colors.white,
                                 )
                               ],
-                            ),
-                            Divider(
-                              color: Colors.white,
-                            )
-                          ],
-                        );
-                      }),
-                ),
+                            );
+                          })
+                      : ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount:
+                              Provider.of<UIData>(context).groupInvitesLength,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () {
+                                        // Navigator.push(context,
+                                        //     MaterialPageRoute(builder: (context) {
+                                        //       return InviteDetailsScreen(
+                                        //           invite: Provider.of<UIData>(context).eventInvites[index]);
+                                        //     }));
+                                      },
+                                      padding: EdgeInsets.zero,
+                                      minWidth: 0,
+                                      child: Container(
+                                        width: 300,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              Provider.of<UIData>(context)
+                                                  .getGroupInvite(index)
+                                                  .group
+                                                  .title,
+                                              style: kEventDetailsTextStyle
+                                                  .copyWith(
+                                                      fontSize: 22,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'From ' +
+                                                  Provider.of<UIData>(context)
+                                                      .getGroupInvite(index)
+                                                      .from +
+                                                  '\n',
+                                              style: kEventDetailsTextStyle
+                                                  .copyWith(
+                                                color: kEventBlue,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        MaterialButton(
+                                          onPressed: () {
+                                            _sendConfirmation(
+                                                group: Provider.of<UIData>(
+                                                        context,
+                                                        listen: false)
+                                                    .getGroupInvite(index)
+                                                    .group,
+                                                isEvent: false);
+                                            scan(context);
+                                          },
+                                          minWidth: 0,
+                                          padding: EdgeInsets.zero,
+                                          color: Colors.green,
+                                          shape: CircleBorder(),
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            _deleteInvitation(
+                                                group: Provider.of<UIData>(
+                                                    context,
+                                                    listen: false)
+                                                    .getGroupInvite(index)
+                                                    .group,
+                                                isEvent: false
+                                            );
+                                          },
+                                          minWidth: 0,
+                                          padding: EdgeInsets.zero,
+                                          color: Colors.red,
+                                          shape: CircleBorder(),
+                                          child: Icon(
+                                            Icons.cancel,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                Divider(
+                                  color: Colors.white,
+                                )
+                              ],
+                            );
+                          }),
+                )
               ],
             ),
           ),
@@ -187,51 +346,75 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       ),
     );
   }
-  _sendConfirmation(UI_Event ui_event) async {
-    ui_event.realEvent.peopleGoing.add(activeAtSign);
+
+  _sendConfirmation(
+      {UI_Event ui_event, GroupModel group, @required bool isEvent}) async {
     AtKey atKey = AtKey();
-    atKey.key = 'confirm_'+ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+    if (isEvent) {
+      ui_event.realEvent.peopleGoing.add(activeAtSign);
+      atKey.key =
+          'confirm_' + ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      atKey.sharedWith = ui_event.realEvent.atSignCreator;
+    } else {
+      group.atSignMembers.add(activeAtSign);
+      atKey.key = 'confirm_' + group.key.toLowerCase().replaceAll(" ", "");
+      atKey.sharedWith = group.atSignCreator;
+    }
+
     atKey.namespace = namespace;
-    atKey.sharedWith = ui_event.realEvent.atSignCreator;
     atKey.sharedBy = activeAtSign;
     Metadata metadata = Metadata();
     metadata.ccd = true;
     atKey.metadata = metadata;
 
-    String storedValue =
-    EventNotificationModel.convertEventNotificationToJson(
-        ui_event.realEvent);
+    String storedValue;
 
+    if (isEvent) {
+      storedValue = EventNotificationModel.convertEventNotificationToJson(
+          ui_event.realEvent);
+    } else {
+      storedValue = GroupModel.convertGroupToJson(group);
+    }
     var operation = OperationEnum.update;
     await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
-
-
   }
-  _deleteInvitation(UI_Event ui_event) async {
 
-  AtKey atKey = AtKey();
-  atKey.key = ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
-  atKey.namespace = namespace;
-  atKey.sharedWith = activeAtSign;
-  atKey.sharedBy = activeAtSign.replaceAll("@", "");
-  Metadata metadata = Metadata();
+  _deleteInvitation(
+      {UI_Event ui_event, GroupModel group, @required bool isEvent}) async {
+    AtKey atKey = AtKey();
+    if (isEvent) {
+      atKey.key =
+          'confirm_' + ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+    } else {
+      atKey.key = 'confirm_' + group.key.toLowerCase().replaceAll(" ", "");
+    }
 
-  atKey.metadata = metadata;
+    atKey.namespace = namespace;
+    atKey.sharedWith = activeAtSign;
+    atKey.sharedBy = activeAtSign.replaceAll("@", "");
+    Metadata metadata = Metadata();
 
-  String storedValue =
-  EventNotificationModel.convertEventNotificationToJson(
-      ui_event.realEvent);
+    atKey.metadata = metadata;
 
-  await ClientSdkService.getInstance().delete(atKey);
+    String storedValue;
 
-  atKey.sharedWith=ui_event.realEvent.atSignCreator.replaceAll("@", "");
-  atKey.key = atKey.key;
-  print("Deleting: " + atKey.toString());
+    if (isEvent) {
+      storedValue = EventNotificationModel.convertEventNotificationToJson(
+          ui_event.realEvent);
+    } else {
+      storedValue = GroupModel.convertGroupToJson(group);
+    }
 
-  var operation = OperationEnum.delete;
-  await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
-  scan(context);
-}
+    await ClientSdkService.getInstance().delete(atKey);
+
+    atKey.sharedWith = ui_event.realEvent.atSignCreator.replaceAll("@", "");
+    atKey.key = atKey.key;
+    print("Deleting: " + atKey.toString());
+
+    var operation = OperationEnum.delete;
+    await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
+    scan(context);
+  }
 
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
@@ -239,5 +422,4 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       activeAtSign = currentAtSign;
     });
   }
-
 }
