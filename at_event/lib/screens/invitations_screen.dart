@@ -182,11 +182,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _sendConfirmation(
-                                                ui_event: Provider.of<UIData>(
+                                                eventInvite: Provider.of<UIData>(
                                                         context,
                                                         listen: false)
-                                                    .eventInvites[index]
-                                                    .event,
+                                                    .getEventInvite(index),
                                                 isEvent: true);
                                             scan(context);
                                           },
@@ -202,11 +201,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _deleteInvitation(
-                                                ui_event: Provider.of<UIData>(
+                                                eventInvite: Provider.of<UIData>(
                                                     context,
                                                     listen: false)
-                                                    .eventInvites[index]
-                                                    .event,
+                                                    .getEventInvite(index),
                                                 isEvent: true);
                                           },
                                           minWidth: 0,
@@ -291,11 +289,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _sendConfirmation(
-                                                group: Provider.of<UIData>(
+                                                groupInvite: Provider.of<UIData>(
                                                         context,
                                                         listen: false)
-                                                    .getGroupInvite(index)
-                                                    .group,
+                                                    .getGroupInvite(index),
                                                 isEvent: false);
                                             scan(context);
                                           },
@@ -311,11 +308,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _deleteInvitation(
-                                                group: Provider.of<UIData>(
+                                                groupInvite: Provider.of<UIData>(
                                                     context,
                                                     listen: false)
-                                                    .getGroupInvite(index)
-                                                    .group,
+                                                    .getGroupInvite(index),
                                                 isEvent: false
                                             );
                                           },
@@ -348,17 +344,17 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   _sendConfirmation(
-      {UI_Event ui_event, GroupModel group, @required bool isEvent}) async {
+      {EventInvite eventInvite, GroupInvite groupInvite, @required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      ui_event.realEvent.peopleGoing.add(activeAtSign);
+      eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
       atKey.key =
-          'confirm_' + ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
-      atKey.sharedWith = ui_event.realEvent.atSignCreator;
+          'confirm_' + eventInvite.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
     } else {
-      group.atSignMembers.add(activeAtSign);
-      atKey.key = 'confirm_' + group.key.toLowerCase().replaceAll(" ", "");
-      atKey.sharedWith = group.atSignCreator;
+      groupInvite.group.atSignMembers.add(activeAtSign);
+      atKey.key = 'confirm_' + groupInvite.group.key.toLowerCase().replaceAll(" ", "");
+      atKey.sharedWith = groupInvite.group.atSignCreator;
     }
 
     atKey.namespace = namespace;
@@ -371,22 +367,24 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
-          ui_event.realEvent);
+          eventInvite.event.realEvent);
     } else {
-      storedValue = GroupModel.convertGroupToJson(group);
+      storedValue = GroupModel.convertGroupToJson(groupInvite.group);
     }
     var operation = OperationEnum.update;
     await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
   }
 
   _deleteInvitation(
-      {UI_Event ui_event, GroupModel group, @required bool isEvent}) async {
+      {EventInvite eventInvite, GroupInvite groupInvite, @required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
       atKey.key =
-          'confirm_' + ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
+          eventInvite.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      Provider.of<UIData>(context).deleteEventInvite(eventInvite);
+
     } else {
-      atKey.key = 'confirm_' + group.key.toLowerCase().replaceAll(" ", "");
+      atKey.key = groupInvite.group.key.toLowerCase().replaceAll(" ", "");
     }
 
     atKey.namespace = namespace;
@@ -400,14 +398,14 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
-          ui_event.realEvent);
+          eventInvite.event.realEvent);
     } else {
-      storedValue = GroupModel.convertGroupToJson(group);
+      storedValue = GroupModel.convertGroupToJson(groupInvite.group);
     }
 
-    await ClientSdkService.getInstance().delete(atKey);
+    //await ClientSdkService.getInstance().delete(atKey);
 
-    atKey.sharedWith = ui_event.realEvent.atSignCreator.replaceAll("@", "");
+    atKey.sharedWith = eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
     atKey.key = atKey.key;
     print("Deleting: " + atKey.toString());
 

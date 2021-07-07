@@ -57,13 +57,17 @@ scan(BuildContext context) async {
           Provider.of<UIData>(context, listen: false)
               .addEvent(eventModel.toUI_Event());
         } else {
+
           if (atKey.sharedWith.replaceAll("@", "") !=
               atKey.sharedBy.replaceAll("@", "") &&
               currentUser.replaceAll("@", "") !=
                   eventModel.atSignCreator.replaceAll("@", "")) {
+            print(" Got invite to: " +currentUser);
             EventInvite newInvite = EventInvite(
                 event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
             Provider.of<UIData>(context, listen: false).addEventInvite(newInvite);
+          } else {
+            await client.delete(atKey);
           }
         }
       } else if (atKey.key.startsWith('group_')) {
@@ -182,6 +186,7 @@ void _notificationCallback(dynamic response) async {
           names.add(e.eventName.toLowerCase());
         }
       }
+
       //if the the key being deleted is for an event made by the activeAtSign
       if (names.contains(realKey.key.replaceFirst("event", ""))) {
         //swap shared with and shared by
@@ -253,10 +258,13 @@ void _notificationCallback(dynamic response) async {
     // if we get here it is not a delete or a confirmation
     // just throw that key on the secondary it is a invitation or event to be
     // added to the UI properly in the scan
-    String value = await lookup(realKey);
-    print("Value: " + value.toString());
-    print('_notificationCallback operation $operation');
-    await ClientSdkService.getInstance().put(realKey, value);
-    scan(globalContext);
+    if(operation == 'update'){
+      String value = await lookup(realKey);
+      print("Value: " + value.toString());
+      print('_notificationCallback operation $operation');
+      await ClientSdkService.getInstance().put(realKey, value);
+      scan(globalContext);
+    }
+
   }
 }
