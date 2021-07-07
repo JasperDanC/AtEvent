@@ -1,4 +1,5 @@
 import 'package:at_event/models/group_model.dart';
+import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -276,6 +277,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           address: events[index].location,
                           date:
                               DateFormat('hh:MM a').format(events[index].from),
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  EventDetailsScreen(
+                                event: events[index],
+                              ),
+                            ),
+                          ),
                         );
                       })
                   : Column(

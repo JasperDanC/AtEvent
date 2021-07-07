@@ -7,7 +7,6 @@ class InviteBox extends StatefulWidget {
   final List<String> invitees;
   final Function onAdd;
 
-
   @override
   _InviteBoxState createState() => _InviteBoxState();
 }
@@ -20,8 +19,8 @@ class _InviteBoxState extends State<InviteBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
       height: 300,
+      width: 300,
       child: Column(
         children: [
           Row(
@@ -33,10 +32,8 @@ class _InviteBoxState extends State<InviteBox> {
                 onPressed: () {
                   if (_inviteeAtSign != null) {
                     setState(() {
-                      if (!widget.invitees
-                          .contains(_inviteeAtSign)) {
-                        widget.invitees
-                            .add(_inviteeAtSign);
+                      if (!widget.invitees.contains(_inviteeAtSign)) {
+                        widget.invitees.add(_inviteeAtSign);
                       }
                       _controller.clear();
                       widget.onAdd();
@@ -74,19 +71,18 @@ class _InviteBoxState extends State<InviteBox> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0, vertical: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20.0),
               child: Container(
                 decoration: BoxDecoration(
                     color: kForegroundGrey,
-                    borderRadius:
-                    BorderRadius.all(Radius.circular(40.0))),
+                    borderRadius: BorderRadius.all(Radius.circular(40.0))),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ListView.builder(
                       shrinkWrap: true,
-                      padding: EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 12.0),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 12.0),
                       controller: _scrollController,
                       itemCount: widget.invitees.length,
                       itemBuilder: (context, index) {

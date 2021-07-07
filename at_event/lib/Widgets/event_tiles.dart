@@ -41,12 +41,14 @@ class PopularEventTile extends StatefulWidget {
   final String address;
   final String imgAssetPath;
   final Function onPressed;
+  final UI_Event event;
   PopularEventTile({
     @required this.address,
     @required this.date,
     @required this.imgAssetPath,
     @required this.desc,
     this.onPressed,
+    this.event,
   });
 
   @override
