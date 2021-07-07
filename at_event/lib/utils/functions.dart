@@ -41,51 +41,7 @@ scan(BuildContext context) async {
     print("Key:" + atKey.toString());
     print("Key Value:" + value.toString());
 
-    //if the received atKey is a confirmation of going to an event
-    if (atKey.key.startsWith('confirm_') &&
-        atKey.sharedBy.replaceFirst("@", "") !=
-            atKey.sharedWith.replaceFirst("@", "")) {
-      print("got event confirmation " + atKey.key);
-      //get the key of the real event
-      String keyOfEvent = atKey.key.replaceFirst("confirm_", "");
-
-      //create a replacement atKey to update the peopleGoing
-      AtKey updatedKey = AtKey();
-      updatedKey.key = keyOfEvent;
-      updatedKey.namespace = namespace;
-
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      updatedKey.metadata = metadata;
-      updatedKey.sharedWith = atKey.sharedWith;
-      updatedKey.sharedBy = atKey.sharedWith;
-      //get the original event
-      String eventValue = await lookup(updatedKey);
-      print(eventValue);
-      Map<String, dynamic> jsonValue = json.decode(eventValue);
-      EventNotificationModel eventModel =
-          EventNotificationModel.fromJson(jsonValue);
-
-      //add the person who confirmed to the event
-      eventModel.peopleGoing.add(atKey.sharedBy);
-
-      //convert to back to string
-      eventValue =
-          EventNotificationModel.convertEventNotificationToJson(eventModel);
-
-      //update on the secondary
-      await client.put(updatedKey, eventValue);
-
-      //notify all invitees of the change
-      for (String invitee in eventModel.invitees) {
-        updatedKey.sharedWith = invitee;
-        var operation = OperationEnum.update;
-        await client.notify(updatedKey, eventValue, operation);
-      }
-
-      //delete the confirmation key
-      await client.delete(atKey);
-    } else if (!atKey.key.startsWith('confirm_') && !atKey.key.startsWith('group_')) {
+    if (!atKey.key.startsWith('confirm_') && !atKey.key.startsWith('group_')) {
       // if it is not a confirmation key or a group
 
       //decode the json string into a json map
@@ -101,10 +57,6 @@ scan(BuildContext context) async {
         Provider.of<UIData>(context, listen: false)
             .addEvent(eventModel.toUI_Event());
       } else {
-        print("active: " +
-            atKey.sharedWith +
-            " from: " +
-            eventModel.atSignCreator);
         if (atKey.sharedWith.replaceAll("@", "") !=
                 atKey.sharedBy.replaceAll("@", "") &&
             currentUser.replaceAll("@", "") !=
@@ -114,13 +66,27 @@ scan(BuildContext context) async {
           Provider.of<UIData>(context, listen: false).addEventInvite(newInvite);
         }
       }
-    } else if (atKey.key.startsWith('group_')){
-
+    } else if (atKey.key.startsWith('group_')) {
       //decode the json string into a json map
       Map<String, dynamic> jsonValue = json.decode(value);
       //make the event Model from the json
       GroupModel groupModel = GroupModel.fromJson(jsonValue);
-      Provider.of<UIData>(context,listen:  false).addGroup(groupModel);
+
+      if (groupModel.atSignMembers.contains(currentUser) &&
+          !(groupModel.atSignCreator == currentUser &&
+              atKey.sharedWith != currentUser)) {
+        Provider.of<UIData>(context, listen: false).addGroup(groupModel);
+      } else {
+        if (atKey.sharedWith.replaceAll("@", "") !=
+            atKey.sharedBy.replaceAll("@", "") &&
+            currentUser.replaceAll("@", "") !=
+                groupModel.atSignCreator.replaceAll("@", "")) {
+          GroupInvite newInvite = GroupInvite(group: groupModel, from: groupModel.atSignCreator);
+          Provider.of<UIData>(context, listen:false).addGroupInvite(newInvite);
+        }
+      }
+
+
     }
 
     //keep track of the amount of my keys for debugging purposes
@@ -205,8 +171,8 @@ void _notificationCallback(dynamic response) async {
 
     //if it is a delete notification delete the event
     if (operation == 'delete') {
-
-
+      // create a list of names of the events that sharedWith (which would
+      // be the activeAtSign) made.
       List<String> names = [];
       for (UI_Event e
           in Provider.of<UIData>(globalContext, listen: false).events) {
@@ -214,21 +180,30 @@ void _notificationCallback(dynamic response) async {
           names.add(e.eventName.toLowerCase());
         }
       }
-      print(names);
+      //if the the key being deleted is for an event made by the activeAtSign
       if (names.contains(realKey.key.replaceFirst("event", ""))) {
+        //swap shared with and shared by
         String temp = realKey.sharedBy;
         realKey.sharedBy = realKey.sharedWith.replaceAll("@", "");
-        realKey.sharedWith =  temp;
-        print('deleting event: '+realKey.toString());
+        realKey.sharedWith = temp;
+        print('deleting event: ' + realKey.toString());
+        //delete the shared version of the key.
+        // when a key is shared a separate shared version is made so we
+        // gotta delete the shared version so it disappears on this secondary as
+        // well as there person it was shared with
         await ClientSdkService.getInstance().delete(realKey);
-        scan(globalContext);
         return;
       } else {
+        //if I did not create this key and got the delete notification then all
+        // i do is  delete the key
         await ClientSdkService.getInstance().delete(realKey);
       }
+      // don't run any other notification code as the delete notification has
+      // been dealt with
       return;
     }
 
+    // getting a notification that someone has accepted an invite
     if (realKey.toString().contains("confirm_")) {
       print("got event confirmation " + realKey.key);
       //get the key of the real event
@@ -270,8 +245,12 @@ void _notificationCallback(dynamic response) async {
       //delete the confirmation key
       await ClientSdkService.getInstance().delete(realKey);
       scan(globalContext);
+      //don't do more code we have dealt with the notification
       return;
     }
+    // if we get here it is not a delete or a confirmation
+    // just throw that key on the secondary it is a invitation or event to be
+    // added to the UI properly in the scan
     String value = await lookup(realKey);
     print("Value: " + value.toString());
     print('_notificationCallback operation $operation');

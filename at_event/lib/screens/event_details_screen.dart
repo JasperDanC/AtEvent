@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'calendar_screen.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:at_event/widgets/invite_box.dart';
 
 void main() {
   runApp(EventDetailsScreen(
@@ -48,11 +49,9 @@ class EventDetailsScreen extends StatefulWidget {
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
-  final ScrollController _scrollController = ScrollController();
   String activeAtSign = '';
   ClientSdkService clientSdkService;
-  String _inviteeAtSign;
-  TextEditingController _controller = TextEditingController();
+
 
   @override
   void initState() {
@@ -187,83 +186,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   widget.event.invitees.length.toString() + " invited:",
                   style: kEventDetailsTextStyle,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    MaterialButton(
-                      padding: EdgeInsets.zero,
-                      minWidth: 0,
-                      onPressed: () {
-                        if (_inviteeAtSign != null) {
-                          setState(() {
-                            if (!widget.event.invitees
-                                .contains(_inviteeAtSign)) {
-                              widget.event.realEvent.invitees
-                                  .add(_inviteeAtSign);
-                            }
-                            _controller.clear();
-                            _updateAndInvite();
-                          });
-                        }
-                      },
-                      shape: CircleBorder(),
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        color: Colors.white,
-                        size: 33,
-                      ),
-                    ),
-                    Text(
-                      '@',
-                      style: TextStyle(color: Color(0xFFaae5e6), fontSize: 22),
-                    ),
-                    Expanded(
-                      child: TextField(
-                        onChanged: (value) {
-                          _inviteeAtSign = value;
-                        },
-                        controller: _controller,
-                        cursorColor: Colors.white,
-                        style: kEventDetailsTextStyle,
-                        decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 20.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: kForegroundGrey,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(40.0))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 0, horizontal: 12.0),
-                            controller: _scrollController,
-                            itemCount: widget.event.invitees.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  widget.event.invitees[index],
-                                  style: kEventDetailsTextStyle,
-                                ),
-                              );
-                            }),
-                      ),
-                    ),
-                  ),
+                InviteBox(
+                  invitees: widget.event.invitees,
+                  onAdd: _updateAndInvite,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -338,20 +263,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         atKey.key =
             widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
         atKey.sharedWith = invitee;
-        atKey.sharedBy = widget.event.realEvent.atSignCreator.replaceAll("@", "");
+        atKey.sharedBy =
+            widget.event.realEvent.atSignCreator.replaceAll("@", "");
         Metadata metaData = Metadata()..ccd = true;
         atKey.metadata = metaData;
         deleteResult = await clientSdkService.delete(atKey);
-
       }
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
     }
   }
 
-
-  _updateAndInvite() async {
-
+  _updateAndInvite(String _invitee) async {
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();
@@ -368,25 +291,23 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
     await ClientSdkService.getInstance().put(atKey, storedValue);
 
-
     //metadata for the shared key
     var sharedMetadata = Metadata()
       ..ccd = true
       ..ttr = 10
       ..isCached = true;
 
-
     //key that comes from me and is shared with the added invitee
     AtKey sharedKey = AtKey()
       ..key = atKey.key
       ..metadata = sharedMetadata
       ..sharedBy = activeAtSign
-      ..sharedWith = _inviteeAtSign; //important: shared with is the person invited
+      ..sharedWith =
+          _invitee; //important: shared with is the person invited
 
     //share that key and value
     print(storedValue);
     await ClientSdkService.getInstance().put(sharedKey, storedValue);
-
   }
 
   //simple atSign getter
