@@ -16,6 +16,7 @@ const Color kColorStyle3 = Color(0xFF7C9885);
 const Color kGreyishWhite = Color(0xffa8a8a8);
 const Color kGroupBoxGrad1 = Color(0xff43cea2);
 const Color kGroupBoxGrad2 = Color(0xff185a9d);
+const Color kGroupInfoImageBackground = Color(0xff3a4256);
 
 class ContactInitialsColors {
   static final color = {

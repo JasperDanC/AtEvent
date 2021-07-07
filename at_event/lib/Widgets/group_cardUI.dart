@@ -1,10 +1,13 @@
 import 'package:at_event/Widgets/circle_avatar.dart';
+import 'package:at_event/models/group_model.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/screens/group_details.dart';
 import 'dart:math';
 
 class GroupCard extends StatefulWidget {
+  GroupModel group;
+  GroupCard({this.group});
   @override
   _GroupCardState createState() => _GroupCardState();
 }
@@ -42,9 +45,11 @@ class _GroupCardState extends State<GroupCard> {
           Center(
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context,rootNavigator: true).push(
+                Navigator.of(context, rootNavigator: true).push(
                   MaterialPageRoute(
-                    builder: (BuildContext context) => GroupDetails(),
+                    builder: (BuildContext context) => GroupDetails(
+                      group: widget.group,
+                    ),
                   ),
                 );
               },

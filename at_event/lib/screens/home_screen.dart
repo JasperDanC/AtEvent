@@ -1,3 +1,4 @@
+import 'package:at_event/models/group_model.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -36,6 +37,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
+  List<GroupModel> groups = [
+    GroupModel()
+      ..title = 'Group Title'
+      ..description = 'This is a hard coded test for our group model',
+    GroupModel()
+      ..title = 'CMPT 222'
+      ..description =
+          'Welcome to Computer Science 222 where we learn about computers and stuff.',
+    GroupModel()
+      ..title = 'Study Buddies'
+      ..description = 'For those who do not want to repeat any classes'
+  ];
 
   @override
   void initState() {
@@ -95,20 +108,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: Container(
-          /// Box Decoration
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20), color: kPrimaryBlue),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 5, bottom: 10),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
+      body: Container(
+        /// Box Decoration
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), color: kPrimaryBlue),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 5, bottom: 10),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: EdgeInsets.only(top: 60.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -136,12 +150,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 SizedBox(
                                   height: 20,
                                   child: Text(
                                       "Let's see what is happening today!",
-                                      style: kNormalTextStyle),
+                                      style: kNormalTextStyle.copyWith(
+                                          fontSize: 16)),
                                 ),
                                 CustomCircleAvatar(
                                   image: 'assets/images/Profile.jpg',
@@ -152,197 +168,201 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    margin: const EdgeInsets.all(4.0),
-                    child: TableCalendar(
-                      calendarFormat: CalendarFormat.week,
-                      firstDay: DateTime(2010, 01, 01),
-                      lastDay: DateTime(2050, 12, 31),
-                      focusedDay: _focusedDay,
-                      selectedDayPredicate: (day) {
-                        return isSameDay(_selectedDay, day);
-                      },
-                      onPageChanged: (focusedDay) {
-                        _focusedDay = focusedDay;
-                      },
-                      onFormatChanged: (format) {
-                        Navigator.pushNamed(context, '/CalendarScreen');
-                      },
-                      onDaySelected: (selectedDay, today) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return CalendarScreen(specificDay: selectedDay);
-                        }));
-                      },
-                      headerStyle: HeaderStyle(
-                        titleTextStyle: kHeadingTextStyle,
-                        formatButtonDecoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(20)),
-                        formatButtonTextStyle: kNormalTextStyle,
-                        leftChevronIcon: Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                        ),
-                        rightChevronIcon: Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
-                        ),
-                        decoration: BoxDecoration(
-                          color: kColorStyle1,
-                        ),
-                        headerMargin: const EdgeInsets.only(bottom: 6),
-                      ),
-                      calendarStyle: CalendarStyle(
-                        canMarkersOverflow: true,
-                      ),
-                      eventLoader: (day) {
-                        List<UI_Event> allEvents = [];
-
-                        for (int i = 0;
-                            i < Provider.of<UIData>(context).eventsLength;
-                            i++) {
-                          if (Provider.of<UIData>(context).getEvent(i).from !=
-                              null) {
-                            if (Provider.of<UIData>(context)
-                                        .getEvent(i)
-                                        .from
-                                        .day ==
-                                    day.day &&
-                                Provider.of<UIData>(context)
-                                        .getEvent(i)
-                                        .from
-                                        .month ==
-                                    day.month &&
-                                Provider.of<UIData>(context)
-                                        .getEvent(i)
-                                        .from
-                                        .year ==
-                                    day.year) {
-                              allEvents.add(
-                                  Provider.of<UIData>(context).getEvent(i));
-                            }
-                          }
-                        }
-                        return allEvents;
-                      },
-                    ),
-                  )
+                  ),
                 ],
               ),
-              Text(
-                "Today's Events",
-                style: kSubHeadingTextStyle,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: SizeConfig().screenHeight * 0.36,
-                child: events.length > 0
-                    ? ListView.builder(
-                        padding: EdgeInsets.only(top: 8),
-                        shrinkWrap: true,
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          return PopularEventTile(
-                            desc: events[index].eventName,
-                            address: events[index].location,
-                            date: DateFormat('hh:MM a')
-                                .format(events[index].from),
-                          );
-                        })
-                    : Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Container(
-                            width: 250,
-                            child: Text(
-                              'Seems that you have no events today',
-                              style: kSubHeadingTextStyle,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+            ),
+            Column(
+              children: <Widget>[
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  margin: const EdgeInsets.all(4.0),
+                  child: TableCalendar(
+                    calendarFormat: CalendarFormat.week,
+                    firstDay: DateTime(2010, 01, 01),
+                    lastDay: DateTime(2050, 12, 31),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) {
+                      return isSameDay(_selectedDay, day);
+                    },
+                    onPageChanged: (focusedDay) {
+                      _focusedDay = focusedDay;
+                    },
+                    onFormatChanged: (format) {
+                      Navigator.pushNamed(context, '/CalendarScreen');
+                    },
+                    onDaySelected: (selectedDay, today) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return CalendarScreen(specificDay: selectedDay);
+                      }));
+                    },
+                    headerStyle: HeaderStyle(
+                      titleTextStyle: kHeadingTextStyle,
+                      formatButtonDecoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(20)),
+                      formatButtonTextStyle: kNormalTextStyle,
+                      leftChevronIcon: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
                       ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10.0),
-                      gradient: LinearGradient(
-                          begin: Alignment.topRight,
-                          end: Alignment.bottomLeft,
-                          stops: [0.4, 0.9],
-                          colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.blueGrey.withOpacity(0.5),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 2))
+                      rightChevronIcon: Icon(
+                        Icons.chevron_right,
+                        color: Colors.white,
+                      ),
+                      decoration: BoxDecoration(
+                        color: kColorStyle1,
+                      ),
+                      headerMargin: const EdgeInsets.only(bottom: 6),
+                    ),
+                    calendarStyle: CalendarStyle(
+                      canMarkersOverflow: true,
+                    ),
+                    eventLoader: (day) {
+                      List<UI_Event> allEvents = [];
+
+                      for (int i = 0;
+                          i < Provider.of<UIData>(context).eventsLength;
+                          i++) {
+                        if (Provider.of<UIData>(context).getEvent(i).from !=
+                            null) {
+                          if (Provider.of<UIData>(context)
+                                      .getEvent(i)
+                                      .from
+                                      .day ==
+                                  day.day &&
+                              Provider.of<UIData>(context)
+                                      .getEvent(i)
+                                      .from
+                                      .month ==
+                                  day.month &&
+                              Provider.of<UIData>(context)
+                                      .getEvent(i)
+                                      .from
+                                      .year ==
+                                  day.year) {
+                            allEvents
+                                .add(Provider.of<UIData>(context).getEvent(i));
+                          }
+                        }
+                      }
+                      return allEvents;
+                    },
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Text(
+              "Today's Events",
+              style: kSubHeadingTextStyle,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: SizeConfig().screenHeight * 0.36,
+              child: events.length > 0
+                  ? ListView.builder(
+                      padding: EdgeInsets.only(top: 8),
+                      shrinkWrap: true,
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return PopularEventTile(
+                          desc: events[index].eventName,
+                          address: events[index].location,
+                          date:
+                              DateFormat('hh:MM a').format(events[index].from),
+                        );
+                      })
+                  : Column(
+                      children: [
+                        SizedBox(
+                          height: 40,
+                        ),
+                        Container(
+                          width: 250,
+                          child: Text(
+                            'Seems that you have no events today',
+                            style: kSubHeadingTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ],
-                      backgroundBlendMode: BlendMode.modulate),
-                  child: Center(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.all(8),
-                            height: 85,
-                            width: 25,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              GroupCreateScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                      size: 40,
-                                    ),
+                    ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10.0),
+                    gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        stops: [0.4, 0.9],
+                        colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.blueGrey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 2))
+                    ],
+                    backgroundBlendMode: BlendMode.modulate),
+                child: Center(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(8),
+                          height: 85,
+                          width: 25,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            GroupCreateScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 40,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          GroupCard(),
-                          GroupCard(),
-                          GroupCard(),
-                          GroupCard(),
-                          GroupCard(),
-                          GroupCard(),
-                          GroupCard(),
-                          GroupCard(),
-                        ],
-                      ),
+                        ),
+                        GroupCard(group: groups[0]),
+                        GroupCard(group: groups[1]),
+                        GroupCard(group: groups[2]),
+                        GroupCard(group: groups[0]),
+                        GroupCard(group: groups[1]),
+                        GroupCard(group: groups[2]),
+                        GroupCard(group: groups[0]),
+                        GroupCard(group: groups[1]),
+                        GroupCard(group: groups[2])
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     ));

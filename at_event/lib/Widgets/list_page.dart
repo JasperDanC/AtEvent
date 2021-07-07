@@ -1,10 +1,13 @@
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
 import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_event/models/event_type_model_homescreen.dart';
+import 'package:at_event/models/group_model.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
+import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/group_details.dart';
+import 'package:at_event/screens/group_information_screen.dart';
 import 'package:at_event/screens/home_screen.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +21,8 @@ import 'package:at_event/models/ui_data.dart';
 import 'event_tiles.dart';
 
 class ListPage extends StatefulWidget {
-  ListPage({Key key}) : super(key: key);
+  GroupModel group;
+  ListPage({this.group});
   @override
   _ListPageState createState() => _ListPageState();
 }
@@ -41,128 +45,142 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: kColorStyle1,
+      appBar: AppBar(
+        elevation: 0.1,
         backgroundColor: kColorStyle1,
-        appBar: AppBar(
-          elevation: 0.1,
-          backgroundColor: kColorStyle1,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (BuildContext context) => HomeScreen(),
+              ),
+            );
+          },
+        ),
+        title: Text(
+          'Group Events',
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.info_sharp),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen(),
+                  builder: (BuildContext context) => GroupInformation(
+                    group: widget.group,
+                  ),
                 ),
               );
             },
           ),
-          title: Text(
-            'Group Events',
-          ),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.info_sharp),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        bottomNavigationBar: Container(
-          height: 55.0,
-          child: BottomAppBar(
-            color: kColorStyle1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => HomeScreen(),
-                      ),
-                    );
-                  },
+        ],
+      ),
+      bottomNavigationBar: Container(
+        height: 55.0,
+        child: BottomAppBar(
+          color: kColorStyle1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.home,
+                  color: Colors.white,
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => EventCreateScreen(),
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.calendar_today_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => CalendarScreen(),
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.contacts,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => ContactsScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: Container(
-          height: SizeConfig().screenHeight * 0.8,
-          child: events.length > 0
-              ? ListView.builder(
-                  padding: EdgeInsets.only(top: 8),
-                  shrinkWrap: true,
-                  itemCount: events.length,
-                  itemBuilder: (context, index) {
-                    return PopularEventTile(
-                      desc: events[index].eventName,
-                      address: events[index].location,
-                      date: DateFormat('hh:MM a').format(events[index].from),
-                    );
-                  })
-              : Column(
-                  children: [
-                    SizedBox(
-                      height: 40,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => HomeScreen(),
                     ),
-                    Center(
-                      child: Container(
-                        child: Text(
-                          'Seems that you have no events today',
-                          style: kSubHeadingTextStyle,
-                          textAlign: TextAlign.start,
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => EventCreateScreen(),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.calendar_today_rounded,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => CalendarScreen(),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.contacts,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => ContactsScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: Container(
+        height: SizeConfig().screenHeight * 0.8,
+        child: events.length > 0
+            ? ListView.builder(
+                padding: EdgeInsets.only(top: 8),
+                shrinkWrap: true,
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  return PopularEventTile(
+                    desc: events[index].eventName,
+                    address: events[index].location,
+                    date: DateFormat('hh:MM a').format(events[index].from),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => EventDetailsScreen(
+                            event: events[index],
+                          ),
                         ),
+                      );
+                    },
+                  );
+                })
+            : Column(
+                children: [
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Center(
+                    child: Container(
+                      child: Text(
+                        'Seems that you have no events today',
+                        style: kSubHeadingTextStyle,
+                        textAlign: TextAlign.start,
                       ),
                     ),
-                  ],
-                ),
-        ),
+                  ),
+                ],
+              ),
       ),
     );
   }
