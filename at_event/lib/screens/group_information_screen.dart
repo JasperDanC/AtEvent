@@ -1,9 +1,10 @@
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/utils/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'group_details.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'dart:math';
+import 'package:at_event/Widgets/invite_box.dart';
 
 class GroupInformation extends StatelessWidget {
   final GroupModel group;
@@ -13,6 +14,7 @@ class GroupInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: <Widget>[
           Stack(
@@ -104,21 +106,49 @@ class GroupInformation extends StatelessWidget {
               ),
             ],
           ),
-          Column(children: [
-            Container(
-              height: SizeConfig().screenHeight * 0.5,
-              width: SizeConfig().screenWidth,
-              decoration: BoxDecoration(color: kColorStyle1),
-              child: Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Text(
-                  group.description,
-                  style: kNormalTextStyle.copyWith(
-                      fontSize: 18.0, color: Colors.white),
+          Container(
+            height: SizeConfig().screenHeight * 0.5,
+            width: SizeConfig().screenWidth,
+            decoration: BoxDecoration(color: kColorStyle1),
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(40.0),
+                  child: Text(
+                    group.description,
+                    style: kNormalTextStyle.copyWith(
+                        fontSize: 18.0, color: Colors.white),
+                  ),
                 ),
-              ),
-            )
-          ])
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: MaterialButton(
+                    color: kColorStyle2,
+                    shape: StadiumBorder(),
+                    elevation: 0.1,
+                    child: Text('Show Members', style: kButtonTextStyle),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            height: SizeConfig().screenHeight * 2.0,
+                            decoration: BoxDecoration(color: kColorStyle3),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                InviteBox(invitees: [], onAdd: null)
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
