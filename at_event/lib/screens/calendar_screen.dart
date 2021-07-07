@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:at_event/models/uicalendar_event_data_source.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/utils/functions.dart';
+import 'home_screen.dart';
 
 void main() {
   runApp(CalendarScreen());
@@ -88,7 +89,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     MaterialButton(
                         shape: CircleBorder(),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/HomeScreen');
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomeScreen()));
                         },
                         child: Icon(
                           Icons.chevron_left,
@@ -196,7 +197,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                       int numAppointments = 0;
                       List<String> seen = [];
-                      for(UI_Event app in details.appointments){
+                      var app;
+                      for( app in details.appointments){
                         if(!seen.contains(app.eventName)){
                           seen.add(app.eventName);
                           numAppointments +=1;

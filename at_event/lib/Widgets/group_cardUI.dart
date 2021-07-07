@@ -42,7 +42,7 @@ class _GroupCardState extends State<GroupCard> {
           Center(
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
+                Navigator.of(context,rootNavigator: true).push(
                   MaterialPageRoute(
                     builder: (BuildContext context) => GroupDetails(),
                   ),

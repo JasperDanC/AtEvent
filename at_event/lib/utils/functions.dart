@@ -205,21 +205,26 @@ void _notificationCallback(dynamic response) async {
 
     //if it is a delete notification delete the event
     if (operation == 'delete') {
-      await ClientSdkService.getInstance().delete(realKey);
+
+
       List<String> names = [];
       for (UI_Event e
           in Provider.of<UIData>(globalContext, listen: false).events) {
         if (e.realEvent.atSignCreator == realKey.sharedWith) {
-          names.add(e.eventName);
+          names.add(e.eventName.toLowerCase());
         }
       }
-      if (names.contains(realKey.key.replaceAll("event", ""))) {
-        print('deleting event');
+      print(names);
+      if (names.contains(realKey.key.replaceFirst("event", ""))) {
         String temp = realKey.sharedBy;
-        realKey.sharedBy = realKey.sharedWith;
-        realKey.sharedWith = temp;
+        realKey.sharedBy = realKey.sharedWith.replaceAll("@", "");
+        realKey.sharedWith =  temp;
+        print('deleting event: '+realKey.toString());
         await ClientSdkService.getInstance().delete(realKey);
         scan(globalContext);
+        return;
+      } else {
+        await ClientSdkService.getInstance().delete(realKey);
       }
       return;
     }

@@ -338,12 +338,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         atKey.key =
             widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
         atKey.sharedWith = invitee;
-        atKey.sharedBy = widget.event.realEvent.atSignCreator;
+        atKey.sharedBy = widget.event.realEvent.atSignCreator.replaceAll("@", "");
         Metadata metaData = Metadata()..ccd = true;
         atKey.metadata = metaData;
         deleteResult = await clientSdkService.delete(atKey);
-        var operation = OperationEnum.delete;
-        await clientSdkService.notify(atKey, atKey.toString(), operation);
+
       }
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);

@@ -208,14 +208,14 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
   }
   _deleteInvitation(UI_Event ui_event) async {
-    ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
   AtKey atKey = AtKey();
   atKey.key = ui_event.realEvent.key.toLowerCase().replaceAll(" ", "");
   atKey.namespace = namespace;
   atKey.sharedWith = activeAtSign;
   atKey.sharedBy = activeAtSign.replaceAll("@", "");
   Metadata metadata = Metadata();
-  metadata.ccd = true;
+
   atKey.metadata = metadata;
 
   String storedValue =
@@ -223,7 +223,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       ui_event.realEvent);
 
   await ClientSdkService.getInstance().delete(atKey);
-  atKey.sharedWith=ui_event.realEvent.atSignCreator;
+
+  atKey.sharedWith=ui_event.realEvent.atSignCreator.replaceAll("@", "");
+  atKey.key = atKey.key;
+  print("Deleting: " + atKey.toString());
+
   var operation = OperationEnum.delete;
   await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
   scan(context);
