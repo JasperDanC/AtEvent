@@ -35,58 +35,60 @@ scan(BuildContext context) async {
 
   for (AtKey atKey in response) {
     //await client.delete(atKey);
+    if(atKey.sharedBy != 'null' && atKey.sharedBy != null ) {
+      //looks up the key to get the value
+      String value = await lookup(atKey);
+      print("Key:" + atKey.toString());
+      print("Key Value:" + value.toString());
 
-    //looks up the key to get the value
-    String value = await lookup(atKey);
-    print("Key:" + atKey.toString());
-    print("Key Value:" + value.toString());
+      if (!atKey.key.startsWith('confirm_') && !atKey.key.startsWith('group_')) {
+        // if it is not a confirmation key or a group
 
-    if (!atKey.key.startsWith('confirm_') && !atKey.key.startsWith('group_')) {
-      // if it is not a confirmation key or a group
+        //decode the json string into a json map
+        Map<String, dynamic> jsonValue = json.decode(value);
+        //make the event Model from the json
+        EventNotificationModel eventModel =
+        EventNotificationModel.fromJson(jsonValue);
 
-      //decode the json string into a json map
-      Map<String, dynamic> jsonValue = json.decode(value);
-      //make the event Model from the json
-      EventNotificationModel eventModel =
-          EventNotificationModel.fromJson(jsonValue);
-
-      //if I am going to this event add it to my calendar otherwise add it to my invitation list
-      if (eventModel.peopleGoing.contains(currentUser) &&
-          !(eventModel.atSignCreator == currentUser &&
-              atKey.sharedWith != currentUser)) {
-        Provider.of<UIData>(context, listen: false)
-            .addEvent(eventModel.toUI_Event());
-      } else {
-        if (atKey.sharedWith.replaceAll("@", "") !=
-                atKey.sharedBy.replaceAll("@", "") &&
-            currentUser.replaceAll("@", "") !=
-                eventModel.atSignCreator.replaceAll("@", "")) {
-          EventInvite newInvite = EventInvite(
-              event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
-          Provider.of<UIData>(context, listen: false).addEventInvite(newInvite);
+        //if I am going to this event add it to my calendar otherwise add it to my invitation list
+        if (eventModel.peopleGoing.contains(currentUser) &&
+            !(eventModel.atSignCreator == currentUser &&
+                atKey.sharedWith != currentUser)) {
+          Provider.of<UIData>(context, listen: false)
+              .addEvent(eventModel.toUI_Event());
+        } else {
+          if (atKey.sharedWith.replaceAll("@", "") !=
+              atKey.sharedBy.replaceAll("@", "") &&
+              currentUser.replaceAll("@", "") !=
+                  eventModel.atSignCreator.replaceAll("@", "")) {
+            EventInvite newInvite = EventInvite(
+                event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
+            Provider.of<UIData>(context, listen: false).addEventInvite(newInvite);
+          }
         }
-      }
-    } else if (atKey.key.startsWith('group_')) {
-      //decode the json string into a json map
-      Map<String, dynamic> jsonValue = json.decode(value);
-      //make the event Model from the json
-      GroupModel groupModel = GroupModel.fromJson(jsonValue);
+      } else if (atKey.key.startsWith('group_')) {
+        //decode the json string into a json map
+        Map<String, dynamic> jsonValue = json.decode(value);
+        //make the event Model from the json
+        GroupModel groupModel = GroupModel.fromJson(jsonValue);
 
-      if (groupModel.atSignMembers.contains(currentUser) &&
-          !(groupModel.atSignCreator == currentUser &&
-              atKey.sharedWith != currentUser)) {
-        Provider.of<UIData>(context, listen: false).addGroup(groupModel);
-      } else {
-        if (atKey.sharedWith.replaceAll("@", "") !=
-            atKey.sharedBy.replaceAll("@", "") &&
-            currentUser.replaceAll("@", "") !=
-                groupModel.atSignCreator.replaceAll("@", "")) {
-          GroupInvite newInvite = GroupInvite(group: groupModel, from: groupModel.atSignCreator);
-          Provider.of<UIData>(context, listen:false).addGroupInvite(newInvite);
+        if (groupModel.atSignMembers.contains(currentUser) &&
+            !(groupModel.atSignCreator == currentUser &&
+                atKey.sharedWith != currentUser)) {
+          Provider.of<UIData>(context, listen: false).addGroup(groupModel);
+        } else {
+          if (atKey.sharedWith.replaceAll("@", "") !=
+              atKey.sharedBy.replaceAll("@", "") &&
+              currentUser.replaceAll("@", "") !=
+                  groupModel.atSignCreator.replaceAll("@", "")) {
+            GroupInvite newInvite = GroupInvite(group: groupModel, from: groupModel.atSignCreator);
+            Provider.of<UIData>(context, listen:false).addGroupInvite(newInvite);
+          }
         }
+
+      } else {
+        await client.delete(atKey);
       }
-
-
     }
 
     //keep track of the amount of my keys for debugging purposes
