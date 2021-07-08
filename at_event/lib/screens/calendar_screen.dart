@@ -15,6 +15,7 @@ import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/utils/functions.dart';
 import 'home_screen.dart';
 
+
 void main() {
   runApp(CalendarScreen());
 }
@@ -197,8 +198,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                       int numAppointments = 0;
                       List<String> seen = [];
-                      var app;
-                      for( app in details.appointments){
+
+                      for(UI_Event app  in details.appointments ){
                         if(!seen.contains(app.eventName)){
                           seen.add(app.eventName);
                           numAppointments +=1;

@@ -35,13 +35,14 @@ scan(BuildContext context) async {
 
   for (AtKey atKey in response) {
     //await client.delete(atKey);
-    if(atKey.sharedBy != 'null' && atKey.sharedBy != null ) {
+    if (atKey.sharedBy != 'null' && atKey.sharedBy != null) {
       //looks up the key to get the value
       String value = await lookup(atKey);
       print("Key:" + atKey.toString());
       print("Key Value:" + value.toString());
 
-      if (!atKey.key.startsWith('confirm_') && !atKey.key.startsWith('group_')) {
+      if (!atKey.key.startsWith('confirm_') &&
+          !atKey.key.startsWith('group_')) {
         // if it is not a confirmation key or a group
 
         //decode the json string into a json map
@@ -54,18 +55,29 @@ scan(BuildContext context) async {
         if (eventModel.peopleGoing.contains(currentUser) &&
             !(eventModel.atSignCreator == currentUser &&
                 atKey.sharedWith != currentUser)) {
-          Provider.of<UIData>(context, listen: false)
-              .addEvent(eventModel.toUI_Event());
+          if (atKey.sharedWith.replaceAll("@", "") ==
+              atKey.sharedBy.replaceAll("@", "") &&
+              currentUser.replaceAll("@", "") !=
+                  eventModel.atSignCreator.replaceAll("@", "")) {
+            await client.delete(atKey);
+          } else {
+            Provider.of<UIData>(context, listen: false)
+                .addEvent(eventModel.toUI_Event());
+          }
         } else {
-
           if (atKey.sharedWith.replaceAll("@", "") !=
               atKey.sharedBy.replaceAll("@", "") &&
               currentUser.replaceAll("@", "") !=
                   eventModel.atSignCreator.replaceAll("@", "")) {
-            print(" Got invite to: " +currentUser);
+            print(" Got invite to: " + currentUser);
             EventInvite newInvite = EventInvite(
                 event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
-            Provider.of<UIData>(context, listen: false).addEventInvite(newInvite);
+
+            if (!Provider
+                .of<UIData>(context, listen: false).isDeletedEventInvite(newInvite)) {
+              Provider.of<UIData>(context, listen: false)
+                  .addEventInvite(newInvite);
+            }
           } else {
             await client.delete(atKey);
           }
@@ -79,19 +91,60 @@ scan(BuildContext context) async {
         if (groupModel.atSignMembers.contains(currentUser) &&
             !(groupModel.atSignCreator == currentUser &&
                 atKey.sharedWith != currentUser)) {
-          Provider.of<UIData>(context, listen: false).addGroup(groupModel);
+          if (atKey.sharedWith.replaceAll("@", "") ==
+              atKey.sharedBy.replaceAll("@", "") &&
+              currentUser.replaceAll("@", "") !=
+                  groupModel.atSignCreator.replaceAll("@", "")) {
+            await client.delete(atKey);
+
+          } else {
+            Provider.of<UIData>(context, listen: false).addGroup(groupModel);
+          }
         } else {
           if (atKey.sharedWith.replaceAll("@", "") !=
               atKey.sharedBy.replaceAll("@", "") &&
               currentUser.replaceAll("@", "") !=
                   groupModel.atSignCreator.replaceAll("@", "")) {
-            GroupInvite newInvite = GroupInvite(group: groupModel, from: groupModel.atSignCreator);
-            Provider.of<UIData>(context, listen:false).addGroupInvite(newInvite);
+            GroupInvite newInvite =
+            GroupInvite(group: groupModel, from: groupModel.atSignCreator);
+
+            if (!Provider
+                .of<UIData>(context, listen: false)
+                .deletedGroupInvites
+                .contains(newInvite) &&
+                !Provider
+                    .of<UIData>(context, listen: false)
+                    .acceptedGroupInvites
+                    .contains(newInvite)) {
+              Provider.of<UIData>(context, listen: false)
+                  .addGroupInvite(newInvite);
+            }
+          } else {
+            await client.delete(atKey);
           }
         }
+      }
+    }
+    for (EventInvite ei
+    in Provider
+        .of<UIData>(context, listen: false)
+        .acceptedEventInvites) {
+      if (!Provider
+          .of<UIData>(context, listen: false).isAddedEvent(ei.event)) {
+        Provider.of<UIData>(context, listen: false).addEvent(ei.event);
 
-      } else {
-        await client.delete(atKey);
+      }
+    }
+
+    for (GroupInvite gi
+    in Provider
+        .of<UIData>(context, listen: false)
+        .acceptedGroupInvites) {
+      if (!Provider
+          .of<UIData>(context, listen: false)
+          .isAddedGroup(gi.group)) {
+        Provider.of<UIData>(context, listen: false).addGroup(gi.group);
+
       }
     }
 
@@ -171,7 +224,7 @@ void _notificationCallback(dynamic response) async {
       atKey +
       "\nTranslated to: " +
       realKey.toString());
-  if (fromAtSign != to && fromAtSign != null && fromAtSign != 'null' ) {
+  if (fromAtSign != to && fromAtSign != null && fromAtSign != 'null') {
     //lookup that key to add to use the value when needed
     print('_notificationCallback operation $operation');
 
@@ -205,6 +258,7 @@ void _notificationCallback(dynamic response) async {
         // i do is  delete the key
         await ClientSdkService.getInstance().delete(realKey);
       }
+      scan(globalContext);
       // don't run any other notification code as the delete notification has
       // been dealt with
       return;
@@ -249,22 +303,24 @@ void _notificationCallback(dynamic response) async {
         await ClientSdkService.getInstance().put(updatedKey, eventValue);
       }
 
-      //delete the confirmation key
-      //await ClientSdkService.getInstance().delete(realKey);
-
       //don't do more code we have dealt with the notification
       return;
     }
     // if we get here it is not a delete or a confirmation
     // just throw that key on the secondary it is a invitation or event to be
     // added to the UI properly in the scan
-    if(operation == 'update'){
+    if (operation == 'update') {
       String value = await lookup(realKey);
       print("Value: " + value.toString());
-      print('_notificationCallback operation $operation');
+      if(realKey.key.startsWith("group_")){
+        GroupModel group = GroupModel.fromJson(jsonDecode(value));
+        Provider.of<UIData>(globalContext, listen: false).deleteGroupByIdentical(group);
+      } else {
+        UI_Event event = EventNotificationModel.fromJson(jsonDecode(value)).toUI_Event();
+        Provider.of<UIData>(globalContext, listen: false).deleteEventByIdentical(event);
+      }
       await ClientSdkService.getInstance().put(realKey, value);
-      //scan(globalContext);
+      scan(globalContext);
     }
-
   }
 }

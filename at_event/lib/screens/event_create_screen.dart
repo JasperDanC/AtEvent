@@ -3,7 +3,7 @@ import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/recurring_event.dart';
 import 'package:at_event/screens/select_location.dart';
 import 'package:at_common_flutter/services/size_config.dart';
-import 'package:at_event/widgets/bottom_sheet.dart';
+import 'package:at_event/Widgets/bottom_sheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
