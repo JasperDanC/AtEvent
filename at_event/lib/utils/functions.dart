@@ -55,15 +55,10 @@ scan(BuildContext context) async {
         if (eventModel.peopleGoing.contains(currentUser) &&
             !(eventModel.atSignCreator == currentUser &&
                 atKey.sharedWith != currentUser)) {
-          if (atKey.sharedWith.replaceAll("@", "") ==
-              atKey.sharedBy.replaceAll("@", "") &&
-              currentUser.replaceAll("@", "") !=
-                  eventModel.atSignCreator.replaceAll("@", "")) {
-            await client.delete(atKey);
-          } else {
+
             Provider.of<UIData>(context, listen: false)
                 .addEvent(eventModel.toUI_Event());
-          }
+
         } else {
           if (atKey.sharedWith.replaceAll("@", "") !=
               atKey.sharedBy.replaceAll("@", "") &&
@@ -91,15 +86,9 @@ scan(BuildContext context) async {
         if (groupModel.atSignMembers.contains(currentUser) &&
             !(groupModel.atSignCreator == currentUser &&
                 atKey.sharedWith != currentUser)) {
-          if (atKey.sharedWith.replaceAll("@", "") ==
-              atKey.sharedBy.replaceAll("@", "") &&
-              currentUser.replaceAll("@", "") !=
-                  groupModel.atSignCreator.replaceAll("@", "")) {
-            await client.delete(atKey);
 
-          } else {
             Provider.of<UIData>(context, listen: false).addGroup(groupModel);
-          }
+
         } else {
           if (atKey.sharedWith.replaceAll("@", "") !=
               atKey.sharedBy.replaceAll("@", "") &&
@@ -189,7 +178,6 @@ Future<String> lookup(AtKey atKey) async {
 Future<bool> startMonitor(currentAtSign) async {
   await ClientSdkService.getInstance()
       .startMonitor(currentAtSign, _notificationCallback);
-  print('Monitor started');
   return true;
 }
 
@@ -224,7 +212,7 @@ void _notificationCallback(dynamic response) async {
       atKey +
       "\nTranslated to: " +
       realKey.toString());
-  if (fromAtSign != to && fromAtSign != null && fromAtSign != 'null') {
+  if (fromAtSign.replaceAll("@","") != to.replaceAll("@","") && fromAtSign != null && fromAtSign != 'null') {
     //lookup that key to add to use the value when needed
     print('_notificationCallback operation $operation');
 
@@ -315,9 +303,11 @@ void _notificationCallback(dynamic response) async {
       if(realKey.key.startsWith("group_")){
         GroupModel group = GroupModel.fromJson(jsonDecode(value));
         Provider.of<UIData>(globalContext, listen: false).deleteGroupByIdentical(group);
+        Provider.of<UIData>(globalContext, listen: false).acceptedGroupInvites.clear();
       } else {
         UI_Event event = EventNotificationModel.fromJson(jsonDecode(value)).toUI_Event();
         Provider.of<UIData>(globalContext, listen: false).deleteEventByIdentical(event);
+        Provider.of<UIData>(globalContext, listen: false).acceptedEventInvites.clear();
       }
       await ClientSdkService.getInstance().put(realKey, value);
       scan(globalContext);

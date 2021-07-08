@@ -21,7 +21,7 @@ import 'package:at_event/models/ui_data.dart';
 import 'event_tiles.dart';
 
 class ListPage extends StatefulWidget {
-  GroupModel group;
+  final GroupModel group;
   ListPage({this.group});
   @override
   _ListPageState createState() => _ListPageState();
@@ -61,7 +61,7 @@ class _ListPageState extends State<ListPage> {
           },
         ),
         title: Text(
-          'Group Events',
+          widget.group.title +' Events',
         ),
         centerTitle: true,
         actions: <Widget>[

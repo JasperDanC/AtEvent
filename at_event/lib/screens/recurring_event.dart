@@ -4,6 +4,7 @@ import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import 'package:at_event/Widgets/custom_toast.dart';
 import 'package:at_event/Widgets/custom_heading.dart';
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/service/event_services.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'calendar_screen.dart';
+import 'package:provider/provider.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
@@ -410,6 +412,7 @@ class _RecurringEventState extends State<RecurringEvent> {
       if(widget.eventDate.event.endsOn == null) {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
+
       //create the @key
       AtKey atKey = AtKey();
       atKey.key = widget.eventDate.key;
@@ -423,6 +426,7 @@ class _RecurringEventState extends State<RecurringEvent> {
       String storedValue =
       EventNotificationModel.convertEventNotificationToJson(
           widget.eventDate);
+      Provider.of<UIData>(context, listen: false).addEvent(widget.eventDate.toUI_Event());
       print(atKey.toString());
       print(storedValue);
       //put that shiza on the secondary

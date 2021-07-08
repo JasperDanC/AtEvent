@@ -270,7 +270,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         deleteResult = await clientSdkService.delete(atKey);
       }
       Navigator.of(context)
-          .pushNamedAndRemoveUntil('/CalendarScreen', (route) => false);
+          .push(MaterialPageRoute(builder: (context)=>CalendarScreen()));
     }
   }
 

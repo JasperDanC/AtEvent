@@ -15,11 +15,16 @@ class UIData extends ChangeNotifier {
 
 
   void addEvent(UI_Event event){
-    _uiEvents.add(event);
+    if(!isAddedEvent(event)){
+      _uiEvents.add(event);
+    }
     notifyListeners();
   }
   void addGroup(GroupModel group){
-    _groups.add(group);
+    if(!isAddedGroup(group)){
+      _groups.add(group);
+    }
+
     notifyListeners();
   }
 
@@ -65,7 +70,7 @@ class UIData extends ChangeNotifier {
 
   bool isAddedEvent(UI_Event e){
     for(UI_Event storedEvent in _uiEvents){
-      if(e.eventName == storedEvent.eventName && e.realEvent.atSignCreator == storedEvent.realEvent.atSignCreator){
+      if(e.eventName == storedEvent.eventName && e.realEvent.atSignCreator == storedEvent.realEvent.atSignCreator && e.description == storedEvent.description ){
         return true;
       }
     }
@@ -88,7 +93,7 @@ class UIData extends ChangeNotifier {
 
   bool isAddedGroup(GroupModel g){
     for(GroupModel storedGroup in _groups){
-      if(g.title == storedGroup.title && g.atSignCreator == storedGroup.atSignCreator){
+      if(g.title == storedGroup.title && g.atSignCreator == storedGroup.atSignCreator && g.description == storedGroup.description){
         return true;
       }
     }

@@ -2,6 +2,7 @@ import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'dart:convert';
 import 'package:at_event/screens/background.dart';
+import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
@@ -275,7 +276,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         backgroundColor: kBackgroundGrey,
                         child: Icon(Icons.add),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/EventCreateScreen');
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EventCreateScreen()));
                         }),
                   ),
                 )

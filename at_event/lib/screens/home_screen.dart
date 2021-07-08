@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
+  List<Widget> groupCards = [];
   List<GroupModel> groups = [
     GroupModel()
       ..title = 'Group Title'
@@ -56,16 +57,56 @@ class _HomeScreenState extends State<HomeScreen> {
     getAtSignAndInitContacts();
     scan(context);
     scaffoldKey = GlobalKey<ScaffoldState>();
-    for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
-      if (isToday(e)) {
-        events.add(e);
-      }
-    }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    events.clear();
+    for (UI_Event e in Provider.of<UIData>(context).events) {
+      if (isToday(e)) {
+        events.add(e);
+      }
+    }
+    groupCards.clear();
+    groupCards.insert(
+      0,
+      Container(
+        margin: EdgeInsets.all(8),
+        height: 85,
+        width: 25,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => GroupCreateScreen(),
+                    ),
+                  );
+                },
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+    for (GroupModel g in Provider.of<UIData>(context).groups) {
+      groupCards.add(
+        GroupCard(
+          group: g,
+        ),
+      );
+    }
+
     setState(() {});
     SizeConfig().init(context);
     return MaterialApp(
@@ -190,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       _focusedDay = focusedDay;
                     },
                     onFormatChanged: (format) {
-                      Navigator.pushNamed(context, '/CalendarScreen');
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalendarScreen()));
                     },
                     onDaySelected: (selectedDay, today) {
                       Navigator.push(context,
@@ -328,44 +369,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.all(8),
-                          height: 85,
-                          width: 25,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Center(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            GroupCreateScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 40,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GroupCard(group: groups[0]),
-                        GroupCard(group: groups[1]),
-                        GroupCard(group: groups[2]),
-                        GroupCard(group: groups[0]),
-                        GroupCard(group: groups[1]),
-                        GroupCard(group: groups[2]),
-                        GroupCard(group: groups[0]),
-                        GroupCard(group: groups[1]),
-                        GroupCard(group: groups[2])
-                      ],
+                      children: groupCards,
                     ),
                   ),
                 ),
