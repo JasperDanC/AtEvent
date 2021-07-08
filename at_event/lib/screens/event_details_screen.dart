@@ -51,11 +51,56 @@ class EventDetailsScreen extends StatefulWidget {
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   String activeAtSign = '';
   ClientSdkService clientSdkService;
-
+  String timeText;
 
   @override
   void initState() {
     clientSdkService = ClientSdkService.getInstance();
+    if (!widget.event.isRecurring) {
+      timeText = "From: " +
+          DateFormat('MMMM').format(widget.event.from) +
+          " " +
+          widget.event.from.day.toString() +
+          " " +
+          widget.event.from.hour.toString() +
+          ":" +
+          DateFormat('mm').format(widget.event.from) +
+          "\n" +
+          "To: " +
+          DateFormat('MMMM').format(widget.event.to) +
+          " " +
+          widget.event.to.day.toString() +
+          " " +
+          widget.event.to.hour.toString() +
+          ":" +
+          DateFormat('mm').format(widget.event.to);
+    } else {
+      if (widget.event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+        timeText = getWeekString(widget.event.realEvent.event.occursOn) +
+            "s\nFrom: " +
+            widget.event.from.hour.toString() +
+            ":" +
+            DateFormat('mm').format(widget.event.from) +
+            "\n" +
+            "To: " +
+            widget.event.to.hour.toString() +
+            ":" +
+            DateFormat('mm').format(widget.event.to);
+      } else if (widget.event.realEvent.event.repeatCycle ==
+          RepeatCycle.MONTH) {
+        timeText = widget.event.from.day.toString() +
+            " of each Month" +
+            "\nFrom: " +
+            widget.event.from.hour.toString() +
+            ":" +
+            DateFormat('mm').format(widget.event.from) +
+            "\n" +
+            "To: " +
+            widget.event.to.hour.toString() +
+            ":" +
+            DateFormat('mm').format(widget.event.to);
+      }
+    }
     getAtSign();
     super.initState();
   }
@@ -138,23 +183,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "From: " +
-                          DateFormat('MMMM').format(widget.event.from) +
-                          " " +
-                          widget.event.from.day.toString() +
-                          " " +
-                          widget.event.from.hour.toString() +
-                          ":" +
-                          DateFormat('mm').format(widget.event.from) +
-                          "\n" +
-                          "To: " +
-                          DateFormat('MMMM').format(widget.event.to) +
-                          " " +
-                          widget.event.to.day.toString() +
-                          " " +
-                          widget.event.to.hour.toString() +
-                          ":" +
-                          DateFormat('mm').format(widget.event.to),
+                      timeText,
                       textAlign: TextAlign.end,
                       style: kEventDetailsTextStyle,
                     ),
@@ -183,7 +212,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: Colors.white,
                 ),
                 Text(
-                  widget.event.realEvent.invitees.length.toString() + " invited:",
+                  widget.event.realEvent.invitees.length.toString() +
+                      " invited:",
                   style: kEventDetailsTextStyle,
                 ),
                 InviteBox(
@@ -270,14 +300,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         deleteResult = await clientSdkService.delete(atKey);
       }
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context)=>CalendarScreen()));
+          .push(MaterialPageRoute(builder: (context) => CalendarScreen()));
     }
   }
 
   _updateAndInvite() async {
-    setState(() {
-
-    });
+    setState(() {});
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();
@@ -299,19 +327,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ..ccd = true
       ..ttr = 10
       ..isCached = true;
-    for(String invitee in widget.event.invitees){
+    for (String invitee in widget.event.invitees) {
       //key that comes from me and is shared with the added invitee
       AtKey sharedKey = AtKey()
         ..key = atKey.key
         ..metadata = sharedMetadata
         ..sharedBy = activeAtSign
-        ..sharedWith =
-            invitee; //important: shared with is the person invited
+        ..sharedWith = invitee; //important: shared with is the person invited
 
       //share that key and value
       await ClientSdkService.getInstance().put(sharedKey, storedValue);
     }
-
   }
 
   //simple atSign getter
