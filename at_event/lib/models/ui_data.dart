@@ -36,7 +36,9 @@ class UIData extends ChangeNotifier {
   }
 
   void deleteGroupInvite(GroupInvite invite){
+    print(_groupInvites.length);
     _groupInvites.remove(invite);
+    print(_groupInvites.length);
     _deletedGroupInvites.add(invite);
     notifyListeners();
   }
@@ -110,23 +112,6 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteGroupByIdentical(GroupModel g){
-    for(GroupModel storedGroup in _groups){
-      if(g.title == storedGroup.title && g.atSignCreator == storedGroup.atSignCreator && g.description == storedGroup.description){
-        _groups.remove(storedGroup);
-      }
-    }
-    notifyListeners();
-  }
-
-  void deleteEventByIdentical(UI_Event e){
-    for(UI_Event storedEvent in _uiEvents){
-      if(e.eventName == storedEvent.eventName&& e.realEvent.atSignCreator == storedEvent.realEvent.atSignCreator && e.description == storedEvent.description){
-        _groups.remove(storedEvent);
-      }
-    }
-    notifyListeners();
-  }
 
 
   void clear(){

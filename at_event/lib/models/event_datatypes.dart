@@ -61,7 +61,7 @@ class EventNotificationModel {
           : 'null';
     }
     if (data['group'] != 'null' && data['group'] != null) {
-      data['group'] = GroupModel.fromJson(jsonDecode(data['group']));
+      group = GroupModel.fromJson(jsonDecode(data['group']));
     }
   }
 

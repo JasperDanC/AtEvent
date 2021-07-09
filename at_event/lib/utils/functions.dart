@@ -74,7 +74,7 @@ scan(BuildContext context) async {
                   .addEventInvite(newInvite);
             }
           } else {
-            await client.delete(atKey);
+            //await client.delete(atKey);
           }
         }
       } else if (atKey.key.startsWith('group_')) {
@@ -97,19 +97,13 @@ scan(BuildContext context) async {
             GroupInvite newInvite =
             GroupInvite(group: groupModel, from: groupModel.atSignCreator);
 
-            if (!Provider
-                .of<UIData>(context, listen: false)
-                .deletedGroupInvites
-                .contains(newInvite) &&
-                !Provider
-                    .of<UIData>(context, listen: false)
-                    .acceptedGroupInvites
-                    .contains(newInvite)) {
+            if (!Provider.of<UIData>(context,listen: false).isDeletedGroupInvite(newInvite)) {
+              print("adding invite "+ newInvite.group.title);
               Provider.of<UIData>(context, listen: false)
                   .addGroupInvite(newInvite);
             }
           } else {
-            await client.delete(atKey);
+            //await client.delete(atKey);
           }
         }
       }
@@ -224,12 +218,18 @@ void _notificationCallback(dynamic response) async {
       for (UI_Event e
           in Provider.of<UIData>(globalContext, listen: false).events) {
         if (e.realEvent.atSignCreator == realKey.sharedWith) {
-          names.add(e.eventName.toLowerCase());
+          names.add(e.eventName.toLowerCase().replaceAll(" ", ""));
         }
       }
-
+      for(GroupModel g in Provider.of<UIData>(globalContext, listen: false).groups){
+        if(g.atSignCreator == realKey.sharedWith){
+          names.add(g.title.toLowerCase().replaceAll(" ", ""));
+        }
+      }
+      print("should delete? "+ realKey.toString());
+      print("names: "+names.toString() +" name:"+realKey.key.replaceFirst("group_", "").trim());
       //if the the key being deleted is for an event made by the activeAtSign
-      if (names.contains(realKey.key.replaceFirst("event", ""))) {
+      if (names.contains(realKey.key.replaceFirst("event", "")) || names.contains(realKey.key.replaceFirst("group_", "")) ) {
         //swap shared with and shared by
         String temp = realKey.sharedBy;
         realKey.sharedBy = realKey.sharedWith.replaceAll("@", "");
@@ -254,13 +254,13 @@ void _notificationCallback(dynamic response) async {
 
     // getting a notification that someone has accepted an invite
     if (realKey.toString().contains("confirm_")) {
-      print("got event confirmation " + realKey.key);
+      print("got confirmation " + realKey.key);
       //get the key of the real event
-      String keyOfEvent = realKey.key.replaceFirst("confirm_", "");
+      String keyOfObject = realKey.key.replaceFirst("confirm_", "");
 
       //create a replacement atKey to update the peopleGoing
       AtKey updatedKey = AtKey();
-      updatedKey.key = keyOfEvent;
+      updatedKey.key = keyOfObject;
       updatedKey.namespace = namespace;
 
       Metadata metadata = Metadata();
@@ -269,27 +269,40 @@ void _notificationCallback(dynamic response) async {
       updatedKey.sharedWith = realKey.sharedWith;
       updatedKey.sharedBy = realKey.sharedWith;
       //get the original event
-      String eventValue = await lookup(updatedKey);
-      print(eventValue);
-      Map<String, dynamic> jsonValue = json.decode(eventValue);
-      EventNotificationModel eventModel =
-          EventNotificationModel.fromJson(jsonValue);
+      String value = await lookup(updatedKey);
+      print(value);
+      Map<String, dynamic> jsonValue = json.decode(value);
 
-      //add the person who confirmed to the event
-      eventModel.peopleGoing.add(realKey.sharedBy);
-
-      //convert to back to string
-      eventValue =
-          EventNotificationModel.convertEventNotificationToJson(eventModel);
-
-      //update on the secondary
-      await ClientSdkService.getInstance().put(updatedKey, eventValue);
-
-      //notify all invitees of the change
-      for (String invitee in eventModel.invitees) {
-        updatedKey.sharedWith = invitee;
-        await ClientSdkService.getInstance().put(updatedKey, eventValue);
+      if(keyOfObject.startsWith("event")){
+        EventNotificationModel eventModel =
+        EventNotificationModel.fromJson(jsonValue);
+        //add the person who confirmed to the event
+        eventModel.peopleGoing.add(realKey.sharedBy);
+        //convert to back to string
+        value =
+            EventNotificationModel.convertEventNotificationToJson(eventModel);
+        //update on the secondary
+        await ClientSdkService.getInstance().put(updatedKey, value);
+        //notify all invitees of the change
+        for (String invitee in eventModel.invitees) {
+          updatedKey.sharedWith = invitee;
+          await ClientSdkService.getInstance().put(updatedKey, value);
+        }
+      } else if(keyOfObject.startsWith("group_")){
+        print("group confirmation");
+        GroupModel groupModel = GroupModel.fromJson(jsonValue);
+        groupModel.atSignMembers.add(realKey.sharedBy);
+        value = GroupModel.convertGroupToJson(groupModel);
+        //update on the secondary
+        await ClientSdkService.getInstance().put(updatedKey, value);
+        //notify all invitees of the change
+        for (String invitee in groupModel.invitees) {
+          updatedKey.sharedWith = invitee;
+          await ClientSdkService.getInstance().put(updatedKey, value);
+        }
       }
+
+
 
       //don't do more code we have dealt with the notification
       return;
@@ -301,12 +314,8 @@ void _notificationCallback(dynamic response) async {
       String value = await lookup(realKey);
       print("Value: " + value.toString());
       if(realKey.key.startsWith("group_")){
-        GroupModel group = GroupModel.fromJson(jsonDecode(value));
-        Provider.of<UIData>(globalContext, listen: false).deleteGroupByIdentical(group);
         Provider.of<UIData>(globalContext, listen: false).acceptedGroupInvites.clear();
       } else {
-        UI_Event event = EventNotificationModel.fromJson(jsonDecode(value)).toUI_Event();
-        Provider.of<UIData>(globalContext, listen: false).deleteEventByIdentical(event);
         Provider.of<UIData>(globalContext, listen: false).acceptedEventInvites.clear();
       }
       await ClientSdkService.getInstance().put(realKey, value);

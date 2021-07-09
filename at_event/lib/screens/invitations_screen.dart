@@ -403,13 +403,15 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
           eventInvite.event.realEvent);
+      atKey.sharedWith = eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
     } else {
       storedValue = GroupModel.convertGroupToJson(groupInvite.group);
+      atKey.sharedWith = groupInvite.group.atSignCreator.replaceAll("@", "");
     }
 
     //await ClientSdkService.getInstance().delete(atKey);
 
-    atKey.sharedWith = eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
+
     atKey.key = atKey.key;
     print("Deleting: " + atKey.toString());
 

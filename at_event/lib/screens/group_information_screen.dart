@@ -1,3 +1,4 @@
+import 'package:at_event/Widgets/custom_toast.dart';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -133,11 +134,21 @@ class GroupInformation extends StatelessWidget {
                         builder: (context) {
                           return Container(
                             height: SizeConfig().screenHeight * 2.0,
-                            decoration: BoxDecoration(color: kColorStyle3),
+                            decoration: BoxDecoration(
+                              color: kColorStyle3,
+                            ),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                InviteBox(invitees: [], onAdd: null)
+                                InviteBox(
+                                  invitees: group.atSignMembers,
+                                  onAdd: (){
+                                    CustomToast()
+                                        .show('Invite Sent!', context);
+                                  },
+                                  width: 300,
+                                  height: 300,
+                                )
                               ],
                             ),
                           );

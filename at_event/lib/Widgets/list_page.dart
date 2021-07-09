@@ -36,15 +36,25 @@ class _ListPageState extends State<ListPage> {
     getAtSign();
     scan(context);
 
-    for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
-      events.add(e);
-    }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    events.clear();
+    for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
+      if(e.realEvent.group!=null){
+        print("Event, " + e.eventName + ", for group, "+  e.realEvent.group.title);
+        if (e.realEvent.group.title == widget.group.title &&
+            e.realEvent.group.atSignCreator == widget.group.atSignCreator &&
+            e.realEvent.group.description == widget.group.description) {
+          events.add(e);
+        }
+      }
+
+    }
     return Scaffold(
       backgroundColor: kColorStyle1,
       appBar: AppBar(
@@ -61,7 +71,7 @@ class _ListPageState extends State<ListPage> {
           },
         ),
         title: Text(
-          widget.group.title +' Events',
+          widget.group.title + ' Events',
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -173,9 +183,9 @@ class _ListPageState extends State<ListPage> {
                   Center(
                     child: Container(
                       child: Text(
-                        'Seems that you have no events today',
+                        'Seems that you have no events for this group. \n Try and make one!',
                         style: kSubHeadingTextStyle,
-                        textAlign: TextAlign.start,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),

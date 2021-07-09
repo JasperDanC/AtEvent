@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/screens/event_details_screen.dart';
+import 'package:at_event/screens/invitations_screen.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -124,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: Text("Your Invitations"),
               onTap: () {
-                Navigator.pushNamed(context, '/InvitationsScreen');
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InvitationsScreen()));
               },
             ),
             ListTile(
@@ -333,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           desc: events[index].eventName,
                           address: events[index].location,
                           date:
-                              DateFormat('hh:MM a').format(events[index].from),
+                              DateFormat('hh:mm a').format(events[index].from),
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
