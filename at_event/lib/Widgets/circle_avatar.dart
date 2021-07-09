@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -6,10 +7,10 @@ import 'package:at_event/utils/constants.dart';
 class CustomCircleAvatar extends StatelessWidget {
   final String image;
   final bool nonAsset;
-  final Uint8List byteImage;
+  final File fileImage;
 
   const CustomCircleAvatar(
-      {Key key, this.image, this.nonAsset = false, this.byteImage})
+      {Key key, this.image, this.nonAsset = false, this.fileImage})
       : super(key: key);
 
   @override
@@ -25,8 +26,8 @@ class CustomCircleAvatar extends StatelessWidget {
           child: nonAsset
               ? ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
-                  child: Image.memory(
-                    byteImage,
+                  child: Image.file(
+                    fileImage,
                     width: 50,
                     height: 50,
                     fit: BoxFit.fill,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/utils/constants.dart';
@@ -14,7 +16,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/models/event_type_model_homescreen.dart';
-import 'package:at_event/models/events_model_homescreen.dart';
 import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_event/Widgets/circle_avatar.dart';
@@ -22,6 +23,7 @@ import 'package:at_event/utils/functions.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/Widgets/group_cardUI.dart';
 import 'package:at_event/screens/group_create.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -35,6 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ClientSdkService clientSdkService = ClientSdkService.getInstance();
   String activeAtSign = '';
   GlobalKey<ScaffoldState> scaffoldKey;
+  File _image;
+  final _picker = ImagePicker();
+  bool _nonAsset = false;
 
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
@@ -201,8 +206,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                       style: kNormalTextStyle.copyWith(
                                           fontSize: 16)),
                                 ),
-                                CustomCircleAvatar(
-                                  image: 'assets/images/Profile.jpg',
+                                GestureDetector(
+                                  onTap: () {
+                                    _showPicker(context);
+                                    _nonAsset = true;
+                                  },
+                                  child: CustomCircleAvatar(
+                                    nonAsset: _nonAsset,
+                                    image: _image == null
+                                        ? 'assets/images/Profile.jpg'
+                                        : null,
+                                    fileImage: _image != null ? _image : null,
+                                  ),
                                 ),
                               ],
                             ),
@@ -231,7 +246,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       _focusedDay = focusedDay;
                     },
                     onFormatChanged: (format) {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalendarScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => CalendarScreen()));
                     },
                     onDaySelected: (selectedDay, today) {
                       Navigator.push(context,
@@ -449,5 +465,54 @@ class _HomeScreenState extends State<HomeScreen> {
                         .isBefore(ui_event.realEvent.event.endEventOnDate)));
       }
     }
+  }
+
+  _imgFromCamera() async {
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+
+    setState(() {
+      _image = File(image.path);
+    });
+  }
+
+  _imgFromGallery() async {
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = File(image.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+            child: Container(
+              child: Wrap(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.photo_library),
+                    title: Text('Photo Library'),
+                    onTap: () {
+                      _imgFromGallery();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.photo_camera),
+                    title: Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
