@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 
 class InviteBox extends StatefulWidget {
-  InviteBox({@required this.invitees, @required this.onAdd});
-
+  InviteBox({@required this.invitees, @required this.onAdd, @required this.width, @required this.height});
+  final double width;
+  final double height;
   final List<String> invitees;
   final Function onAdd;
 
@@ -19,8 +20,8 @@ class _InviteBoxState extends State<InviteBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
-      width: 300,
+      height: widget.height,
+      width: widget.width,
       child: Column(
         children: [
           Row(

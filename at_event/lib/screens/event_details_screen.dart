@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'calendar_screen.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:at_event/widgets/invite_box.dart';
+import 'package:at_event/Widgets/invite_box.dart';
 
 void main() {
   runApp(EventDetailsScreen(
@@ -219,6 +219,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 InviteBox(
                   invitees: widget.event.invitees,
                   onAdd: _updateAndInvite,
+                  width: 300.0,
+                  height: 200.0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

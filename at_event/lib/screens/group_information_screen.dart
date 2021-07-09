@@ -137,7 +137,7 @@ class GroupInformation extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                InviteBox(invitees: [], onAdd: null)
+                                InviteBox(invitees: [], onAdd: null,width: 300,height:300,)
                               ],
                             ),
                           );

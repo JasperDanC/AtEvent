@@ -317,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           desc: events[index].eventName,
                           address: events[index].location,
                           date:
-                              DateFormat('hh:MM a').format(events[index].from),
+                              DateFormat('hh:mm a').format(events[index].from),
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) =>
