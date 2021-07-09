@@ -1,3 +1,4 @@
+import 'package:at_event/Widgets/invite_box.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
@@ -19,174 +20,106 @@ class GroupCreateScreen extends StatefulWidget {
 }
 
 class _GroupCreateScreenState extends State<GroupCreateScreen> {
-
   int _dropDownValue = 1;
 
   final ScrollController _scrollController = ScrollController();
   ClientSdkService clientSdkService;
   String _groupTitle;
   String _groupDesc;
-  List<String> _invitees =[];
+  List<String> _invitees = [];
   String activeAtSign = '';
 
   TextEditingController _inviteTextController;
 
   @override
   void initState() {
-   getAtSign();
+    getAtSign();
     clientSdkService = ClientSdkService.getInstance();
-    _inviteTextController=TextEditingController();
+    _inviteTextController = TextEditingController();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Background(
-          child: Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                  color: kColorStyle2, borderRadius: kBasicBorderRadius),
-              child: Padding(
-                padding: const EdgeInsets.all(35.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Your New Group',
-                      style: TextStyle(
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                    TextField(
-                      cursorColor: Colors.white,
-                      style: kEventDetailsTextStyle,
-                      decoration: InputDecoration(
-                        hintText: 'Group Title',
-                        hintStyle: kEventDetailsTextStyle.copyWith(
-                            color: Colors.grey[400]),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
-                      ),
-                      onChanged: (value) {
-                        _groupTitle = value;
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: TextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: 3,
-                        cursorColor: Colors.white,
-                        style: kEventDetailsTextStyle,
-                        decoration: InputDecoration(
-                          hintText: 'Group Description',
-                          hintStyle: kEventDetailsTextStyle.copyWith(
-                              color: Colors.grey[400]),
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)),
-                        ),
-                        onChanged: (value) {
-                          _groupDesc = value;
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        MaterialButton(
-                          padding: EdgeInsets.zero,
-                          minWidth: 0,
-                          onPressed: () {
-                            if(_inviteTextController.value.text.isNotEmpty){
-                              setState(() {
-                                _invitees.add(_inviteTextController.value.text);
-                                _inviteTextController.clear();
-                              });
-                            }
-                          },
-                          shape: CircleBorder(),
-                          child: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.white,
-                            size: 33,
-                          ),
-                        ),
-                        Text(
-                          '@',
-                          style: TextStyle(color: Color(0xFFaae5e6), fontSize: 22),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: _inviteTextController,
-                            cursorColor: Colors.white,
-                            style: kEventDetailsTextStyle,
-                            decoration: InputDecoration(
-                              hintStyle: kEventDetailsTextStyle.copyWith(
-                                  color: Colors.grey[400]),
-                              hintText: 'signs to add to group',
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 20.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: kForegroundGrey,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(40.0))),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 12.0),
-                                controller: _scrollController,
-                                itemCount: _invitees.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      _invitees[index],
-                                      style: kEventDetailsTextStyle,
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                      ),
-                    ),
-                    FloatingActionButton(
-                      backgroundColor: kPrimaryBlue,
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        _update();
-                      },
-                    ),
-                  ],
+      child: Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+              color: kColorStyle2, borderRadius: kBasicBorderRadius),
+          child: Padding(
+            padding: const EdgeInsets.all(35.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Your New Group',
+                  style: TextStyle(
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-              ),
+                TextField(
+                  cursorColor: Colors.white,
+                  style: kEventDetailsTextStyle,
+                  decoration: InputDecoration(
+                    hintText: 'Group Title',
+                    hintStyle: kEventDetailsTextStyle.copyWith(
+                        color: Colors.grey[400]),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                  ),
+                  onChanged: (value) {
+                    _groupTitle = value;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 3,
+                    cursorColor: Colors.white,
+                    style: kEventDetailsTextStyle,
+                    decoration: InputDecoration(
+                      hintText: 'Group Description',
+                      hintStyle: kEventDetailsTextStyle.copyWith(
+                          color: Colors.grey[400]),
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white)),
+                    ),
+                    onChanged: (value) {
+                      _groupDesc = value;
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                InviteBox(
+                  invitees: _invitees,
+                  onAdd: () {},
+                  width: 300,
+                  height: 340,
+                ),
+                FloatingActionButton(
+                  backgroundColor: kPrimaryBlue,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    _update();
+                  },
+                ),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   _update() async {
@@ -221,8 +154,26 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
 
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
-      Provider.of<UIData>(context, listen: false)
-          .addGroup(group);
+
+      //metadata for the shared key
+      var sharedMetadata = Metadata()
+        ..ccd = true
+        ..ttr = 10
+        ..isCached = true;
+      for (String invitee in _invitees) {
+        //key that comes from me and is shared with the added invitee
+        AtKey sharedKey = AtKey()
+          ..key = atKey.key
+          ..metadata = sharedMetadata
+          ..sharedBy = activeAtSign
+          ..sharedWith = invitee; //important: shared with is the person invited
+
+        //share that key and value
+        await ClientSdkService.getInstance().put(sharedKey, storedValue);
+      }
+
+
+      Provider.of<UIData>(context, listen: false).addGroup(group);
       //back to the calendar
       Navigator.pop(context);
       Navigator.pushReplacement(

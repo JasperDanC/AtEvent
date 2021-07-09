@@ -82,24 +82,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    CustomInputField(
-                      width: 155.toWidth,
-                      height: 50.toHeight,
-                      hintText: 'repeat cycle',
-                      icon: Icons.keyboard_arrow_down,
-                      initialValue: eventData.event.repeatDuration != null
-                          ? eventData.event.repeatDuration.toString()
-                          : '',
-                      value: (val) {
-                        if (val.trim().isNotEmpty) {
-                          var repeatCycle = int.parse(val);
-                          eventData.event.repeatDuration = repeatCycle;
-                        } else {
-                          eventData.event.repeatDuration = null;
-                        }
-                        print('repeat cycle:${eventData.event.repeatDuration}');
-                      },
-                    ),
                     Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -406,13 +388,12 @@ class _RecurringEventState extends State<RecurringEvent> {
   }
   _update() async {
     //goes through and makes sure every field was set to something
-    bool filled = widget.eventDate.event != null &&
-    widget.eventDate.event.repeatCycle != null;
+    bool filled = widget.eventDate.event != null;
     if (filled) {
       if(widget.eventDate.event.endsOn == null) {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
-
+      widget.eventDate.event.repeatDuration = 1;
       //create the @key
       AtKey atKey = AtKey();
       atKey.key = widget.eventDate.key;

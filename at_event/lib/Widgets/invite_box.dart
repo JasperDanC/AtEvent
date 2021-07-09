@@ -17,6 +17,7 @@ class _InviteBoxState extends State<InviteBox> {
   final ScrollController _scrollController = ScrollController();
   String _inviteeAtSign;
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,8 +33,12 @@ class _InviteBoxState extends State<InviteBox> {
                 minWidth: 0,
                 onPressed: () {
                   if (_inviteeAtSign != null) {
+                    List<String> withoutAtSigns = [];
+                    for(String sign in widget.invitees){
+                      withoutAtSigns.add(sign.replaceAll("@", ""));
+                    }
                     setState(() {
-                      if (!widget.invitees.contains(_inviteeAtSign)) {
+                      if (!withoutAtSigns.contains(_inviteeAtSign.replaceAll("@", ""))) {
                         widget.invitees.add(_inviteeAtSign);
                       }
                       _controller.clear();
@@ -90,7 +95,7 @@ class _InviteBoxState extends State<InviteBox> {
                         return Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Text(
-                            widget.invitees[index],
+                            widget.invitees[index].startsWith("@") ? widget.invitees[index] : "@"+widget.invitees[index],
                             style: kEventDetailsTextStyle,
                           ),
                         );
