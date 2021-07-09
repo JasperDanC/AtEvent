@@ -218,12 +218,18 @@ void _notificationCallback(dynamic response) async {
       for (UI_Event e
           in Provider.of<UIData>(globalContext, listen: false).events) {
         if (e.realEvent.atSignCreator == realKey.sharedWith) {
-          names.add(e.eventName.toLowerCase());
+          names.add(e.eventName.toLowerCase().replaceAll(" ", ""));
         }
       }
-
+      for(GroupModel g in Provider.of<UIData>(globalContext, listen: false).groups){
+        if(g.atSignCreator == realKey.sharedWith){
+          names.add(g.title.toLowerCase().replaceAll(" ", ""));
+        }
+      }
+      print("should delete? "+ realKey.toString());
+      print("names: "+names.toString() +" name:"+realKey.key.replaceFirst("group_", "").trim());
       //if the the key being deleted is for an event made by the activeAtSign
-      if (names.contains(realKey.key.replaceFirst("event", ""))) {
+      if (names.contains(realKey.key.replaceFirst("event", "")) || names.contains(realKey.key.replaceFirst("group_", "")) ) {
         //swap shared with and shared by
         String temp = realKey.sharedBy;
         realKey.sharedBy = realKey.sharedWith.replaceAll("@", "");
