@@ -1,7 +1,7 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/models/event_datatypes.dart';
-import 'package:at_event/service/event_services.dart';
+
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 

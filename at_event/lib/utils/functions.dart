@@ -49,27 +49,26 @@ scan(BuildContext context) async {
         Map<String, dynamic> jsonValue = json.decode(value);
         //make the event Model from the json
         EventNotificationModel eventModel =
-        EventNotificationModel.fromJson(jsonValue);
+            EventNotificationModel.fromJson(jsonValue);
 
         //if I am going to this event add it to my calendar otherwise add it to my invitation list
-        if (eventModel.peopleGoing.contains(currentUser) &&
+        if ((eventModel.peopleGoing.contains(currentUser) &&
             !(eventModel.atSignCreator == currentUser &&
-                atKey.sharedWith != currentUser)) {
-
-            Provider.of<UIData>(context, listen: false)
-                .addEvent(eventModel.toUI_Event());
+                atKey.sharedWith != currentUser) ) || Provider.of<UIData>(context, listen: false).hasGroup(eventModel.group) ) {
+          Provider.of<UIData>(context, listen: false)
+              .addEvent(eventModel.toUI_Event());
 
         } else {
           if (atKey.sharedWith.replaceAll("@", "") !=
-              atKey.sharedBy.replaceAll("@", "") &&
+                  atKey.sharedBy.replaceAll("@", "") &&
               currentUser.replaceAll("@", "") !=
                   eventModel.atSignCreator.replaceAll("@", "")) {
             print(" Got invite to: " + currentUser);
             EventInvite newInvite = EventInvite(
                 event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
 
-            if (!Provider
-                .of<UIData>(context, listen: false).isDeletedEventInvite(newInvite)) {
+            if (!Provider.of<UIData>(context, listen: false)
+                .isDeletedEventInvite(newInvite)) {
               Provider.of<UIData>(context, listen: false)
                   .addEventInvite(newInvite);
             }
@@ -86,19 +85,18 @@ scan(BuildContext context) async {
         if (groupModel.atSignMembers.contains(currentUser) &&
             !(groupModel.atSignCreator == currentUser &&
                 atKey.sharedWith != currentUser)) {
-
-            Provider.of<UIData>(context, listen: false).addGroup(groupModel);
-
+          Provider.of<UIData>(context, listen: false).addGroup(groupModel);
         } else {
           if (atKey.sharedWith.replaceAll("@", "") !=
-              atKey.sharedBy.replaceAll("@", "") &&
+                  atKey.sharedBy.replaceAll("@", "") &&
               currentUser.replaceAll("@", "") !=
                   groupModel.atSignCreator.replaceAll("@", "")) {
             GroupInvite newInvite =
-            GroupInvite(group: groupModel, from: groupModel.atSignCreator);
+                GroupInvite(group: groupModel, from: groupModel.atSignCreator);
 
-            if (!Provider.of<UIData>(context,listen: false).isDeletedGroupInvite(newInvite)) {
-              print("adding invite "+ newInvite.group.title);
+            if (!Provider.of<UIData>(context, listen: false)
+                .isDeletedGroupInvite(newInvite)) {
+              print("adding invite " + newInvite.group.title);
               Provider.of<UIData>(context, listen: false)
                   .addGroupInvite(newInvite);
             }
@@ -109,25 +107,16 @@ scan(BuildContext context) async {
       }
     }
     for (EventInvite ei
-    in Provider
-        .of<UIData>(context, listen: false)
-        .acceptedEventInvites) {
-      if (!Provider
-          .of<UIData>(context, listen: false).isAddedEvent(ei.event)) {
+        in Provider.of<UIData>(context, listen: false).acceptedEventInvites) {
+      if (!Provider.of<UIData>(context, listen: false).isAddedEvent(ei.event)) {
         Provider.of<UIData>(context, listen: false).addEvent(ei.event);
-
       }
     }
 
     for (GroupInvite gi
-    in Provider
-        .of<UIData>(context, listen: false)
-        .acceptedGroupInvites) {
-      if (!Provider
-          .of<UIData>(context, listen: false)
-          .isAddedGroup(gi.group)) {
+        in Provider.of<UIData>(context, listen: false).acceptedGroupInvites) {
+      if (!Provider.of<UIData>(context, listen: false).isAddedGroup(gi.group)) {
         Provider.of<UIData>(context, listen: false).addGroup(gi.group);
-
       }
     }
 
@@ -136,6 +125,7 @@ scan(BuildContext context) async {
   }
   print(" found $keysFound keys");
 }
+
 
 deleteAll(BuildContext context) async {
   print("started deletion");
@@ -206,7 +196,9 @@ void _notificationCallback(dynamic response) async {
       atKey +
       "\nTranslated to: " +
       realKey.toString());
-  if (fromAtSign.replaceAll("@","") != to.replaceAll("@","") && fromAtSign != null && fromAtSign != 'null') {
+  if (fromAtSign.replaceAll("@", "") != to.replaceAll("@", "") &&
+      fromAtSign != null &&
+      fromAtSign != 'null') {
     //lookup that key to add to use the value when needed
     print('_notificationCallback operation $operation');
 
@@ -221,15 +213,20 @@ void _notificationCallback(dynamic response) async {
           names.add(e.eventName.toLowerCase().replaceAll(" ", ""));
         }
       }
-      for(GroupModel g in Provider.of<UIData>(globalContext, listen: false).groups){
-        if(g.atSignCreator == realKey.sharedWith){
+      for (GroupModel g
+          in Provider.of<UIData>(globalContext, listen: false).groups) {
+        if (g.atSignCreator == realKey.sharedWith) {
           names.add(g.title.toLowerCase().replaceAll(" ", ""));
         }
       }
-      print("should delete? "+ realKey.toString());
-      print("names: "+names.toString() +" name:"+realKey.key.replaceFirst("group_", "").trim());
+
+      print("names: " +
+          names.toString() +
+          " name:" +
+          realKey.key.replaceFirst("group_", "").trim());
       //if the the key being deleted is for an event made by the activeAtSign
-      if (names.contains(realKey.key.replaceFirst("event", "")) || names.contains(realKey.key.replaceFirst("group_", "")) ) {
+      if (names.contains(realKey.key.replaceFirst("event", "")) ||
+          names.contains(realKey.key.replaceFirst("group_", ""))) {
         //swap shared with and shared by
         String temp = realKey.sharedBy;
         realKey.sharedBy = realKey.sharedWith.replaceAll("@", "");
@@ -273,9 +270,9 @@ void _notificationCallback(dynamic response) async {
       print(value);
       Map<String, dynamic> jsonValue = json.decode(value);
 
-      if(keyOfObject.startsWith("event")){
+      if (keyOfObject.startsWith("event")) {
         EventNotificationModel eventModel =
-        EventNotificationModel.fromJson(jsonValue);
+            EventNotificationModel.fromJson(jsonValue);
         //add the person who confirmed to the event
         eventModel.peopleGoing.add(realKey.sharedBy);
         //convert to back to string
@@ -288,10 +285,39 @@ void _notificationCallback(dynamic response) async {
           updatedKey.sharedWith = invitee;
           await ClientSdkService.getInstance().put(updatedKey, value);
         }
-      } else if(keyOfObject.startsWith("group_")){
+      } else if (keyOfObject.startsWith("group_")) {
         print("group confirmation");
+
         GroupModel groupModel = GroupModel.fromJson(jsonValue);
         groupModel.atSignMembers.add(realKey.sharedBy);
+        String updatedGroupValue = GroupModel.convertGroupToJson(groupModel);
+        shareWithMany(keyOfObject,updatedGroupValue,realKey.sharedWith,groupModel.invitees);
+
+        //metadata for the shared key
+        var sharedMetadata = Metadata()
+          ..ccd = true
+          ..ttr = 10
+          ..isCached = true;
+        for (String key in groupModel.eventKeys) {
+          AtKey eventKey = AtKey()
+            ..key = key.toLowerCase().replaceAll(" ", "")
+            ..metadata = sharedMetadata
+            ..sharedBy = realKey.sharedWith
+            ..sharedWith = realKey.sharedWith;
+
+
+
+          EventNotificationModel eventModel = Provider.of<UIData>(globalContext, listen: false).getEventByKey(key);
+
+          eventModel.invitees.add(realKey.sharedBy);
+          eventModel.peopleGoing.add(realKey.sharedBy);
+
+          String storedValue = EventNotificationModel.convertEventNotificationToJson(
+              eventModel);
+          await ClientSdkService.getInstance().put(eventKey, storedValue);
+          await shareWithMany(key.toLowerCase().replaceAll(" ", ""),storedValue,realKey.sharedWith,eventModel.invitees);
+        }
+
         value = GroupModel.convertGroupToJson(groupModel);
         //update on the secondary
         await ClientSdkService.getInstance().put(updatedKey, value);
@@ -302,8 +328,6 @@ void _notificationCallback(dynamic response) async {
         }
       }
 
-
-
       //don't do more code we have dealt with the notification
       return;
     }
@@ -313,13 +337,36 @@ void _notificationCallback(dynamic response) async {
     if (operation == 'update') {
       String value = await lookup(realKey);
       print("Value: " + value.toString());
-      if(realKey.key.startsWith("group_")){
-        Provider.of<UIData>(globalContext, listen: false).acceptedGroupInvites.clear();
+      if (realKey.key.startsWith("group_")) {
+        Provider.of<UIData>(globalContext, listen: false)
+            .acceptedGroupInvites
+            .clear();
       } else {
-        Provider.of<UIData>(globalContext, listen: false).acceptedEventInvites.clear();
+        Provider.of<UIData>(globalContext, listen: false)
+            .acceptedEventInvites
+            .clear();
       }
       await ClientSdkService.getInstance().put(realKey, value);
       scan(globalContext);
     }
+  }
+}
+
+void shareWithMany(String key,String value,String sharedBy, List<String> invitees) async{
+  //metadata for the shared key
+  var sharedMetadata = Metadata()
+    ..ccd = true
+    ..ttr = 10
+    ..isCached = true;
+  for (String invitee in invitees) {
+    //key that comes from me and is shared with the added invitee
+    AtKey sharedKey = AtKey()
+      ..key = key
+      ..metadata = sharedMetadata
+      ..sharedBy = sharedBy
+      ..sharedWith = invitee;
+
+    //share that key and value
+    await ClientSdkService.getInstance().put(sharedKey, value);
   }
 }

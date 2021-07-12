@@ -20,9 +20,7 @@ class GroupCreateScreen extends StatefulWidget {
 }
 
 class _GroupCreateScreenState extends State<GroupCreateScreen> {
-  int _dropDownValue = 1;
 
-  final ScrollController _scrollController = ScrollController();
   ClientSdkService clientSdkService;
   String _groupTitle;
   String _groupDesc;
@@ -131,7 +129,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
     if (filled) {
       GroupModel group = GroupModel()
         ..atSignCreator = activeAtSign
-        ..key = 'group_' + _groupTitle
+        ..key = 'group_' + _groupTitle.toLowerCase().replaceAll(" ", "")
         ..title = _groupTitle
         ..description = _groupDesc
         ..imageURL = ''

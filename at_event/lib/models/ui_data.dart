@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:at_event/models/event_datatypes.dart';
 import 'package:flutter/cupertino.dart';
 import 'ui_event.dart';
 import 'invite.dart';
@@ -17,6 +20,15 @@ class UIData extends ChangeNotifier {
   void addEvent(UI_Event event){
     if(!isAddedEvent(event)){
       _uiEvents.add(event);
+      if(event.realEvent.group != null){
+        for(GroupModel g in _groups){
+          if(g.title == event.realEvent.group.title && g.atSignCreator == event.realEvent.group.atSignCreator){
+            _groups.remove(g);
+            g.eventKeys.add(event.realEvent.key);
+            _groups.add(g);
+          }
+        }
+      }
     }
     notifyListeners();
   }
@@ -28,11 +40,38 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
+  GroupModel getGroupByTitle(String title){
+    for(GroupModel g in _groups){
+      if(g.title == title){
+        return g;
+      }
+    }
+    return null;
+  }
+
+  EventNotificationModel getEventByKey(String key){
+    for(UI_Event e in _uiEvents){
+      if(e.realEvent.key.toLowerCase().replaceAll(" ", "") == key.toLowerCase().replaceAll(" ", "")){
+        return e.realEvent;
+      }
+    }
+    return null;
+  }
+
   void acceptGroupInvite(GroupInvite invite){
     deleteGroupInvite(invite);
     _groups.add(invite.group);
     _acceptedGroupInvites.add(invite);
     notifyListeners();
+  }
+
+  bool hasGroup(GroupModel groupModel){
+    for(GroupModel g in _groups){
+      if(g.title == groupModel.title && g.atSignCreator == groupModel.atSignCreator){
+        return true;
+      }
+    }
+    return false;
   }
 
   void deleteGroupInvite(GroupInvite invite){

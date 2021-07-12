@@ -92,8 +92,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                     InputField(
                       width: 321.toWidth,
                       hintText: 'Save this address as',
-                      // TODO: Set Initial Value to setting
-                      initialValue: widget.displayName,
+
                       value: (String val) {
                         widget.displayName = val;
                       },

@@ -7,7 +7,6 @@ import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/utils/constants.dart';
-import 'package:at_event/service/event_services.dart';
 import 'package:at_event/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:at_event/models/group_model.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
@@ -367,9 +367,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                         MaterialPageRoute(
                             builder: (context) => CalendarScreen()),
                       );
-                      // TODO: Implement a confirmation request that will update our event to become a recurring event
-                      // For now it will just pop back to the other screen.
-
                     },
                     buttonText: 'Done',
                     width: 164.toWidth,
@@ -412,6 +409,44 @@ class _RecurringEventState extends State<RecurringEvent> {
       print(storedValue);
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
+      GroupModel eventsGroup = widget.eventDate.group;
+      if(eventsGroup != null) {
+        String groupKeyString = eventsGroup.key
+            .toLowerCase().replaceAll(" ", "");
+        Metadata metadata = Metadata();
+        metadata.ccd = true;
+        AtKey groupKey = AtKey()
+          ..key = groupKeyString
+          ..metadata = metadata
+          ..sharedWith = activeAtSign
+          ..sharedBy = activeAtSign;
+
+        GroupModel group = Provider.of<UIData>(context, listen: false)
+            .getGroupByTitle(eventsGroup.title);
+        if (group != null) {
+          String groupValue = GroupModel.convertGroupToJson(group);
+          await clientSdkService.put(groupKey, groupValue);
+
+          //metadata for the shared key
+          var sharedMetadata = Metadata()
+            ..ccd = true
+            ..ttr = 10
+            ..isCached = true;
+          for (String invitee in group.invitees) {
+            //key that comes from me and is shared with the added invitee
+            AtKey sharedKey = AtKey()
+              ..key = groupKey.key
+              ..metadata = sharedMetadata
+              ..sharedBy = activeAtSign
+              ..sharedWith = invitee;
+
+            //share that key and value
+            await ClientSdkService.getInstance().put(sharedKey, groupValue);
+          }
+        } else {
+          print("tried updated null group");
+        }
+      }
     } else {
       //if they did not fill the fields print
       CustomToast()

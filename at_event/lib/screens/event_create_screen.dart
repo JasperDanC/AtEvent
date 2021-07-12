@@ -446,6 +446,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   _update() async {
+
     //goes through and makes sure every field was set to something
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
@@ -506,7 +507,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
-        ..key = "event " + _eventTitle;
+        ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "");
 
       //create the @key
       AtKey atKey = AtKey();
@@ -527,6 +528,49 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       await clientSdkService.put(atKey, storedValue);
       Provider.of<UIData>(context, listen: false)
           .addEvent(newEventNotification.toUI_Event());
+
+
+      if(_groupDropDownValue != 0){
+        String groupKeyString = groupValueMap[_groupDropDownValue].key.toLowerCase().replaceAll(" ", "");
+        Metadata metadata = Metadata();
+        metadata.ccd = true;
+        AtKey groupKey = AtKey()
+        ..key = groupKeyString.toLowerCase().replaceAll(" ", "")
+        ..metadata = metadata
+        ..sharedWith = activeAtSign
+        ..sharedBy = activeAtSign;
+
+        GroupModel group = Provider.of<UIData>(context, listen: false).getGroupByTitle(groupValueMap[_groupDropDownValue].title);
+        if(group != null){
+          String groupValue = GroupModel.convertGroupToJson(group);
+          await clientSdkService.put(groupKey, groupValue);
+
+          //metadata for the shared key
+          var sharedMetadata = Metadata()
+            ..ccd = true
+            ..ttr = 10
+            ..isCached = true;
+          for(String invitee in group.invitees){
+            //key that comes from me and is shared with the added invitee
+            AtKey sharedKey = AtKey()
+              ..key = groupKey.key
+              ..metadata = sharedMetadata
+              ..sharedBy = activeAtSign
+              ..sharedWith = invitee;
+
+            //share that key and value
+            await ClientSdkService.getInstance().put(sharedKey, groupValue);
+          }
+
+        } else {
+          print("tried updated null group");
+        }
+
+
+
+      }
+
+
       //back to the calendar
       Navigator.pop(context);
       Navigator.pushReplacement(
@@ -583,7 +627,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
-        ..key = "event " + _eventTitle;
+        ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "");
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return RecurringEvent(eventDate: newEventNotification);
