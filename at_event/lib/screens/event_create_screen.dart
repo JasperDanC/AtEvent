@@ -508,7 +508,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
-        ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "");
+        ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "").replaceAll("@", "ATSYMBOL").replaceAll(":", "COLON");
       List<String> groupMembersExcludingMe = [];
       if(_groupDropDownValue != 0){
         groupMembersExcludingMe.addAll(groupValueMap[_groupDropDownValue].atSignMembers);

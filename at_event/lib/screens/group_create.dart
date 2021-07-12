@@ -129,7 +129,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
     if (filled) {
       GroupModel group = GroupModel()
         ..atSignCreator = activeAtSign
-        ..key = 'group_' + _groupTitle.toLowerCase().replaceAll(" ", "")
+        ..key = 'group_' + _groupTitle.toLowerCase().replaceAll(" ", "").replaceAll("@", "ATSYMBOL").replaceAll(":", "COLON")
         ..title = _groupTitle
         ..description = _groupDesc
         ..imageURL = ''
