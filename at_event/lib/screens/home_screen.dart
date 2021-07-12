@@ -69,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    globalContext = context;
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context).events) {
       if (isToday(e)) {

@@ -4,6 +4,7 @@ import 'package:at_event/screens/recurring_event.dart';
 import 'package:at_event/screens/select_location.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_event/Widgets/bottom_sheet.dart';
+import 'package:at_event/utils/functions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
@@ -508,6 +509,15 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..description = _eventDesc
         ..setting = location
         ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "");
+      List<String> groupMembersExcludingMe = [];
+      if(_groupDropDownValue != 0){
+        groupMembersExcludingMe.addAll(groupValueMap[_groupDropDownValue].atSignMembers);
+        groupMembersExcludingMe.remove(activeAtSign);
+        groupMembersExcludingMe.remove(activeAtSign.replaceFirst("@", ""));
+        newEventNotification.invitees.addAll(groupMembersExcludingMe);
+        newEventNotification.peopleGoing.addAll(groupMembersExcludingMe);
+      }
+
 
       //create the @key
       AtKey atKey = AtKey();
@@ -530,7 +540,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           .addEvent(newEventNotification.toUI_Event());
 
 
+
       if(_groupDropDownValue != 0){
+
+        shareWithMany(newEventNotification.key,storedValue, activeAtSign, groupMembersExcludingMe);
         String groupKeyString = groupValueMap[_groupDropDownValue].key.toLowerCase().replaceAll(" ", "");
         Metadata metadata = Metadata();
         metadata.ccd = true;
@@ -560,6 +573,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
 
             //share that key and value
             await ClientSdkService.getInstance().put(sharedKey, groupValue);
+
+
+
+
           }
 
         } else {
@@ -628,6 +645,11 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..description = _eventDesc
         ..setting = location
         ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "");
+
+      if(_groupDropDownValue != 0){
+        newEventNotification.invitees.addAll(groupValueMap[_groupDropDownValue].atSignMembers);
+        newEventNotification.peopleGoing.addAll(groupValueMap[_groupDropDownValue].atSignMembers);
+      }
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return RecurringEvent(eventDate: newEventNotification);

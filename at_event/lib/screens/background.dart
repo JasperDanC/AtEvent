@@ -31,6 +31,7 @@ class _BackgroundState extends State<Background> {
 
   @override
   Widget build(BuildContext context) {
+    globalContext = context;
     return MaterialApp(
       home: Scaffold(
         key: scaffoldKey,

@@ -15,6 +15,7 @@ import 'package:at_event/service/client_sdk_service.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/group_model.dart';
+import 'package:at_event/utils/functions.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
@@ -424,6 +425,7 @@ class _RecurringEventState extends State<RecurringEvent> {
         GroupModel group = Provider.of<UIData>(context, listen: false)
             .getGroupByTitle(eventsGroup.title);
         if (group != null) {
+          shareWithMany(widget.eventDate.key,storedValue, activeAtSign, widget.eventDate.invitees);
           String groupValue = GroupModel.convertGroupToJson(group);
           await clientSdkService.put(groupKey, groupValue);
 

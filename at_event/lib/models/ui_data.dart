@@ -58,6 +58,16 @@ class UIData extends ChangeNotifier {
     return null;
   }
 
+  void clearAcceptedEvents(){
+    _acceptedEventInvites.clear();
+    notifyListeners();
+  }
+
+  void clearAcceptedGroups(){
+    _acceptedGroupInvites.clear();
+    notifyListeners();
+  }
+
   void acceptGroupInvite(GroupInvite invite){
     deleteGroupInvite(invite);
     _groups.add(invite.group);

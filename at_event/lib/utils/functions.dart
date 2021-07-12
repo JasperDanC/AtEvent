@@ -291,17 +291,18 @@ void _notificationCallback(dynamic response) async {
         GroupModel groupModel = GroupModel.fromJson(jsonValue);
         groupModel.atSignMembers.add(realKey.sharedBy);
         String updatedGroupValue = GroupModel.convertGroupToJson(groupModel);
+
+
+        await ClientSdkService.getInstance().put(updatedKey, updatedGroupValue);
         shareWithMany(keyOfObject,updatedGroupValue,realKey.sharedWith,groupModel.invitees);
 
         //metadata for the shared key
-        var sharedMetadata = Metadata()
-          ..ccd = true
-          ..ttr = 10
-          ..isCached = true;
+        var metadata = Metadata()
+          ..ccd = true;
         for (String key in groupModel.eventKeys) {
           AtKey eventKey = AtKey()
             ..key = key.toLowerCase().replaceAll(" ", "")
-            ..metadata = sharedMetadata
+            ..metadata = metadata
             ..sharedBy = realKey.sharedWith
             ..sharedWith = realKey.sharedWith;
 
@@ -317,17 +318,7 @@ void _notificationCallback(dynamic response) async {
           await ClientSdkService.getInstance().put(eventKey, storedValue);
           await shareWithMany(key.toLowerCase().replaceAll(" ", ""),storedValue,realKey.sharedWith,eventModel.invitees);
         }
-
-        value = GroupModel.convertGroupToJson(groupModel);
-        //update on the secondary
-        await ClientSdkService.getInstance().put(updatedKey, value);
-        //notify all invitees of the change
-        for (String invitee in groupModel.invitees) {
-          updatedKey.sharedWith = invitee;
-          await ClientSdkService.getInstance().put(updatedKey, value);
-        }
       }
-
       //don't do more code we have dealt with the notification
       return;
     }
@@ -338,13 +329,9 @@ void _notificationCallback(dynamic response) async {
       String value = await lookup(realKey);
       print("Value: " + value.toString());
       if (realKey.key.startsWith("group_")) {
-        Provider.of<UIData>(globalContext, listen: false)
-            .acceptedGroupInvites
-            .clear();
+        Provider.of<UIData>(globalContext, listen: false).clearAcceptedGroups();
       } else {
-        Provider.of<UIData>(globalContext, listen: false)
-            .acceptedEventInvites
-            .clear();
+        Provider.of<UIData>(globalContext, listen: false).clearAcceptedEvents();
       }
       await ClientSdkService.getInstance().put(realKey, value);
       scan(globalContext);
