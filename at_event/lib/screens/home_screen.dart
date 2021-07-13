@@ -63,6 +63,12 @@ class _HomeScreenState extends State<HomeScreen> {
     getAtSignAndInitContacts();
     scan(context);
     scaffoldKey = GlobalKey<ScaffoldState>();
+    if (Provider.of<UIData>(context, listen: false).isPathEmpty() == false) {
+      _nonAsset = true;
+      setState(() {
+        _image = File(Provider.of<UIData>(context, listen: false).getPath(0));
+      });
+    }
 
     super.initState();
   }
@@ -126,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: Text("Your Invitations"),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>InvitationsScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => InvitationsScreen()));
               },
             ),
             ListTile(
@@ -399,6 +406,11 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
+  ///
+  ///  These are a bunch of functions that our home screen uses
+  ///
+
+  // Initializes the AtSign contact instance
   getAtSignAndInitContacts() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
     setState(() {
@@ -409,6 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
+  // Calculates the time difference between
   int calculateDifference(DateTime date) {
     DateTime now = DateTime.now();
     return DateTime(date.year, date.month, date.day)
@@ -475,6 +488,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _image = File(image.path);
+      Provider.of<UIData>(context, listen: false).addPath(_image.path);
+      print('Image path: ' + _image.path);
     });
   }
 
@@ -484,6 +499,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _image = File(image.path);
+      Provider.of<UIData>(context, listen: false).addPath(_image.path);
+      print('Image path: ' + _image.path);
     });
   }
 
