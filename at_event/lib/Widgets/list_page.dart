@@ -36,7 +36,6 @@ class _ListPageState extends State<ListPage> {
     getAtSign();
     scan(context);
 
-
     super.initState();
   }
 
@@ -45,15 +44,17 @@ class _ListPageState extends State<ListPage> {
     SizeConfig().init(context);
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
-      if(e.realEvent.group!=null){
-        print("Event, " + e.eventName + ", for group, "+  e.realEvent.group.title);
+      if (e.realEvent.group != null) {
+        print("Event, " +
+            e.eventName +
+            ", for group, " +
+            e.realEvent.group.title);
         if (e.realEvent.group.title == widget.group.title &&
             e.realEvent.group.atSignCreator == widget.group.atSignCreator &&
             e.realEvent.group.description == widget.group.description) {
           events.add(e);
         }
       }
-
     }
     return Scaffold(
       backgroundColor: kColorStyle1,
@@ -160,7 +161,7 @@ class _ListPageState extends State<ListPage> {
                 shrinkWrap: true,
                 itemCount: events.length,
                 itemBuilder: (context, index) {
-                  return PopularEventTile(
+                  return TodayEventTile(
                     desc: events[index].eventName,
                     address: events[index].location,
                     date: DateFormat('hh:MM a').format(events[index].from),

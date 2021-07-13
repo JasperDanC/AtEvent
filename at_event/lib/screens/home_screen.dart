@@ -338,11 +338,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemCount: events.length,
                       itemBuilder: (context, index) {
-                        return PopularEventTile(
+                        return TodayEventTile(
                           desc: events[index].eventName,
                           address: events[index].location,
+                          imgAssetPath: 'assets/images/none.png',
                           date:
                               DateFormat('hh:mm a').format(events[index].from),
+                          event: events[index],
                           onPressed: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) =>

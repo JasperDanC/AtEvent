@@ -1,3 +1,4 @@
+import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,14 +36,15 @@ class _EventTileState extends State<EventTile> {
   }
 }
 
-class PopularEventTile extends StatefulWidget {
+//ignore: must_be_immutable
+class TodayEventTile extends StatefulWidget {
   final String desc;
   final String date;
   final String address;
-  final String imgAssetPath;
+  String imgAssetPath;
   final Function onPressed;
   final UI_Event event;
-  PopularEventTile({
+  TodayEventTile({
     @required this.address,
     @required this.date,
     @required this.imgAssetPath,
@@ -52,12 +54,13 @@ class PopularEventTile extends StatefulWidget {
   });
 
   @override
-  _PopularEventTileState createState() => _PopularEventTileState();
+  _TodayEventTileState createState() => _TodayEventTileState();
 }
 
-class _PopularEventTileState extends State<PopularEventTile> {
+class _TodayEventTileState extends State<TodayEventTile> {
   @override
   Widget build(BuildContext context) {
+    setCategoryAsset(widget.event.realEvent);
     return GestureDetector(
       onTap: widget.onPressed,
       child: Container(
@@ -110,19 +113,46 @@ class _PopularEventTileState extends State<PopularEventTile> {
                 ),
               ),
             ),
-            // ClipRRect(
-            //   borderRadius: BorderRadius.only(
-            //       topRight: Radius.circular(8), bottomRight: Radius.circular(8)),
-            //   child: Image.asset(
-            //     widget.imgAssetPath,
-            //     height: 100,
-            //     width: 120,
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8)),
+              child: Image(
+                image: AssetImage(widget.imgAssetPath),
+                height: 100,
+                width: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void setCategoryAsset(EventNotificationModel event) {
+    switch (event.category) {
+      case EventCategory.Class:
+        widget.imgAssetPath = 'assets/images/clock.png';
+        break;
+      case EventCategory.Tutorial:
+        widget.imgAssetPath = 'assets/images/tutorial.png';
+        break;
+      case EventCategory.StudySession:
+        widget.imgAssetPath = 'assets/images/study.png';
+        break;
+      case EventCategory.Hangout:
+        widget.imgAssetPath = 'assets/images/hangout.png';
+        break;
+      case EventCategory.Lab:
+        widget.imgAssetPath = 'assets/images/lab.png';
+        break;
+      case EventCategory.StudentClubEvent:
+        widget.imgAssetPath = 'assets/images/student_club.png';
+        break;
+      case EventCategory.None:
+        widget.imgAssetPath = 'assets/images/none.png';
+        break;
+    }
   }
 }

@@ -6,11 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'dart:math';
 import 'package:at_event/Widgets/invite_box.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
-class GroupInformation extends StatelessWidget {
+class GroupInformation extends StatefulWidget {
   final GroupModel group;
+
   const GroupInformation({this.group});
 
+  @override
+  _GroupInformationState createState() => _GroupInformationState();
+}
+
+class _GroupInformationState extends State<GroupInformation> {
+  final _picker = ImagePicker();
+  File _image;
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -25,7 +35,9 @@ class GroupInformation extends StatelessWidget {
                 height: SizeConfig().screenHeight * 0.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/images/group_landscape.jpg'),
+                      image: _image == null
+                          ? AssetImage('assets/images/group_landscape.jpg')
+                          : FileImage(_image),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -40,10 +52,23 @@ class GroupInformation extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     SizedBox(height: 60.0),
-                    Icon(
-                      Icons.group,
-                      color: Colors.white,
-                      size: 40.0,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Icon(
+                          Icons.group,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.add_photo_alternate,
+                            size: 40.0,
+                            color: Colors.white,
+                          ),
+                          onPressed: () => _showPicker(context),
+                        )
+                      ],
                     ),
                     Container(
                       width: 90.0,
@@ -53,7 +78,7 @@ class GroupInformation extends StatelessWidget {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      group.title,
+                      widget.group.title,
                       style: kTitleTextStyle.copyWith(fontSize: 35.0),
                     ),
                     SizedBox(
@@ -116,7 +141,7 @@ class GroupInformation extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(40.0),
                   child: Text(
-                    group.description,
+                    widget.group.description,
                     style: kNormalTextStyle.copyWith(
                         fontSize: 18.0, color: Colors.white),
                   ),
@@ -141,10 +166,9 @@ class GroupInformation extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 InviteBox(
-                                  invitees: group.atSignMembers,
-                                  onAdd: (){
-                                    CustomToast()
-                                        .show('Invite Sent!', context);
+                                  invitees: widget.group.atSignMembers,
+                                  onAdd: () {
+                                    CustomToast().show('Invite Sent!', context);
                                   },
                                   width: 300,
                                   height: 300,
@@ -175,5 +199,56 @@ class GroupInformation extends StatelessWidget {
     Random random = Random();
     int rndNum = random.nextInt(101);
     return rndNum.toString();
+  }
+
+  _imgFromCamera() async {
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+
+    setState(() {
+      _image = File(image.path);
+      print('Image path: ' + _image.path);
+    });
+  }
+
+  _imgFromGallery() async {
+    PickedFile image =
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = File(image.path);
+      print('Image path: ' + _image.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+            child: Container(
+              child: Wrap(
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.photo_library),
+                    title: Text('Photo Library'),
+                    onTap: () {
+                      _imgFromGallery();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.photo_camera),
+                    title: Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
