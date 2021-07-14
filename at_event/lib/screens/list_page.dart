@@ -50,7 +50,8 @@ class _ListPageState extends State<ListPage> {
         }
       }
 
-    }
+
+
     return Scaffold(
       backgroundColor: kColorStyle1,
       appBar: AppBar(

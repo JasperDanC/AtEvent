@@ -553,7 +553,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
       Provider.of<UIData>(context, listen: false)
-          .addEvent(newEventNotification.toUI_Event());
+          .addEvent(newEventNotification.toUIEvent());
 
       if (_groupDropDownValue != 0) {
 

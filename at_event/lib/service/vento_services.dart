@@ -489,12 +489,12 @@ class VentoService {
     if (isSharedAndIsMyEvent[1]) {
       //add it to the UIData as an event and then it will appear in the calendar
       Provider.of<UIData>(_currentKnownContext, listen: false)
-          .addEvent(eventModel.toUI_Event());
+          .addEvent(eventModel.toUIEvent());
     } else if(!isSharedAndIsMyEvent[0]) {
 
       //create an invite
       EventInvite newInvite = EventInvite(
-          event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
+          event: eventModel.toUIEvent(), from: eventModel.atSignCreator);
 
       // deleted invites that have not been deleted as keys can occur in the time
       //it takes to notify the event creator about deleting the event
