@@ -93,7 +93,8 @@ class _GroupInformationState extends State<GroupInformation> {
                             child: LinearProgressIndicator(
                               backgroundColor:
                                   Color.fromRGBO(209, 224, 224, 0.2),
-                              value: generateRandomDouble(Random(), 0.0, 1.0),
+                              value: widget.group.atSignMembers.length /
+                                  widget.group.capacity,
                               valueColor: AlwaysStoppedAnimation(Colors.green),
                             ),
                           ),
@@ -119,7 +120,9 @@ class _GroupInformationState extends State<GroupInformation> {
                             ),
                             child: Center(
                               child: Text(
-                                  'Total:\n  ' + generateRandomCapacity(),
+                                  'Total:\n  ' +
+                                      widget.group.atSignMembers.length
+                                          .toString(),
                                   style: kSubHeadingTextStyle.copyWith(
                                       fontSize: 20.0)),
                             ),
@@ -187,18 +190,6 @@ class _GroupInformationState extends State<GroupInformation> {
         ],
       ),
     );
-  }
-
-  double generateRandomDouble(Random source, num start, num end) {
-    num result;
-    result = source.nextDouble() * (end - start) + start;
-    return result;
-  }
-
-  String generateRandomCapacity() {
-    Random random = Random();
-    int rndNum = random.nextInt(101);
-    return rndNum.toString();
   }
 
   _imgFromCamera() async {

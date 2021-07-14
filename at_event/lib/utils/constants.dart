@@ -305,3 +305,10 @@ class AppStrings {
 }
 
 final String namespace = 'bagelconservation';
+
+/*
+API KEY/s
+ */
+
+const String tinyPNG_base64 =
+    'YXBpOnY3QzM0M2wxeFlWQ1p3aGtCUkdIOEJZNDRWUDh5Zno0';

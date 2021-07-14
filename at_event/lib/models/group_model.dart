@@ -5,6 +5,7 @@ class GroupModel {
   String title;
   String description;
   String imageURL;
+  int capacity;
   List<String> eventKeys;
   List<String> atSignMembers;
   List<String> invitees;
@@ -15,6 +16,7 @@ class GroupModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     imageURL = data['imageURL'] ?? '';
+    capacity = data['capacity'] ?? '';
     description = data['description'] ?? '';
     eventKeys = data['eventKeys'] == '[]' || data['eventKeys'] == ''
         ? []
@@ -32,6 +34,7 @@ class GroupModel {
     var groupJson = json.encode({
       'title': group.title != null ? group.title.toString() : '',
       'imageURL': group.imageURL != null ? group.imageURL.toString() : '',
+      'capacity': group.capacity != null ? group.capacity.toString() : '',
       'description': group.description,
       'atSignCreator': group.atSignCreator.toString(),
       'invitees': group.invitees.length > 0 ? group.invitees.join(',') : '[]',

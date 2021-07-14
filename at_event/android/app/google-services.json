@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "332226510123",
+    "project_id": "image-storage-ad813",
+    "storage_bucket": "image-storage-ad813.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332226510123:android:854826fa0a0ae2fc8ed96e",
+        "android_client_info": {
+          "package_name": "com.company.vento"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "332226510123-srmbhejv44igoqkp583h4osk5392otua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC34MIEow4ev3Lj1cmfHiAnZtVm6fqwwEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "332226510123-srmbhejv44igoqkp583h4osk5392otua.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "332226510123-8lhfnpia9ac4amd6mmurc48k4f4hhf40.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.company.vento"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
