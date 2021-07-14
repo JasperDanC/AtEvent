@@ -44,13 +44,9 @@ class _ListPageState extends State<ListPage> {
     SizeConfig().init(context);
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
-      if(e.realEvent.group!=null){
-        print("Event, " + e.eventName + ", for group, "+  e.realEvent.group.title);
-        if (e.realEvent.group.title == widget.group.title &&
-            e.realEvent.group.atSignCreator == widget.group.atSignCreator &&
-            e.realEvent.group.description == widget.group.description) {
+      if(e.realEvent.groupKey!=null &&e.realEvent.groupKey== widget.group.key){
+        print("Event, " + e.eventName + ", for group, "+  widget.group.title);
           events.add(e);
-        }
       }
 
     }

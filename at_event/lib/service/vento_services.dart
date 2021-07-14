@@ -246,21 +246,20 @@ class VentoService {
         shareWithMany(keyOfObject, updatedGroupValue, atKeyOfObject.sharedBy,
             groupModel.invitees);
 
-        var sharedMetadata = Metadata()
-          ..ccd = true
-          ..ttr = 10
-          ..isCached = true;
-
+        var eventMetadata = Metadata()
+          ..ccd = true;
+        print("sending all group events");
         //add the new group member to all events associated with group
         for (String key in groupModel.eventKeys) {
+          print("sending event key: "+key);
           AtKey eventKey = AtKey()
             ..key = key
-            ..metadata = sharedMetadata
+            ..metadata = eventMetadata
             ..sharedBy = notifKey.sharedWith
             ..sharedWith = notifKey.sharedWith;
 
           //get the event
-          String value = await lookup(atKeyOfObject);
+          String value = await lookup(eventKey);
           Map<String, dynamic> jsonValue = json.decode(value);
           EventNotificationModel eventModel =
           EventNotificationModel.fromJson(jsonValue);
@@ -275,8 +274,7 @@ class VentoService {
 
           //store for myself and all invitees
           await put(eventKey, storedValue);
-          shareWithMany(key.toLowerCase().replaceAll(" ", ""),
-              storedValue, notifKey.sharedWith, eventModel.invitees);
+          shareWithMany(key,storedValue, notifKey.sharedWith, eventModel.invitees);
         }
         break;
     }
@@ -346,7 +344,7 @@ class VentoService {
     String activeAtSign = await getAtSign();
 
     Provider.of<UIData>(context,listen: false).clear();
-
+    print("Found ${response.length} keys");
     for (AtKey atKey in response) {
       print("Key:" + atKey.toString());
       //makes sure we do not save any keys that don't come from anyone
@@ -385,23 +383,25 @@ class VentoService {
         Provider.of<UIData>(context, listen: false).addGroup(gi.group);
       }
     }
-    print("Found ${response.length} keys");
+
   }
 
   ///handles putting keys/values for groups in the ui
   void handleGroupKey(AtKey groupKey, String activeAtSign) async {
     //looks up the value which is stored as a json string
     String value = await lookup(groupKey);
+
+
+    //deletes the key if it is a duplicated event that shouldn't exist
+    if (isDuplicatedGroupKey(activeAtSign, groupKey)) {
+      print("bad key");
+      await delete(groupKey);
+      return;
+    }
     print("Key Value:" + value.toString());
     //decode the json string into a json map
     Map<String, dynamic> jsonValue = json.decode(value);
     GroupModel groupModel = GroupModel.fromJson(jsonValue);
-
-    //deletes the key if it is a duplicated event that shouldn't exist
-    if (isDuplicatedGroupKey(activeAtSign, groupKey, groupModel)) {
-      await delete(groupKey);
-      return;
-    }
 
     // saves all the important names (+other important vars)
     // and removes any existing @ symbols so that
@@ -411,20 +411,21 @@ class VentoService {
     List<String> members = [
       for (var x in groupModel.atSignMembers) x.replaceAll("@", "")
     ];
+    String currentUser = activeAtSign.replaceAll("@", "");
 
     //figures out if this is a group the active user has
-    bool isMyGroup = isGoingToKey(
+    List<bool> isSharedAndMyGroup = isGoingToKey(
         keyMaker: eventMaker,
         sharedWith: sharedWith,
         goingMembers: members,
-        activeAtSign: activeAtSign,
+        activeAtSign: currentUser,
         isEventAndHasGroup: false);
 
-    if (isMyGroup) {
+    if ( isSharedAndMyGroup[1]) {
       //adds it to groups in the ui
       Provider.of<UIData>(_currentKnownContext, listen: false)
           .addGroup(groupModel);
-    } else {
+    } else if(!isSharedAndMyGroup[0]) {
       //adds it as an invite
       GroupInvite newInvite =
           GroupInvite(group: groupModel, from: groupModel.atSignCreator);
@@ -446,19 +447,19 @@ class VentoService {
   void handleEventKey(AtKey eventKey, String activeAtSign) async {
     //looks up the value which is stored as a json string
     String value = await lookup(eventKey);
+
+
+    //deletes the key if it is a duplicated event that shouldn't exist
+    if (isDuplicatedEventKey(activeAtSign, eventKey)) {
+      await delete(eventKey);
+      return;
+    }
     print("Key Value:" + value.toString());
     //decode the json string into a json map
     Map<String, dynamic> jsonValue = json.decode(value);
     //make the event Model from the json
     EventNotificationModel eventModel =
-        EventNotificationModel.fromJson(jsonValue);
-
-    //deletes the key if it is a duplicated event that shouldn't exist
-    if (isDuplicatedEventKey(activeAtSign, eventKey, eventModel)) {
-      await delete(eventKey);
-      return;
-    }
-
+    EventNotificationModel.fromJson(jsonValue);
     // saves all the important names (+other important vars)
     // and removes any existing @ symbols so that
     // finding out if this is a calendar event is straight forward
@@ -469,23 +470,27 @@ class VentoService {
     ];
     String currentSign = activeAtSign.replaceAll("@", "");
 
+    bool eventWithGroup = false;
     //if the current event is in a group the user has
-    bool eventWithGroup =
-        Provider.of<UIData>(_currentKnownContext, listen: false)
-            .hasGroup(eventModel.group);
+    if(eventModel.groupKey != '' && eventModel.groupKey != null && eventModel.groupKey != 'null'){
+     eventWithGroup =
+      Provider.of<UIData>(_currentKnownContext, listen: false)
+          .hasGroupKey(eventModel.groupKey);
+    }
 
-    bool isCalendarEvent = isGoingToKey(
+    List<bool> isSharedAndIsMyEvent = isGoingToKey(
         keyMaker: eventMaker,
         sharedWith: sharedWith,
         goingMembers: peopleGoing,
         activeAtSign: currentSign,
         isEventAndHasGroup: eventWithGroup);
 
-    if (isCalendarEvent) {
+
+    if (isSharedAndIsMyEvent[1]) {
       //add it to the UIData as an event and then it will appear in the calendar
       Provider.of<UIData>(_currentKnownContext, listen: false)
           .addEvent(eventModel.toUI_Event());
-    } else {
+    } else if(!isSharedAndIsMyEvent[0]) {
 
       //create an invite
       EventInvite newInvite = EventInvite(
@@ -530,9 +535,9 @@ class VentoService {
     //metadata for the shared key
     var sharedMetadata = Metadata()
       ..ccd = true
-      ..ttr = 10
-      ..isCached = true;
+      ..ttr = 40;
     for (String invitee in invitees) {
+      if(!invitee.startsWith("@")) invitee ="@"+ invitee;
       //key that comes from me and is shared with the added invitee
       AtKey sharedKey = AtKey()
         ..key = key
@@ -546,7 +551,7 @@ class VentoService {
   }
 
   ///Function for deciding if a event or group is not an invite.
-  bool isGoingToKey(
+  List<bool> isGoingToKey(
       {String keyMaker,
       String sharedWith,
       List<String> goingMembers,
@@ -564,24 +569,24 @@ class VentoService {
     // it is a key that active has when active is going or
     // event is in a group that active has
     // and this isn't the shared version of the key.
-    return !activeSharedThisKey && (activeIsGoing || isEventAndHasGroup);
+    return [activeSharedThisKey, !activeSharedThisKey && (activeIsGoing || isEventAndHasGroup)];
   }
 
   ///occasionally when sending invitations the receiver will receive two keys
   ///one of these is a duplicated version that they have shared with themself
   /// this function marks if it is that type.
   bool isDuplicatedEventKey(
-      String activeAtSign, AtKey atKey, EventNotificationModel event) {
+      String activeAtSign, AtKey atKey) {
     if (compareAtSigns(atKey.sharedBy, atKey.sharedWith)) {
-      return !compareAtSigns(activeAtSign, event.atSignCreator);
+      return !compareAtSigns(activeAtSign, getCreatorOfKey(atKey));
     }
     return false;
   }
 
   bool isDuplicatedGroupKey(
-      String activeAtSign, AtKey atKey, GroupModel group) {
+      String activeAtSign, AtKey atKey) {
     if (compareAtSigns(atKey.sharedBy, atKey.sharedWith)) {
-      return compareAtSigns(activeAtSign, group.atSignCreator);
+      return !compareAtSigns(activeAtSign, getCreatorOfKey(atKey));
     }
     return false;
   }
@@ -598,7 +603,7 @@ class VentoService {
   ///gets the type of the atKey e.i. is it a key for event? group?
   conf.KeyType getKeyType(AtKey atKey) {
     String keyStart = atKey.key.substring(0, 6);
-    print("Start of Key: "+keyStart);
+
     if (!conf.KeyConstants.keyTypeMap.containsKey(keyStart)) {
       return null;
     }
@@ -621,8 +626,31 @@ class VentoService {
     return '';
   }
 
+
+  Future<GroupModel> lookupGroup(AtKey groupKey) async {
+    String stringValue = await lookup(groupKey);
+    if(stringValue == null || stringValue == 'null') return null;
+    print(stringValue);
+    Map<String, dynamic> jsonValue = json.decode(stringValue);
+    GroupModel groupModel = GroupModel.fromJson(jsonValue);
+    return groupModel;
+  }
+
   Future<bool> put(AtKey atKey, String value) async {
-    return await _getAtClientForAtsign().put(atKey, value);
+    if(atKey.sharedWith != null){
+        if(!atKey.sharedWith.startsWith("@")) atKey.sharedWith = "@"+atKey.sharedWith;
+    }
+    if(atKey.sharedBy != null){
+      if(!atKey.sharedBy.startsWith("@")) atKey.sharedBy = "@"+atKey.sharedBy;
+    }
+    var result;
+    try{
+      result = await _getAtClientForAtsign().put(atKey, value);
+    } catch (Exception) {
+      result = await _getAtClientForAtsign().put(atKey, value);
+    }
+    return result;
+
   }
 
   Future<bool> delete(AtKey atKey) async {

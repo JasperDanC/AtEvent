@@ -20,15 +20,6 @@ class UIData extends ChangeNotifier {
   void addEvent(UI_Event event){
     if(!isAddedEvent(event)){
       _uiEvents.add(event);
-      if(event.realEvent.group != null){
-        for(GroupModel g in _groups){
-          if(g.title == event.realEvent.group.title && g.atSignCreator == event.realEvent.group.atSignCreator){
-            _groups.remove(g);
-            g.eventKeys.add(event.realEvent.key);
-            _groups.add(g);
-          }
-        }
-      }
     }
     notifyListeners();
   }
@@ -78,6 +69,15 @@ class UIData extends ChangeNotifier {
   bool hasGroup(GroupModel groupModel){
     for(GroupModel g in _groups){
       if(g.title == groupModel.title && g.atSignCreator == groupModel.atSignCreator){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool hasGroupKey(String keyName){
+    for(GroupModel g in _groups){
+      if(g.key== keyName){
         return true;
       }
     }

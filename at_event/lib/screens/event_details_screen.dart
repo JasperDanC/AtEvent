@@ -323,23 +323,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         widget.event.realEvent);
 
     await VentoService.getInstance().put(atKey, storedValue);
-
-    //metadata for the shared key
-    var sharedMetadata = Metadata()
-      ..ccd = true
-      ..ttr = 10
-      ..isCached = true;
-    for (String invitee in widget.event.invitees) {
-      //key that comes from me and is shared with the added invitee
-      AtKey sharedKey = AtKey()
-        ..key = atKey.key
-        ..metadata = sharedMetadata
-        ..sharedBy = activeAtSign
-        ..sharedWith = invitee; //important: shared with is the person invited
-
-      //share that key and value
-      await VentoService.getInstance().put(sharedKey, storedValue);
-    }
+    VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.event.invitees);
   }
 
   //simple atSign getter

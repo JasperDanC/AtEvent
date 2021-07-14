@@ -10,7 +10,7 @@ class EventNotificationModel {
   String title;
   String description;
   Setting setting;
-  GroupModel group;
+  String groupKey;
   List<String> peopleGoing;
   List<String> invitees;
   EventCategory category;
@@ -60,9 +60,8 @@ class EventNotificationModel {
           ? Event.fromJson(jsonDecode(data['event']))
           : 'null';
     }
-    if (data['group'] != 'null' && data['group'] != null) {
-      group = GroupModel.fromJson(jsonDecode(data['group']));
-    }
+    groupKey = data['groupKey'] ?? '';
+
   }
 
   static String convertEventNotificationToJson(
@@ -83,7 +82,7 @@ class EventNotificationModel {
       'atSignCreator': eventNotification.atSignCreator.toString(),
       'category': eventNotification.category.toString(),
       'key': '${eventNotification.key}',
-      'group': eventNotification.group!= null? GroupModel.convertGroupToJson(eventNotification.group): 'null',
+      'groupKey': '${eventNotification.groupKey}',
       'setting': json.encode({
         'latitude': eventNotification.setting.latitude.toString(),
         'longitude': eventNotification.setting.longitude.toString(),

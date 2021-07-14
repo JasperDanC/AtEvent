@@ -376,7 +376,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
       ..atSignCreator = oldEventModel.atSignCreator
       ..category = _eventCategory
       ..peopleGoing = oldEventModel.peopleGoing
-      ..group = null
+      ..groupKey = ''
       ..title = _eventTitle != null ? _eventTitle : widget.event.eventName
       ..description = _eventDesc != null ? _eventDesc : widget.event.description
       ..setting = location
