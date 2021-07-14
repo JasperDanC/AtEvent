@@ -12,8 +12,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/uicalendar_event_data_source.dart';
-import 'package:at_event/service/client_sdk_service.dart';
-import 'package:at_event/utils/functions.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'home_screen.dart';
 
 
@@ -44,8 +43,7 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  // saves the sdk service for later
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+
 
   String activeAtSign = '';
   @override
@@ -53,7 +51,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     //sets activeAtSign to the currently logged in one
     getAtSign();
     //scans so that the correct information will be displayed
-    scan(context);
+    VentoService.getInstance().scan(context);
     super.initState();
   }
 
@@ -289,7 +287,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
   //straightforward getting the logged in at sign function
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

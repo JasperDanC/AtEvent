@@ -7,7 +7,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/widgets/category_selector.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 
 void main() {
@@ -51,7 +51,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
   List<String> invites = [];
 
   int _dropDownValue;
-  ClientSdkService clientSdkService;
+  VentoService clientSdkService;
   String _eventTitle;
   String _eventDesc;
   String _eventLocation;
@@ -88,7 +88,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
         break;
     }
     final ScrollController _scrollController = ScrollController();
-    clientSdkService = ClientSdkService.getInstance();
+    clientSdkService = VentoService.getInstance();
     super.initState();
   }
 
@@ -384,7 +384,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
 
     AtKey atKey = AtKey();
     atKey.key = newEventNotification.key;
-    atKey.namespace = namespace;
+    atKey.namespace = MixedConstants.NAMESPACE;
     atKey.sharedWith = activeAtSign;
     Metadata metadata = Metadata();
     metadata.ccd = true;
@@ -413,7 +413,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

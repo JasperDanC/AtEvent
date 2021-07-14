@@ -1,11 +1,12 @@
 import 'package:at_event/Widgets/invite_box.dart';
+import 'package:at_event/main.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/group_model.dart';
@@ -21,7 +22,7 @@ class GroupCreateScreen extends StatefulWidget {
 
 class _GroupCreateScreenState extends State<GroupCreateScreen> {
 
-  ClientSdkService clientSdkService;
+  VentoService clientSdkService;
   String _groupTitle;
   String _groupDesc;
   List<String> _invitees = [];
@@ -32,7 +33,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
   @override
   void initState() {
     getAtSign();
-    clientSdkService = ClientSdkService.getInstance();
+    clientSdkService = VentoService.getInstance();
     _inviteTextController = TextEditingController();
     super.initState();
   }
@@ -129,7 +130,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
     if (filled) {
       GroupModel group = GroupModel()
         ..atSignCreator = activeAtSign
-        ..key = 'group_' + _groupTitle.toLowerCase().replaceAll(" ", "").replaceAll("@", "ATSYMBOL").replaceAll(":", "COLON")
+        ..key = VentoService.getInstance().generateKeyName(activeAtSign, KeyType.GROUP)
         ..title = _groupTitle
         ..description = _groupDesc
         ..imageURL = ''
@@ -167,7 +168,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
           ..sharedWith = invitee; //important: shared with is the person invited
 
         //share that key and value
-        await ClientSdkService.getInstance().put(sharedKey, storedValue);
+        await VentoService.getInstance().put(sharedKey, storedValue);
       }
 
 
@@ -186,7 +187,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

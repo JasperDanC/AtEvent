@@ -13,9 +13,8 @@ import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
-import 'package:at_event/utils/functions.dart';
 import 'package:provider/provider.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/models/ui_data.dart';
 
 import 'event_tiles.dart';
@@ -34,7 +33,7 @@ class _ListPageState extends State<ListPage> {
   @override
   void initState() {
     getAtSign();
-    scan(context);
+    VentoService.getInstance().scan(context);
 
 
     super.initState();
@@ -196,7 +195,7 @@ class _ListPageState extends State<ListPage> {
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

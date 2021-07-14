@@ -4,7 +4,6 @@ import 'package:at_event/screens/recurring_event.dart';
 import 'package:at_event/screens/select_location.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_event/Widgets/bottom_sheet.dart';
-import 'package:at_event/utils/functions.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
@@ -12,7 +11,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/widgets/category_selector.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
@@ -32,12 +31,12 @@ class EventCreateScreen extends StatefulWidget {
 class _EventCreateScreenState extends State<EventCreateScreen> {
   List<String> invites = [];
   List<DropdownMenuItem> groupDropDownItems = [];
-  Map<int, GroupModel> groupValueMap = {0:null};
+  Map<int, GroupModel> groupValueMap = {0: null};
   int _categoryDropDownValue = 1;
   int _groupDropDownValue = 0;
 
   final ScrollController _scrollController = ScrollController();
-  ClientSdkService clientSdkService;
+  VentoService clientSdkService;
   String _eventTitle;
   String _eventDesc;
   EventCategory _eventCategory;
@@ -52,7 +51,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   @override
   void initState() {
     getAtSign();
-    clientSdkService = ClientSdkService.getInstance();
+    clientSdkService = VentoService.getInstance();
     super.initState();
   }
 
@@ -82,7 +81,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           child: Padding(
             padding: const EdgeInsets.all(35.0),
             child: Column(
-
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
@@ -447,7 +445,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   _update() async {
-
     //goes through and makes sure every field was set to something
     bool filled = _eventTitle != null &&
         _eventTitle != "" &&
@@ -508,16 +505,17 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..title = _eventTitle
         ..description = _eventDesc
         ..setting = location
-        ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "").replaceAll("@", "ATSYMBOL").replaceAll(":", "COLON");
+        ..key = VentoService.getInstance()
+            .generateKeyName(activeAtSign, KeyType.EVENT);
       List<String> groupMembersExcludingMe = [];
-      if(_groupDropDownValue != 0){
-        groupMembersExcludingMe.addAll(groupValueMap[_groupDropDownValue].atSignMembers);
+      if (_groupDropDownValue != 0) {
+        groupMembersExcludingMe
+            .addAll(groupValueMap[_groupDropDownValue].atSignMembers);
         groupMembersExcludingMe.remove(activeAtSign);
         groupMembersExcludingMe.remove(activeAtSign.replaceFirst("@", ""));
         newEventNotification.invitees.addAll(groupMembersExcludingMe);
         newEventNotification.peopleGoing.addAll(groupMembersExcludingMe);
       }
-
 
       //create the @key
       AtKey atKey = AtKey();
@@ -539,54 +537,36 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       Provider.of<UIData>(context, listen: false)
           .addEvent(newEventNotification.toUI_Event());
 
+      if (_groupDropDownValue != 0) {
+        VentoService.getInstance().shareWithMany(newEventNotification.key,
+            storedValue, activeAtSign, groupMembersExcludingMe);
+        GroupModel group = Provider.of<UIData>(context, listen: false)
+            .getGroupByTitle(groupValueMap[_groupDropDownValue].title);
 
 
-      if(_groupDropDownValue != 0){
+        String groupKeyString = group.key;
 
-        shareWithMany(newEventNotification.key,storedValue, activeAtSign, groupMembersExcludingMe);
-        String groupKeyString = groupValueMap[_groupDropDownValue].key.toLowerCase().replaceAll(" ", "");
         Metadata metadata = Metadata();
         metadata.ccd = true;
         AtKey groupKey = AtKey()
-        ..key = groupKeyString.toLowerCase().replaceAll(" ", "")
-        ..metadata = metadata
-        ..sharedWith = activeAtSign
-        ..sharedBy = activeAtSign;
+          ..key = groupKeyString
+          ..metadata = metadata
+          ..sharedWith = activeAtSign
+          ..sharedBy = activeAtSign;
 
-        GroupModel group = Provider.of<UIData>(context, listen: false).getGroupByTitle(groupValueMap[_groupDropDownValue].title);
-        if(group != null){
+
+        if (group != null) {
+
+          // add the new eventKey to the group
+          group.eventKeys.add(newEventNotification.key);
+
           String groupValue = GroupModel.convertGroupToJson(group);
           await clientSdkService.put(groupKey, groupValue);
-
-          //metadata for the shared key
-          var sharedMetadata = Metadata()
-            ..ccd = true
-            ..ttr = 10
-            ..isCached = true;
-          for(String invitee in group.invitees){
-            //key that comes from me and is shared with the added invitee
-            AtKey sharedKey = AtKey()
-              ..key = groupKey.key
-              ..metadata = sharedMetadata
-              ..sharedBy = activeAtSign
-              ..sharedWith = invitee;
-
-            //share that key and value
-            await ClientSdkService.getInstance().put(sharedKey, groupValue);
-
-
-
-
-          }
-
+          clientSdkService.shareWithMany(groupKey.key, groupValue, activeAtSign, group.invitees);
         } else {
           print("tried updated null group");
         }
-
-
-
       }
-
 
       //back to the calendar
       Navigator.pop(context);
@@ -645,10 +625,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..description = _eventDesc
         ..setting = location
         ..key = "event" + _eventTitle.toLowerCase().replaceAll(" ", "");
-
-      if(_groupDropDownValue != 0){
-        newEventNotification.invitees.addAll(groupValueMap[_groupDropDownValue].atSignMembers);
-        newEventNotification.peopleGoing.addAll(groupValueMap[_groupDropDownValue].atSignMembers);
+      List<String> groupMembersExcludingMe = [];
+      if (_groupDropDownValue != 0) {
+        groupMembersExcludingMe
+            .addAll(groupValueMap[_groupDropDownValue].atSignMembers);
+        groupMembersExcludingMe.remove(activeAtSign);
+        groupMembersExcludingMe.remove(activeAtSign.replaceFirst("@", ""));
+        newEventNotification.invitees.addAll(groupMembersExcludingMe);
+        newEventNotification.peopleGoing.addAll(groupMembersExcludingMe);
       }
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -658,7 +642,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

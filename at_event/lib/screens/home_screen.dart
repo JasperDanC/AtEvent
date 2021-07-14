@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/invitations_screen.dart';
@@ -11,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/Widgets/event_tiles.dart';
-import '../service/client_sdk_service.dart';
+import '../service/vento_services.dart';
 import '../utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +19,6 @@ import 'package:at_event/models/event_type_model_homescreen.dart';
 import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_event/Widgets/circle_avatar.dart';
-import 'package:at_event/utils/functions.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/Widgets/group_cardUI.dart';
 import 'package:at_event/screens/group_create.dart';
@@ -35,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Color scaffoldColor;
   DateTime _selectedDay;
   DateTime _focusedDay = DateTime.now();
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  VentoService clientSdkService = VentoService.getInstance();
   String activeAtSign = '';
   GlobalKey<ScaffoldState> scaffoldKey;
   File _image;
@@ -61,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getAtSignAndInitContacts();
-    scan(context);
+    VentoService.getInstance().scan(context);
     scaffoldKey = GlobalKey<ScaffoldState>();
 
     super.initState();
@@ -69,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    globalContext = context;
+    VentoService.getInstance().updateContext(context);
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context).events) {
       if (isToday(e)) {
@@ -151,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(
               title: Text("Delete All Info on Secondary"),
               onTap: () {
-                deleteAll(context);
+                VentoService.getInstance().deleteAll(context);
               },
             ),
           ],
@@ -400,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getAtSignAndInitContacts() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

@@ -6,7 +6,7 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
 import 'calendar_screen.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/Widgets/invite_box.dart';
 
@@ -50,12 +50,12 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   String activeAtSign = '';
-  ClientSdkService clientSdkService;
+  VentoService clientSdkService;
   String timeText;
 
   @override
   void initState() {
-    clientSdkService = ClientSdkService.getInstance();
+    clientSdkService = VentoService.getInstance();
     if (!widget.event.isRecurring) {
       timeText = "From: " +
           DateFormat('MMMM').format(widget.event.from) +
@@ -272,11 +272,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       // just a safety check
 
       //get that client
-      ClientSdkService clientSdkService = ClientSdkService.getInstance();
+      VentoService clientSdkService = VentoService.getInstance();
 
       //create a key
       AtKey atKey = AtKey();
-      atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
+      atKey.key = widget.event.realEvent.key;
       atKey.sharedWith = activeAtSign;
       atKey.sharedBy = widget.event.realEvent.atSignCreator;
       Metadata metaData = Metadata()..ccd = true;
@@ -299,7 +299,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             widget.event.realEvent.atSignCreator.replaceAll("@", "");
         Metadata metaData = Metadata()..ccd = true;
         atKey.metadata = metaData;
-        deleteResult = await clientSdkService.delete(atKey);
+        await clientSdkService.delete(atKey);
       }
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => CalendarScreen()));
@@ -311,10 +311,10 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();
-    atKey.key = widget.event.realEvent.key.toLowerCase().replaceAll(" ", "");
-    atKey.namespace = namespace;
+    atKey.key = widget.event.realEvent.key;
+    atKey.namespace = MixedConstants.NAMESPACE;
     atKey.sharedWith = activeAtSign;
-    atKey.sharedBy = widget.event.realEvent.atSignCreator;
+    atKey.sharedBy = activeAtSign;
     Metadata metadata = Metadata();
     metadata.ccd = true;
     atKey.metadata = metadata;
@@ -322,7 +322,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     String storedValue = EventNotificationModel.convertEventNotificationToJson(
         widget.event.realEvent);
 
-    await ClientSdkService.getInstance().put(atKey, storedValue);
+    await VentoService.getInstance().put(atKey, storedValue);
 
     //metadata for the shared key
     var sharedMetadata = Metadata()
@@ -338,13 +338,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         ..sharedWith = invitee; //important: shared with is the person invited
 
       //share that key and value
-      await ClientSdkService.getInstance().put(sharedKey, storedValue);
+      await VentoService.getInstance().put(sharedKey, storedValue);
     }
   }
 
   //simple atSign getter
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

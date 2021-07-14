@@ -11,11 +11,10 @@ import 'package:at_event/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/group_model.dart';
-import 'package:at_event/utils/functions.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
@@ -25,7 +24,7 @@ class RecurringEvent extends StatefulWidget {
 }
 
 class _RecurringEventState extends State<RecurringEvent> {
-  ClientSdkService clientSdkService;
+  VentoService clientSdkService;
   List<String> repeatOccurrance;
   List<String> occursOnOptions;
   String activeAtSign = '';
@@ -37,7 +36,7 @@ class _RecurringEventState extends State<RecurringEvent> {
   @override
   void initState() {
     getAtSign();
-    clientSdkService = ClientSdkService.getInstance();
+    clientSdkService = VentoService.getInstance();
     eventData = widget.eventDate;
     eventData.event.isRecurring = true;
 
@@ -412,8 +411,7 @@ class _RecurringEventState extends State<RecurringEvent> {
       await clientSdkService.put(atKey, storedValue);
       GroupModel eventsGroup = widget.eventDate.group;
       if(eventsGroup != null) {
-        String groupKeyString = eventsGroup.key
-            .toLowerCase().replaceAll(" ", "");
+        String groupKeyString = eventsGroup.key;
         Metadata metadata = Metadata();
         metadata.ccd = true;
         AtKey groupKey = AtKey()
@@ -425,9 +423,14 @@ class _RecurringEventState extends State<RecurringEvent> {
         GroupModel group = Provider.of<UIData>(context, listen: false)
             .getGroupByTitle(eventsGroup.title);
         if (group != null) {
-          shareWithMany(widget.eventDate.key,storedValue, activeAtSign, widget.eventDate.invitees);
+          VentoService.getInstance().shareWithMany(widget.eventDate.key,storedValue, activeAtSign, widget.eventDate.invitees);
+
+          //adds the new event to the group
+          group.eventKeys.add(widget.eventDate.key);
+
           String groupValue = GroupModel.convertGroupToJson(group);
           await clientSdkService.put(groupKey, groupValue);
+          clientSdkService.shareWithMany(groupKey.key, groupValue,activeAtSign, group.invitees);
 
           //metadata for the shared key
           var sharedMetadata = Metadata()
@@ -443,7 +446,7 @@ class _RecurringEventState extends State<RecurringEvent> {
               ..sharedWith = invitee;
 
             //share that key and value
-            await ClientSdkService.getInstance().put(sharedKey, groupValue);
+            await VentoService.getInstance().put(sharedKey, groupValue);
           }
         } else {
           print("tried updated null group");
@@ -456,7 +459,7 @@ class _RecurringEventState extends State<RecurringEvent> {
     }
   }
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
