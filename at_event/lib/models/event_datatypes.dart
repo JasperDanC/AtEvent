@@ -23,7 +23,7 @@ class EventNotificationModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     String stringCategory = data['category'] ?? '';
-    switch(stringCategory){
+    switch (stringCategory) {
       case 'EventCategory.None':
         category = EventCategory.None;
         break;
@@ -31,7 +31,7 @@ class EventNotificationModel {
         category = EventCategory.Class;
         break;
       case 'EventCategory.Hangout':
-        category= EventCategory.Hangout;
+        category = EventCategory.Hangout;
         break;
       case 'EventCategory.Lab':
         category = EventCategory.Lab;
@@ -47,7 +47,9 @@ class EventNotificationModel {
         ? []
         : data['peopleGoing'].split(',') ?? [];
 
-    invitees = data['invitees'] == '[]' || data['invitees'] == '' ? [] : data['invitees'].split(',') ?? [];
+    invitees = data['invitees'] == '[]' || data['invitees'] == ''
+        ? []
+        : data['invitees'].split(',') ?? [];
     atSignCreator = data['atSignCreator' ?? ''];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
@@ -110,8 +112,8 @@ class EventNotificationModel {
     return notification;
   }
 
-  UI_Event toUI_Event() {
-    UI_Event ui_event = UI_Event(
+  UI_Event toUIEvent() {
+    UI_Event uiEvent = UI_Event(
       eventName: this.title,
       category: this.category,
       description: this.description,
@@ -124,7 +126,7 @@ class EventNotificationModel {
       realEvent: this,
     );
 
-    return ui_event;
+    return uiEvent;
   }
 }
 
@@ -178,7 +180,7 @@ class Event {
     } else {
       date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
       endDate =
-      data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
+          data['endDate'] != 'null' ? DateTime.parse(data['endDate']) : null;
       repeatDuration = data['repeatDuration'] != 'null'
           ? int.parse(data['repeatDuration'])
           : null;

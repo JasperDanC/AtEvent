@@ -1,9 +1,13 @@
-
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+/// Returns a custom bottom sheet that can contain any child.
+///
+/// Function onSheetClosed should specify any additional actions that will be
+/// taken after closing the bottom sheet
+
 void bottomSheet(BuildContext context, T, double height,
-    {Function onSheetCLosed}) {
+    {Function onSheetClosed}) {
   var future = showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -23,6 +27,6 @@ void bottomSheet(BuildContext context, T, double height,
       });
 
   future.then((value) {
-    if (onSheetCLosed != null) onSheetCLosed();
+    if (onSheetClosed != null) onSheetClosed();
   });
 }

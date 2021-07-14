@@ -1,7 +1,8 @@
-import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
 
+/// Floating IconButton widget
+///
 class FloatingIcon extends StatelessWidget {
   final Color bgColor, iconColor;
   final IconData icon;

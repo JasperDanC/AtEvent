@@ -1,11 +1,9 @@
-import 'package:at_event/Widgets/concurrent_event_request_dialog.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:at_event/models/ui_event.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'background.dart';
@@ -51,9 +49,9 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                       width: 250,
                       child: Text(
                         'You have ' +
-                            (Provider.of<UIData>(context)
-                                .eventInvitesLength + Provider.of<UIData>(context)
-                                .groupInvitesLength)
+                            (Provider.of<UIData>(context).eventInvitesLength +
+                                    Provider.of<UIData>(context)
+                                        .groupInvitesLength)
                                 .toString() +
                             ' invitations',
                         style: TextStyle(
@@ -181,10 +179,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _sendConfirmation(
-                                                eventInvite: Provider.of<UIData>(
-                                                        context,
-                                                        listen: false)
-                                                    .getEventInvite(index),
+                                                eventInvite:
+                                                    Provider.of<UIData>(context,
+                                                            listen: false)
+                                                        .getEventInvite(index),
                                                 isEvent: true);
                                             VentoService.getInstance().scan(context);
                                           },
@@ -200,10 +198,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _deleteInvitation(
-                                                eventInvite: Provider.of<UIData>(
-                                                    context,
-                                                    listen: false)
-                                                    .getEventInvite(index),
+                                                eventInvite:
+                                                    Provider.of<UIData>(context,
+                                                            listen: false)
+                                                        .getEventInvite(index),
                                                 isEvent: true);
                                           },
                                           minWidth: 0,
@@ -288,10 +286,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _sendConfirmation(
-                                                groupInvite: Provider.of<UIData>(
-                                                        context,
-                                                        listen: false)
-                                                    .getGroupInvite(index),
+                                                groupInvite:
+                                                    Provider.of<UIData>(context,
+                                                            listen: false)
+                                                        .getGroupInvite(index),
                                                 isEvent: false);
                                             VentoService.getInstance().scan(context);
                                           },
@@ -307,12 +305,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         MaterialButton(
                                           onPressed: () {
                                             _deleteInvitation(
-                                                groupInvite: Provider.of<UIData>(
-                                                    context,
-                                                    listen: false)
-                                                    .getGroupInvite(index),
-                                                isEvent: false
-                                            );
+                                                groupInvite:
+                                                    Provider.of<UIData>(context,
+                                                            listen: false)
+                                                        .getGroupInvite(index),
+                                                isEvent: false);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -343,20 +340,23 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   _sendConfirmation(
-      {EventInvite eventInvite, GroupInvite groupInvite, @required bool isEvent}) async {
+      {EventInvite eventInvite,
+      GroupInvite groupInvite,
+      @required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
       eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
       atKey.key =
           KeyConstants.confirmStart + eventInvite.event.realEvent.key;
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
-      Provider.of<UIData>(context, listen: false).acceptEventInvite(eventInvite);
-
+      Provider.of<UIData>(context, listen: false)
+          .acceptEventInvite(eventInvite);
     } else {
       groupInvite.group.atSignMembers.add(activeAtSign);
       atKey.key = KeyConstants.confirmStart  + groupInvite.group.key;
       atKey.sharedWith = groupInvite.group.atSignCreator;
-      Provider.of<UIData>(context, listen: false).acceptGroupInvite(groupInvite);
+      Provider.of<UIData>(context, listen: false)
+          .acceptGroupInvite(groupInvite);
     }
 
     atKey.namespace = MixedConstants.NAMESPACE;
@@ -378,7 +378,9 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   _deleteInvitation(
-      {EventInvite eventInvite, GroupInvite groupInvite, @required bool isEvent}) async {
+      {EventInvite eventInvite,
+      GroupInvite groupInvite,
+      @required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
       atKey.key =
@@ -402,13 +404,15 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
           eventInvite.event.realEvent);
-      atKey.sharedWith = eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
+      atKey.sharedWith =
+          eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
     } else {
       storedValue = GroupModel.convertGroupToJson(groupInvite.group);
       atKey.sharedWith = groupInvite.group.atSignCreator.replaceAll("@", "");
     }
 
     //await ClientSdkService.getInstance().delete(atKey);
+
 
     atKey.key = atKey.key;
     print("Deleting: " + atKey.toString());

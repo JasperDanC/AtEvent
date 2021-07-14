@@ -221,3 +221,11 @@ class AppStrings {
   static const String reset_keychain = "Reset Keychain";
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
+
+
+/*
+API KEY/s
+ */
+
+const String tinyPNG_base64 =
+    'YXBpOnY3QzM0M2wxeFlWQ1p3aGtCUkdIOEJZNDRWUDh5Zno0';

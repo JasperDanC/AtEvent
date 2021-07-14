@@ -406,7 +406,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => EventDetailsScreen(
-          event: newEventNotification.toUI_Event(),
+          event: newEventNotification.toUIEvent(),
         ),
       ),
     );

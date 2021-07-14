@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 
+/// UI Widget designed to display all of the atsigns invited to our event/group
+/// has a function [onAdd] designed to create functionality to integrate multiple invitation boxes.
+
 class InviteBox extends StatefulWidget {
-  InviteBox({@required this.invitees, @required this.onAdd, @required this.width, @required this.height});
+  InviteBox(
+      {@required this.invitees,
+      @required this.onAdd,
+      @required this.width,
+      @required this.height});
   final double width;
   final double height;
   final List<String> invitees;
@@ -16,7 +23,6 @@ class _InviteBoxState extends State<InviteBox> {
   TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   String _inviteeAtSign;
-
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +40,12 @@ class _InviteBoxState extends State<InviteBox> {
                 onPressed: () {
                   if (_inviteeAtSign != null) {
                     List<String> withoutAtSigns = [];
-                    for(String sign in widget.invitees){
+                    for (String sign in widget.invitees) {
                       withoutAtSigns.add(sign.replaceAll("@", ""));
                     }
                     setState(() {
-                      if (!withoutAtSigns.contains(_inviteeAtSign.replaceAll("@", ""))) {
+                      if (!withoutAtSigns
+                          .contains(_inviteeAtSign.replaceAll("@", ""))) {
                         widget.invitees.add(_inviteeAtSign);
                       }
                       _controller.clear();
@@ -95,7 +102,9 @@ class _InviteBoxState extends State<InviteBox> {
                         return Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Text(
-                            widget.invitees[index].startsWith("@") ? widget.invitees[index] : "@"+widget.invitees[index],
+                            widget.invitees[index].startsWith("@")
+                                ? widget.invitees[index]
+                                : "@" + widget.invitees[index],
                             style: kEventDetailsTextStyle,
                           ),
                         );

@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:at_event/widgets/category_selector.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/models/event_datatypes.dart';
@@ -21,6 +20,7 @@ import 'package:at_event/widgets/custom_toast.dart';
 
 void main() => runApp(EventCreateScreen());
 
+// ignore: must_be_immutable
 class EventCreateScreen extends StatefulWidget {
   Setting setting;
   TextEditingController locationController = TextEditingController();
@@ -534,6 +534,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         newEventNotification.groupKey = group.key;
       }
 
+
       //create the @key
       AtKey atKey = AtKey();
       atKey.key = newEventNotification.key;
@@ -551,7 +552,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       print("Made Event: "+ storedValue);
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
-
       Provider.of<UIData>(context, listen: false)
           .addEvent(newEventNotification.toUI_Event());
 
@@ -573,7 +573,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           VentoService.getInstance().shareWithMany(newEventNotification.key,
               storedValue, activeAtSign, group.atSignMembers);
           String groupValue = GroupModel.convertGroupToJson(group);
-
           await clientSdkService.put(groupKey, groupValue);
           clientSdkService.shareWithMany(groupKey.key, groupValue, activeAtSign, group.invitees);
         } else {

@@ -208,14 +208,13 @@ class _RecurringEventState extends State<RecurringEvent> {
                       initialValue: eventData.event.date != null
                           ? timeOfDayToString(eventData.event.date)
                           : '',
-                      value:(value) => timeOfDayToString(eventData.event.date),
+                      value: (value) => timeOfDayToString(eventData.event.date),
                       onTap: () async {
                         print("opened picker");
                         final timePicked = await showTimePicker(
                             context: context,
                             initialTime: widget.eventDate.event.date != null
-                                ? TimeOfDay.fromDateTime(
-                                    eventData.event.date)
+                                ? TimeOfDay.fromDateTime(eventData.event.date)
                                 : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
 
@@ -230,7 +229,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                                 timePicked.hour,
                                 timePicked.minute);
                             print(timeOfDayToString(eventData.event.date));
-
                           });
                         }
                       },
@@ -244,7 +242,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                       initialValue: eventData.event.endDate != null
                           ? timeOfDayToString(eventData.event.endDate)
                           : '',
-                      value:(value) => timeOfDayToString(eventData.event.endDate),
+                      value: (value) =>
+                          timeOfDayToString(eventData.event.endDate),
                       onTap: () async {
                         final timePicked = await showTimePicker(
                             context: context,
@@ -260,7 +259,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                           return;
                         }
                         if (timePicked != null) {
-
                           setState(() {
                             eventData.event.endDate = DateTime(
                                 eventData.event.date.year,
@@ -383,11 +381,12 @@ class _RecurringEventState extends State<RecurringEvent> {
       turnAppbar: true,
     );
   }
+
   _update() async {
     //goes through and makes sure every field was set to something
     bool filled = widget.eventDate.event != null;
     if (filled) {
-      if(widget.eventDate.event.endsOn == null) {
+      if (widget.eventDate.event.endsOn == null) {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
       widget.eventDate.event.repeatDuration = 1;
@@ -448,6 +447,7 @@ class _RecurringEventState extends State<RecurringEvent> {
           .show('Please fill all fields before creating the event', context);
     }
   }
+
   getAtSign() async {
     String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'event_datatypes.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:at_event/utils/constants.dart';
 
 // ignore: camel_case_types
 class UI_Event {
@@ -31,7 +30,7 @@ class UI_Event {
       if (realEvent.event.repeatCycle == RepeatCycle.WEEK) {
         recurrenceProperties.recurrenceType = RecurrenceType.weekly;
         WeekDays weekDays;
-        switch(realEvent.event.occursOn){
+        switch (realEvent.event.occursOn) {
           case Week.SUNDAY:
             weekDays = WeekDays.sunday;
             break;

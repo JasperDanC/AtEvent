@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/models/ui_data.dart';
 
-import 'event_tiles.dart';
+import '../Widgets/event_tiles.dart';
 
 class ListPage extends StatefulWidget {
   final GroupModel group;
@@ -47,6 +47,7 @@ class _ListPageState extends State<ListPage> {
       if(e.realEvent.groupKey!=null &&e.realEvent.groupKey== widget.group.key){
         print("Event, " + e.eventName + ", for group, "+  widget.group.title);
           events.add(e);
+        }
       }
 
     }
@@ -155,10 +156,11 @@ class _ListPageState extends State<ListPage> {
                 shrinkWrap: true,
                 itemCount: events.length,
                 itemBuilder: (context, index) {
-                  return PopularEventTile(
+                  return TodayEventTile(
                     desc: events[index].eventName,
                     address: events[index].location,
-                    date: DateFormat('hh:MM a').format(events[index].from),
+                    date: DateFormat('hh:mm a').format(events[index].from),
+                    event: events[index],
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -168,6 +170,8 @@ class _ListPageState extends State<ListPage> {
                         ),
                       );
                     },
+                    imgAssetPath:
+                        'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
                   );
                 })
             : Column(

@@ -1,5 +1,5 @@
+import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/calendar_screen.dart';
-import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/screens/home_screen.dart';
@@ -9,18 +9,64 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/models/ui_data.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:at_event/screens/something_went_wrong.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(Vento());
 }
 
-class Vento extends StatelessWidget {
+class Vento extends StatefulWidget {
   // This widget is the root of your application.
   @override
+  _VentoState createState() => _VentoState();
+}
+
+class _VentoState extends State<Vento> {
+  bool _initialized = false;
+  bool _error = false;
+
+  // Define an async function to initialize FlutterFire
+  void initializeFlutterFire() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    } catch (e) {
+      // Set `_error` state to true if Firebase initialization fails
+      setState(() {
+        _error = true;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
+    if (_error) {
+      return SomethingWentWrongScreen();
+    }
+
+    if (!_initialized) {
+      return Background(
+        child: Center(
+          child: SpinKitFoldingCube(
+            color: Colors.redAccent,
+            size: 50.0,
+          ),
+        ),
+        turnAppbar: false,
+      );
+    }
     return ChangeNotifierProvider<UIData>(
       create: (context) => UIData(),
       child: MaterialApp(
