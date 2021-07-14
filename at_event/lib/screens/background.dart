@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:at_event/utils/constants.dart';
-import '../service/client_sdk_service.dart';
+import '../service/vento_services.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
-import 'package:at_event/utils/functions.dart';
 
 class Background extends StatefulWidget {
   Background({this.child, this.turnAppbar = true, this.loggedIn = true});
@@ -15,7 +14,7 @@ class Background extends StatefulWidget {
 }
 
 class _BackgroundState extends State<Background> {
-  ClientSdkService clientSdkService = ClientSdkService.getInstance();
+  VentoService clientSdkService = VentoService.getInstance();
 
   String activeAtSign = '';
 
@@ -31,7 +30,7 @@ class _BackgroundState extends State<Background> {
 
   @override
   Widget build(BuildContext context) {
-    globalContext = context;
+    VentoService.getInstance().updateContext(context);
     return MaterialApp(
       home: Scaffold(
         key: scaffoldKey,
@@ -117,7 +116,7 @@ class _BackgroundState extends State<Background> {
                     ListTile(
                       title: Text("Delete All Info on Secondary"),
                       onTap: () {
-                        deleteAll(context);
+                        VentoService.getInstance().deleteAll(context);
                       },
                     ),
                   ],
@@ -130,7 +129,7 @@ class _BackgroundState extends State<Background> {
   }
 
   getAtSignAndInitContacts() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
 
     activeAtSign = currentAtSign;
     initializeContactsService(clientSdkService.atClientInstance, activeAtSign,

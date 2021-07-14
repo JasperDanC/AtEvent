@@ -29,78 +29,74 @@ class UIData extends ChangeNotifier {
     return _profilePicturePaths.isEmpty;
   }
 
-  void addEvent(UI_Event event) {
-    if (!isAddedEvent(event)) {
+  void addEvent(UI_Event event){
+    if(!isAddedEvent(event)){
       _uiEvents.add(event);
-      if (event.realEvent.group != null) {
-        for (GroupModel g in _groups) {
-          if (g.title == event.realEvent.group.title &&
-              g.atSignCreator == event.realEvent.group.atSignCreator) {
-            _groups.remove(g);
-            g.eventKeys.add(event.realEvent.key);
-            _groups.add(g);
-          }
-        }
-      }
     }
     notifyListeners();
   }
-
-  void addGroup(GroupModel group) {
-    if (!isAddedGroup(group)) {
+  void addGroup(GroupModel group){
+    if(!isAddedGroup(group)){
       _groups.add(group);
     }
 
     notifyListeners();
   }
 
-  GroupModel getGroupByTitle(String title) {
-    for (GroupModel g in _groups) {
-      if (g.title == title) {
+  GroupModel getGroupByTitle(String title){
+    for(GroupModel g in _groups){
+      if(g.title == title){
         return g;
       }
     }
     return null;
   }
 
-  EventNotificationModel getEventByKey(String key) {
-    for (UI_Event e in _uiEvents) {
-      if (e.realEvent.key.toLowerCase().replaceAll(" ", "") ==
-          key.toLowerCase().replaceAll(" ", "")) {
+  EventNotificationModel getEventByKey(String key){
+    for(UI_Event e in _uiEvents){
+      if(e.realEvent.key.toLowerCase().replaceAll(" ", "") == key.toLowerCase().replaceAll(" ", "")){
         return e.realEvent;
       }
     }
     return null;
   }
 
-  void clearAcceptedEvents() {
+  void clearAcceptedEvents(){
     _acceptedEventInvites.clear();
     notifyListeners();
   }
 
-  void clearAcceptedGroups() {
+  void clearAcceptedGroups(){
     _acceptedGroupInvites.clear();
     notifyListeners();
   }
 
-  void acceptGroupInvite(GroupInvite invite) {
+  void acceptGroupInvite(GroupInvite invite){
     deleteGroupInvite(invite);
     _groups.add(invite.group);
     _acceptedGroupInvites.add(invite);
     notifyListeners();
   }
 
-  bool hasGroup(GroupModel groupModel) {
-    for (GroupModel g in _groups) {
-      if (g.title == groupModel.title &&
-          g.atSignCreator == groupModel.atSignCreator) {
+  bool hasGroup(GroupModel groupModel){
+    for(GroupModel g in _groups){
+      if(g.title == groupModel.title && g.atSignCreator == groupModel.atSignCreator){
         return true;
       }
     }
     return false;
   }
 
-  void deleteGroupInvite(GroupInvite invite) {
+  bool hasGroupKey(String keyName){
+    for(GroupModel g in _groups){
+      if(g.key== keyName){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void deleteGroupInvite(GroupInvite invite){
     print(_groupInvites.length);
     _groupInvites.remove(invite);
     print(_groupInvites.length);
@@ -108,14 +104,14 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void acceptEventInvite(EventInvite invite) {
+  void acceptEventInvite(EventInvite invite){
     deleteEventInvite(invite);
     _uiEvents.add(invite.event);
     _acceptedEventInvites.add(invite);
     notifyListeners();
   }
 
-  void deleteEventInvite(EventInvite invite) {
+  void deleteEventInvite(EventInvite invite){
     _eventInvites.remove(invite);
     _deletedEventInvites.add(invite);
     notifyListeners();
