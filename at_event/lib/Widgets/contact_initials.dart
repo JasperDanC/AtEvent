@@ -6,18 +6,13 @@ import 'package:at_event/utils/constants.dart';
 class ContactInitial extends StatelessWidget {
   final double size;
   final String initials;
-  int index;
   final Color backgroundColor;
-  ContactInitial(
-      {Key key,
-      this.size = 50,
-      this.initials,
-      this.index,
-      this.backgroundColor})
+  ContactInitial({Key key, this.size = 50, this.initials, this.backgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    int index = 0;
     if (initials.length < 3) {
       index = initials.length;
     } else {

@@ -341,7 +341,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         return TodayEventTile(
                           desc: events[index].eventName,
                           address: events[index].location,
-                          imgAssetPath: 'assets/images/none.png',
+                          imgAssetPath:
+                              'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
                           date:
                               DateFormat('hh:mm a').format(events[index].from),
                           event: events[index],
@@ -431,13 +432,13 @@ class _HomeScreenState extends State<HomeScreen> {
         .inDays;
   }
 
-  bool isToday(UI_Event ui_event) {
-    if (!ui_event.isRecurring) {
-      return calculateDifference(ui_event.from) == 0;
+  bool isToday(UI_Event uiEvent) {
+    if (!uiEvent.isRecurring) {
+      return calculateDifference(uiEvent.from) == 0;
     } else {
-      if (ui_event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+      if (uiEvent.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
         int currentWeekday;
-        switch (ui_event.realEvent.event.occursOn) {
+        switch (uiEvent.realEvent.event.occursOn) {
           case Week.SUNDAY:
             currentWeekday = 7;
             break;
@@ -460,26 +461,25 @@ class _HomeScreenState extends State<HomeScreen> {
             currentWeekday = 6;
             break;
         }
-        return DateTime.now().isAfter(ui_event.from) &&
+        return DateTime.now().isAfter(uiEvent.from) &&
             DateTime.now().weekday == currentWeekday &&
-            ((ui_event.realEvent.event.endsOn == EndsOn.NEVER) ||
-                (ui_event.realEvent.event.endsOn == EndsOn.AFTER &&
-                    (DateTime.now().difference(ui_event.from).inDays / 7) *
-                            ui_event.realEvent.event.repeatDuration <
-                        ui_event.realEvent.event.endEventAfterOccurrence) ||
-                (ui_event.realEvent.event.endsOn == EndsOn.ON &&
+            ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
+                (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
+                    (DateTime.now().difference(uiEvent.from).inDays / 7) *
+                            uiEvent.realEvent.event.repeatDuration <
+                        uiEvent.realEvent.event.endEventAfterOccurrence) ||
+                (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
                     DateTime.now()
-                        .isBefore(ui_event.realEvent.event.endEventOnDate)));
+                        .isBefore(uiEvent.realEvent.event.endEventOnDate)));
       } else {
-        return DateTime.now().day == ui_event.to.day &&
-            ((ui_event.realEvent.event.endsOn == EndsOn.NEVER) ||
-                (ui_event.realEvent.event.endsOn == EndsOn.AFTER &&
-                    DateTime.now().difference(ui_event.from).inDays /
-                            30.436875 <
-                        ui_event.realEvent.event.endEventAfterOccurrence) ||
-                (ui_event.realEvent.event.endsOn == EndsOn.ON &&
+        return DateTime.now().day == uiEvent.to.day &&
+            ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
+                (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
+                    DateTime.now().difference(uiEvent.from).inDays / 30.436875 <
+                        uiEvent.realEvent.event.endEventAfterOccurrence) ||
+                (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
                     DateTime.now()
-                        .isBefore(ui_event.realEvent.event.endEventOnDate)));
+                        .isBefore(uiEvent.realEvent.event.endEventOnDate)));
       }
     }
   }

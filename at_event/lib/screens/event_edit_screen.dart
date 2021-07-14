@@ -6,7 +6,6 @@ import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:at_event/models/ui_event.dart';
-import 'package:at_event/widgets/category_selector.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_commons/at_commons.dart';
 
@@ -406,7 +405,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => EventDetailsScreen(
-          event: newEventNotification.toUI_Event(),
+          event: newEventNotification.toUIEvent(),
         ),
       ),
     );

@@ -4,38 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 
-class EventTile extends StatefulWidget {
-  final String imgAssetPath;
-  final String eventType;
-
-  EventTile({this.imgAssetPath, this.eventType});
-
-  @override
-  _EventTileState createState() => _EventTileState();
-}
-
-class _EventTileState extends State<EventTile> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      margin: EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(
-          color: kCategoryTile, borderRadius: BorderRadius.circular(12)),
-      color: kCategoryTile,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset(widget.imgAssetPath, height: 27),
-          SizedBox(height: 12),
-          Text(widget.eventType, style: TextStyle(color: Colors.white))
-        ],
-      ),
-    );
-  }
-}
-
+/// TodayEvenTile is a widget that stores the event's location, date of occurrence,
+/// description and
 //ignore: must_be_immutable
 class TodayEventTile extends StatefulWidget {
   final String desc;
@@ -78,13 +48,14 @@ class _TodayEventTileState extends State<TodayEventTile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      widget.desc,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    // TODO: Replace this text widget to contain the creator of the AtKey
+                    // Text(
+                    //   widget.desc,
+                    //   style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 22,
+                    //       fontWeight: FontWeight.bold),
+                    // ),
                     SizedBox(
                       height: 6,
                     ),

@@ -1,7 +1,9 @@
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/at_common_flutter.dart';
+
+/// Error Dialog with an option to retry the action using a text button with a
+/// [required] onPressed function..
 
 class ErrorScreen extends StatelessWidget {
   final Function onPressed;

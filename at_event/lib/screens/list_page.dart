@@ -6,7 +6,6 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
-import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/screens/group_information_screen.dart';
 import 'package:at_event/screens/home_screen.dart';
 import 'package:at_event/utils/constants.dart';
@@ -18,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/models/ui_data.dart';
 
-import 'event_tiles.dart';
+import '../Widgets/event_tiles.dart';
 
 class ListPage extends StatefulWidget {
   final GroupModel group;
@@ -164,7 +163,8 @@ class _ListPageState extends State<ListPage> {
                   return TodayEventTile(
                     desc: events[index].eventName,
                     address: events[index].location,
-                    date: DateFormat('hh:MM a').format(events[index].from),
+                    date: DateFormat('hh:mm a').format(events[index].from),
+                    event: events[index],
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -174,6 +174,8 @@ class _ListPageState extends State<ListPage> {
                         ),
                       );
                     },
+                    imgAssetPath:
+                        'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
                   );
                 })
             : Column(

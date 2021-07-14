@@ -1,5 +1,4 @@
 import 'package:at_event/screens/calendar_screen.dart';
-import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/screens/home_screen.dart';
@@ -9,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/WelcomeScreen.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/models/ui_data.dart';
 
 void main() async {

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/models/ui_event.dart';
@@ -53,11 +52,12 @@ scan(BuildContext context) async {
 
         //if I am going to this event add it to my calendar otherwise add it to my invitation list
         if ((eventModel.peopleGoing.contains(currentUser) &&
-            !(eventModel.atSignCreator == currentUser &&
-                atKey.sharedWith != currentUser) ) || Provider.of<UIData>(context, listen: false).hasGroup(eventModel.group) ) {
+                !(eventModel.atSignCreator == currentUser &&
+                    atKey.sharedWith != currentUser)) ||
+            Provider.of<UIData>(context, listen: false)
+                .hasGroup(eventModel.group)) {
           Provider.of<UIData>(context, listen: false)
-              .addEvent(eventModel.toUI_Event());
-
+              .addEvent(eventModel.toUIEvent());
         } else {
           if (atKey.sharedWith.replaceAll("@", "") !=
                   atKey.sharedBy.replaceAll("@", "") &&
@@ -65,7 +65,7 @@ scan(BuildContext context) async {
                   eventModel.atSignCreator.replaceAll("@", "")) {
             print(" Got invite to: " + currentUser);
             EventInvite newInvite = EventInvite(
-                event: eventModel.toUI_Event(), from: eventModel.atSignCreator);
+                event: eventModel.toUIEvent(), from: eventModel.atSignCreator);
 
             if (!Provider.of<UIData>(context, listen: false)
                 .isDeletedEventInvite(newInvite)) {
@@ -125,7 +125,6 @@ scan(BuildContext context) async {
   }
   print(" found $keysFound keys");
 }
-
 
 deleteAll(BuildContext context) async {
   print("started deletion");
@@ -292,13 +291,12 @@ void _notificationCallback(dynamic response) async {
         groupModel.atSignMembers.add(realKey.sharedBy);
         String updatedGroupValue = GroupModel.convertGroupToJson(groupModel);
 
-
         await ClientSdkService.getInstance().put(updatedKey, updatedGroupValue);
-        shareWithMany(keyOfObject,updatedGroupValue,realKey.sharedWith,groupModel.invitees);
+        shareWithMany(keyOfObject, updatedGroupValue, realKey.sharedWith,
+            groupModel.invitees);
 
         //metadata for the shared key
-        var metadata = Metadata()
-          ..ccd = true;
+        var metadata = Metadata()..ccd = true;
         for (String key in groupModel.eventKeys) {
           AtKey eventKey = AtKey()
             ..key = key.toLowerCase().replaceAll(" ", "")
@@ -306,17 +304,18 @@ void _notificationCallback(dynamic response) async {
             ..sharedBy = realKey.sharedWith
             ..sharedWith = realKey.sharedWith;
 
-
-
-          EventNotificationModel eventModel = Provider.of<UIData>(globalContext, listen: false).getEventByKey(key);
+          EventNotificationModel eventModel =
+              Provider.of<UIData>(globalContext, listen: false)
+                  .getEventByKey(key);
 
           eventModel.invitees.add(realKey.sharedBy);
           eventModel.peopleGoing.add(realKey.sharedBy);
 
-          String storedValue = EventNotificationModel.convertEventNotificationToJson(
-              eventModel);
+          String storedValue =
+              EventNotificationModel.convertEventNotificationToJson(eventModel);
           await ClientSdkService.getInstance().put(eventKey, storedValue);
-          await shareWithMany(key.toLowerCase().replaceAll(" ", ""),storedValue,realKey.sharedWith,eventModel.invitees);
+          await shareWithMany(key.toLowerCase().replaceAll(" ", ""),
+              storedValue, realKey.sharedWith, eventModel.invitees);
         }
       }
       //don't do more code we have dealt with the notification
@@ -339,7 +338,8 @@ void _notificationCallback(dynamic response) async {
   }
 }
 
-void shareWithMany(String key,String value,String sharedBy, List<String> invitees) async{
+void shareWithMany(
+    String key, String value, String sharedBy, List<String> invitees) async {
   //metadata for the shared key
   var sharedMetadata = Metadata()
     ..ccd = true

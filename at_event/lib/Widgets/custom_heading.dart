@@ -1,6 +1,8 @@
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+/// Custom heading widget with a text button that is [required].
+
 class CustomHeading extends StatelessWidget {
   final String heading, action;
   final Function onPressed;

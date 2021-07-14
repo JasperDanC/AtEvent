@@ -1,6 +1,4 @@
-import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/models/ui_data.dart';
-import 'dart:convert';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/uicalendar_event_data_source.dart';
@@ -16,16 +13,16 @@ import 'package:at_event/service/client_sdk_service.dart';
 import 'package:at_event/utils/functions.dart';
 import 'home_screen.dart';
 
-
 void main() {
   runApp(CalendarScreen());
 }
 
+// ignore: must_be_immutable
 class CalendarScreen extends StatefulWidget {
-
-  CalendarScreen({this.specificDay}){
+  final DateTime specificDay;
+  CalendarScreen({this.specificDay}) {
     //if the calendar was set to open to a specific day
-    if(specificDay != null){
+    if (specificDay != null) {
       //set the view to that date
       switchIndex = 2;
       _controller.displayDate = specificDay;
@@ -35,7 +32,7 @@ class CalendarScreen extends StatefulWidget {
 
   //set default calendar view to month view
   int switchIndex = 0;
-  final DateTime specificDay;
+
   //controller for calendar
   final CalendarController _controller = CalendarController();
 
@@ -89,15 +86,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     MaterialButton(
-                        shape: CircleBorder(),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HomeScreen()));
-                        },
-                        child: Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                          size: 50.0,
-                        ),),
+                      shape: CircleBorder(),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => HomeScreen()));
+                      },
+                      child: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                        size: 50.0,
+                      ),
+                    ),
                   ],
                 ),
                 ToggleSwitch(
@@ -136,21 +135,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           widget._controller.view = CalendarView.day;
                         });
                       } else {
-                        if (ctd.appointments != null || ctd.appointments.length != null) {
+                        if (ctd.appointments != null ||
+                            ctd.appointments.length != null) {
                           UI_Event foundEvent;
-                          for(UI_Event e in Provider.of<UIData>(context,listen: false).events){
-                            if(ctd.appointments[0].from == e.from && ctd.appointments[0].to == e.to){
+                          for (UI_Event e
+                              in Provider.of<UIData>(context, listen: false)
+                                  .events) {
+                            if (ctd.appointments[0].from == e.from &&
+                                ctd.appointments[0].to == e.to) {
                               foundEvent = e;
                             }
                           }
-                          if(foundEvent != null){
+                          if (foundEvent != null) {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return EventDetailsScreen(
-                                      event: foundEvent
-
-                                  );
-                                }));
+                              return EventDetailsScreen(event: foundEvent);
+                            }));
                           } else {
                             print('did not find event');
                           }
@@ -200,10 +200,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       int numAppointments = 0;
                       List<String> seen = [];
 
-                      for(UI_Event app  in details.appointments ){
-                        if(!seen.contains(app.eventName)){
+                      for (UI_Event app in details.appointments) {
+                        if (!seen.contains(app.eventName)) {
                           seen.add(app.eventName);
-                          numAppointments +=1;
+                          numAppointments += 1;
                         }
                       }
 
@@ -235,8 +235,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                               CircleAvatar(
                                 backgroundColor: kEventBlue,
-                                radius:
-                                    numAppointments!= 0 ? 15 : 0,
+                                radius: numAppointments != 0 ? 15 : 0,
                                 child: Text(
                                   numAppointments != 0
                                       ? numAppointments.toString()
@@ -261,12 +260,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontWeight: FontWeight.bold, color: Colors.white),
                         backgroundColor: kPrimaryBlue),
                     view: CalendarView.month,
-                    backgroundColor: widget._controller.view == CalendarView.month
-                        ? Colors.transparent
-                        : Colors.white,
-                    cellBorderColor: widget._controller.view == CalendarView.month
-                        ? Colors.white
-                        : Colors.grey[110],
+                    backgroundColor:
+                        widget._controller.view == CalendarView.month
+                            ? Colors.transparent
+                            : Colors.white,
+                    cellBorderColor:
+                        widget._controller.view == CalendarView.month
+                            ? Colors.white
+                            : Colors.grey[110],
                   ),
                 ),
                 Padding(
@@ -276,7 +277,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         backgroundColor: kBackgroundGrey,
                         child: Icon(Icons.add),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>EventCreateScreen()));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EventCreateScreen()));
                         }),
                   ),
                 )
@@ -287,6 +289,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
     );
   }
+
   //straightforward getting the logged in at sign function
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();

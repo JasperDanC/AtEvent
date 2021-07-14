@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:flutter/cupertino.dart';
 import 'ui_event.dart';

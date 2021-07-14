@@ -1,8 +1,13 @@
 import 'dart:io';
 
-
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
+
+/// Returns a Custom Circle Avatar that has the option to contain an asset image
+/// and a file image chosen from your phone directly.
+///
+///
+///
 
 class CustomCircleAvatar extends StatelessWidget {
   final String image;

@@ -184,7 +184,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                           );
 
                           if (datePicked != null) {
-
                             setState(() {
                               eventData.event.date = datePicked;
                             });
@@ -209,14 +208,13 @@ class _RecurringEventState extends State<RecurringEvent> {
                       initialValue: eventData.event.date != null
                           ? timeOfDayToString(eventData.event.date)
                           : '',
-                      value:(value) => timeOfDayToString(eventData.event.date),
+                      value: (value) => timeOfDayToString(eventData.event.date),
                       onTap: () async {
                         print("opened picker");
                         final timePicked = await showTimePicker(
                             context: context,
                             initialTime: widget.eventDate.event.date != null
-                                ? TimeOfDay.fromDateTime(
-                                    eventData.event.date)
+                                ? TimeOfDay.fromDateTime(eventData.event.date)
                                 : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
 
@@ -231,7 +229,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                                 timePicked.hour,
                                 timePicked.minute);
                             print(timeOfDayToString(eventData.event.date));
-
                           });
                         }
                       },
@@ -245,7 +242,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                       initialValue: eventData.event.endDate != null
                           ? timeOfDayToString(eventData.event.endDate)
                           : '',
-                      value:(value) => timeOfDayToString(eventData.event.endDate),
+                      value: (value) =>
+                          timeOfDayToString(eventData.event.endDate),
                       onTap: () async {
                         final timePicked = await showTimePicker(
                             context: context,
@@ -261,7 +259,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                           return;
                         }
                         if (timePicked != null) {
-
                           setState(() {
                             eventData.event.endDate = DateTime(
                                 eventData.event.date.year,
@@ -384,11 +381,12 @@ class _RecurringEventState extends State<RecurringEvent> {
       turnAppbar: true,
     );
   }
+
   _update() async {
     //goes through and makes sure every field was set to something
     bool filled = widget.eventDate.event != null;
     if (filled) {
-      if(widget.eventDate.event.endsOn == null) {
+      if (widget.eventDate.event.endsOn == null) {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
       widget.eventDate.event.repeatDuration = 1;
@@ -403,17 +401,18 @@ class _RecurringEventState extends State<RecurringEvent> {
 
       //set the value to store in the secondary as the json version of the EventNotifications object
       String storedValue =
-      EventNotificationModel.convertEventNotificationToJson(
-          widget.eventDate);
-      Provider.of<UIData>(context, listen: false).addEvent(widget.eventDate.toUI_Event());
+          EventNotificationModel.convertEventNotificationToJson(
+              widget.eventDate);
+      Provider.of<UIData>(context, listen: false)
+          .addEvent(widget.eventDate.toUIEvent());
       print(atKey.toString());
       print(storedValue);
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
       GroupModel eventsGroup = widget.eventDate.group;
-      if(eventsGroup != null) {
-        String groupKeyString = eventsGroup.key
-            .toLowerCase().replaceAll(" ", "");
+      if (eventsGroup != null) {
+        String groupKeyString =
+            eventsGroup.key.toLowerCase().replaceAll(" ", "");
         Metadata metadata = Metadata();
         metadata.ccd = true;
         AtKey groupKey = AtKey()
@@ -425,7 +424,8 @@ class _RecurringEventState extends State<RecurringEvent> {
         GroupModel group = Provider.of<UIData>(context, listen: false)
             .getGroupByTitle(eventsGroup.title);
         if (group != null) {
-          shareWithMany(widget.eventDate.key,storedValue, activeAtSign, widget.eventDate.invitees);
+          shareWithMany(widget.eventDate.key, storedValue, activeAtSign,
+              widget.eventDate.invitees);
           String groupValue = GroupModel.convertGroupToJson(group);
           await clientSdkService.put(groupKey, groupValue);
 
@@ -455,6 +455,7 @@ class _RecurringEventState extends State<RecurringEvent> {
           .show('Please fill all fields before creating the event', context);
     }
   }
+
   getAtSign() async {
     String currentAtSign = await ClientSdkService.getInstance().getAtSign();
     setState(() {

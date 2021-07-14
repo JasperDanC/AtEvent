@@ -10,7 +10,7 @@ import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactListTile extends StatefulWidget {
   final String name;
-  final String AtSign;
+  final String atSign;
   final Widget image;
   final Function onAdd;
   final Function onRemove;
@@ -20,7 +20,7 @@ class ContactListTile extends StatefulWidget {
   final bool plainView;
   const ContactListTile(
       {this.name,
-      this.AtSign,
+      this.atSign,
       this.image,
       this.onAdd,
       this.onRemove,
@@ -55,7 +55,7 @@ class _ContactListTileState extends State<ContactListTile> {
           style: kNormalTextStyle,
         ),
         subtitle: Text(
-          widget.AtSign,
+          widget.atSign,
           style: kNormalTextStyle,
         ),
         trailing: (widget.plainView)

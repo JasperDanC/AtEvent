@@ -2,6 +2,8 @@ import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+/// Custom Toast Widget that lasts for one second
+///
 class CustomToast {
   CustomToast._();
   static final CustomToast _instance = CustomToast._();
