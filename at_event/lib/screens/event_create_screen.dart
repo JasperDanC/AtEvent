@@ -508,77 +508,11 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..key = VentoService.getInstance()
             .generateKeyName(activeAtSign, KeyType.EVENT);
 
-      GroupModel group;
-      if(_groupDropDownValue!=0){
-        AtKey atKey = AtKey()
-            ..key = groupValueMap[_groupDropDownValue].key
-            ..sharedBy = groupValueMap[_groupDropDownValue].atSignCreator
-            ..sharedWith = activeAtSign;
 
-        group =  await VentoService.getInstance().lookupGroup(atKey);
-      }
-
-
-      List<String> groupMembersExcludingMe = [];
-      if (group != null) {
-        for(String member in  group.atSignMembers) {
-          if(!VentoService.getInstance().compareAtSigns(member, activeAtSign)){
-            groupMembersExcludingMe.add(member);
-          }
-        }
-
-        newEventNotification.invitees.addAll(groupMembersExcludingMe);
-        newEventNotification.peopleGoing.addAll(groupMembersExcludingMe);
-        // add the new eventKey to the group
-        group.eventKeys.add(newEventNotification.key);
-        newEventNotification.groupKey = group.key;
-      }
-
-
-      //create the @key
-      AtKey atKey = AtKey();
-      atKey.key = newEventNotification.key;
-      atKey.sharedWith = activeAtSign;
-      atKey.sharedBy = activeAtSign;
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      atKey.metadata = metadata;
-      print(atKey.toString());
-
-      //set the value to store in the secondary as the json version of the EventNotifications object
-      String storedValue =
-          EventNotificationModel.convertEventNotificationToJson(
-              newEventNotification);
-      print("Made Event: "+ storedValue);
-      //put that shiza on the secondary
-      await clientSdkService.put(atKey, storedValue);
       Provider.of<UIData>(context, listen: false)
           .addEvent(newEventNotification.toUIEvent());
 
-      if (_groupDropDownValue != 0) {
-
-
-        String groupKeyString = group.key;
-
-        Metadata metadata = Metadata();
-        metadata.ccd = true;
-        AtKey groupKey = AtKey()
-          ..key = groupKeyString
-          ..metadata = metadata
-          ..sharedWith = activeAtSign
-          ..sharedBy = activeAtSign;
-
-
-        if (group != null) {
-          VentoService.getInstance().shareWithMany(newEventNotification.key,
-              storedValue, activeAtSign, group.atSignMembers);
-          String groupValue = GroupModel.convertGroupToJson(group);
-          await clientSdkService.put(groupKey, groupValue);
-          clientSdkService.shareWithMany(groupKey.key, groupValue, activeAtSign, group.invitees);
-        } else {
-          print("tried updated null group");
-        }
-      }
+      await VentoService.getInstance().createAndShareEvent(newEventNotification, activeAtSign);
 
       //back to the calendar
       Navigator.pop(context);
@@ -625,15 +559,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       }
 
       Setting location = widget.setting;
-      GroupModel group;
-      if(_groupDropDownValue!=0){
-        AtKey atKey = AtKey()
-          ..key = groupValueMap[_groupDropDownValue].key
-          ..sharedBy = groupValueMap[_groupDropDownValue].atSignCreator
-          ..sharedWith = activeAtSign;
-
-        group =  await VentoService.getInstance().lookupGroup(atKey);
-      }
 
       EventNotificationModel newEventNotification = EventNotificationModel()
         ..event = Event()
@@ -646,22 +571,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..description = _eventDesc
         ..setting = location
         ..key = VentoService.getInstance().generateKeyName(activeAtSign, KeyType.EVENT);
-
-
-      List<String> groupMembersExcludingMe = [];
-      if (_groupDropDownValue != 0) {
-        for(String member in  group.atSignMembers) {
-          if(!VentoService.getInstance().compareAtSigns(member, activeAtSign)){
-            groupMembersExcludingMe.add(member);
-          }
-        }
-        newEventNotification.invitees.addAll(groupMembersExcludingMe);
-        newEventNotification.peopleGoing.addAll(groupMembersExcludingMe);
-
-        // add the new eventKey to the group
-        group.eventKeys.add(newEventNotification.key);
-        newEventNotification.groupKey = group.key;
-      }
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return RecurringEvent(eventDate: newEventNotification);

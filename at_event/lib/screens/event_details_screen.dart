@@ -323,7 +323,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         widget.event.realEvent);
 
     await VentoService.getInstance().put(atKey, storedValue);
-    VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.event.invitees);
+    await VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.event.invitees);
   }
 
   //simple atSign getter

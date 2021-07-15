@@ -196,11 +196,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       DateTime today = DateTime(now.year, now.month, now.day);
 
                       int numAppointments = 0;
-                      List<String> seen = [];
+                      List<Object> seen = [];
 
-                      for (UI_Event app in details.appointments) {
-                        if (!seen.contains(app.eventName)) {
-                          seen.add(app.eventName);
+                      for (Object app in details.appointments) {
+                        if (!seen.contains(app)) {
+                          seen.add(app);
                           numAppointments += 1;
                         }
                       }
