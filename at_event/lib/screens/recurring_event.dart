@@ -390,57 +390,10 @@ class _RecurringEventState extends State<RecurringEvent> {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
       widget.eventDate.event.repeatDuration = 1;
-      //create the @key
-      AtKey atKey = AtKey();
-      atKey.key = widget.eventDate.key;
-      atKey.sharedWith = activeAtSign;
-      atKey.sharedBy = activeAtSign;
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      atKey.metadata = metadata;
 
-      //set the value to store in the secondary as the json version of the EventNotifications object
-      String storedValue =
-      EventNotificationModel.convertEventNotificationToJson(
-          widget.eventDate);
+      Provider.of<UIData>(context, listen: false).addEvent(widget.eventDate.toUIEvent());
+      await VentoService.getInstance().createAndShareEvent(widget.eventDate, activeAtSign);
 
-      print(atKey.toString());
-      print(storedValue);
-      //put that shiza on the secondary
-      await clientSdkService.put(atKey, storedValue);
-      //Provider.of<UIData>(context, listen: false).addEvent(widget.eventDate.toUI_Event());
-
-      GroupModel eventsGroup;
-
-      if(widget.eventDate.groupKey != '' && widget.eventDate.groupKey != null && widget.eventDate.groupKey != 'null'){
-        AtKey groupKey = AtKey()
-          ..key = widget.eventDate.groupKey
-          ..metadata = metadata
-          ..sharedWith = activeAtSign
-          ..sharedBy = activeAtSign;
-        eventsGroup =  await VentoService.getInstance().lookupGroup(groupKey);
-      }
-      print("recurring event's group title: "+eventsGroup.title);
-      if(eventsGroup != null) {
-        eventsGroup.eventKeys.add(widget.eventDate.key);
-
-        String groupKeyString = eventsGroup.key;
-        Metadata metadata = Metadata();
-        metadata.ccd = true;
-        AtKey groupKey = AtKey()
-          ..key = groupKeyString
-          ..metadata = metadata
-          ..sharedWith = activeAtSign
-          ..sharedBy = activeAtSign;
-
-          VentoService.getInstance().shareWithMany(widget.eventDate.key,storedValue, activeAtSign, eventsGroup.atSignMembers);
-          String groupValue = GroupModel.convertGroupToJson(eventsGroup);
-
-          await clientSdkService.put(groupKey, groupValue);
-          clientSdkService.shareWithMany(groupKey.key, groupValue,activeAtSign, eventsGroup.invitees);
-        } else {
-          print("tried updated null group");
-        }
     } else {
       //if they did not fill the fields print
       CustomToast()

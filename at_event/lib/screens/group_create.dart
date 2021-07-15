@@ -153,7 +153,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
 
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
-      VentoService.getInstance().shareWithMany(group.key, storedValue, activeAtSign, group.invitees);
+      await VentoService.getInstance().shareWithMany(group.key, storedValue, activeAtSign, group.invitees);
 
       Provider.of<UIData>(context, listen: false).addGroup(group);
       //back to the calendar
