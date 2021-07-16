@@ -6,15 +6,15 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
+import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/screens/group_information_screen.dart';
 import 'package:at_event/screens/home_screen.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:intl/intl.dart';
-import 'package:at_event/utils/functions.dart';
 import 'package:provider/provider.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/models/ui_data.dart';
 
 import '../Widgets/event_tiles.dart';
@@ -33,7 +33,8 @@ class _ListPageState extends State<ListPage> {
   @override
   void initState() {
     getAtSign();
-    scan(context);
+    VentoService.getInstance().scan(context);
+
 
     super.initState();
   }
@@ -43,18 +44,14 @@ class _ListPageState extends State<ListPage> {
     SizeConfig().init(context);
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
-      if (e.realEvent.group != null) {
-        print("Event, " +
-            e.eventName +
-            ", for group, " +
-            e.realEvent.group.title);
-        if (e.realEvent.group.title == widget.group.title &&
-            e.realEvent.group.atSignCreator == widget.group.atSignCreator &&
-            e.realEvent.group.description == widget.group.description) {
+      if(e.realEvent.groupKey!=null &&e.realEvent.groupKey== widget.group.key){
+        print("Event, " + e.eventName + ", for group, "+  widget.group.title);
           events.add(e);
         }
       }
-    }
+
+
+
     return Scaffold(
       backgroundColor: kColorStyle1,
       appBar: AppBar(
@@ -199,7 +196,7 @@ class _ListPageState extends State<ListPage> {
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

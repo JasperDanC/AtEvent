@@ -56,6 +56,7 @@ class _VentoState extends State<Vento> {
     if (_error) {
       return SomethingWentWrongScreen();
     }
+
     if (!_initialized) {
       return Background(
         child: Center(

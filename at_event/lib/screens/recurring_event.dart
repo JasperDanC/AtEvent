@@ -11,11 +11,10 @@ import 'package:at_event/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_commons/at_commons.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/group_model.dart';
-import 'package:at_event/utils/functions.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
@@ -25,7 +24,7 @@ class RecurringEvent extends StatefulWidget {
 }
 
 class _RecurringEventState extends State<RecurringEvent> {
-  ClientSdkService clientSdkService;
+  VentoService clientSdkService;
   List<String> repeatOccurrance;
   List<String> occursOnOptions;
   String activeAtSign = '';
@@ -37,7 +36,7 @@ class _RecurringEventState extends State<RecurringEvent> {
   @override
   void initState() {
     getAtSign();
-    clientSdkService = ClientSdkService.getInstance();
+    clientSdkService = VentoService.getInstance();
     eventData = widget.eventDate;
     eventData.event.isRecurring = true;
 
@@ -358,13 +357,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                   child: CustomButton(
                     onPressed: () {
                       _update();
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CalendarScreen()),
-                      );
                     },
                     buttonText: 'Done',
                     width: 164.toWidth,
@@ -384,71 +376,39 @@ class _RecurringEventState extends State<RecurringEvent> {
 
   _update() async {
     //goes through and makes sure every field was set to something
-    bool filled = widget.eventDate.event != null;
+    bool filled = widget.eventDate.event != null ||
+        widget.eventDate.event.startTime != null ||
+        widget.eventDate.event.endTime != null;
+
+    if (widget.eventDate.event.repeatCycle == RepeatCycle.WEEK) {
+      filled = filled && widget.eventDate.event.occursOn != null;
+    } else if (widget.eventDate.event.repeatCycle == RepeatCycle.MONTH) {
+      filled = filled && widget.eventDate.event.date != null;
+    } else {
+      filled = false;
+    }
+
+    if (widget.eventDate.event.endsOn == null) {
+      widget.eventDate.event.endsOn = EndsOn.NEVER;
+    } else if (widget.eventDate.event.endsOn == EndsOn.ON){
+      filled = filled && widget.eventDate.event.endEventOnDate != null;
+    } else if (widget.eventDate.event.endsOn == EndsOn.AFTER) {
+      filled = filled && widget.eventDate.event.endEventAfterOccurrence != null;
+    }
     if (filled) {
       if (widget.eventDate.event.endsOn == null) {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
       widget.eventDate.event.repeatDuration = 1;
-      //create the @key
-      AtKey atKey = AtKey();
-      atKey.key = widget.eventDate.key;
-      atKey.sharedWith = activeAtSign;
-      atKey.sharedBy = activeAtSign;
-      Metadata metadata = Metadata();
-      metadata.ccd = true;
-      atKey.metadata = metadata;
 
-      //set the value to store in the secondary as the json version of the EventNotifications object
-      String storedValue =
-          EventNotificationModel.convertEventNotificationToJson(
-              widget.eventDate);
       Provider.of<UIData>(context, listen: false)
           .addEvent(widget.eventDate.toUIEvent());
-      print(atKey.toString());
-      print(storedValue);
-      //put that shiza on the secondary
-      await clientSdkService.put(atKey, storedValue);
-      GroupModel eventsGroup = widget.eventDate.group;
-      if (eventsGroup != null) {
-        String groupKeyString =
-            eventsGroup.key.toLowerCase().replaceAll(" ", "");
-        Metadata metadata = Metadata();
-        metadata.ccd = true;
-        AtKey groupKey = AtKey()
-          ..key = groupKeyString
-          ..metadata = metadata
-          ..sharedWith = activeAtSign
-          ..sharedBy = activeAtSign;
-
-        GroupModel group = Provider.of<UIData>(context, listen: false)
-            .getGroupByTitle(eventsGroup.title);
-        if (group != null) {
-          shareWithMany(widget.eventDate.key, storedValue, activeAtSign,
-              widget.eventDate.invitees);
-          String groupValue = GroupModel.convertGroupToJson(group);
-          await clientSdkService.put(groupKey, groupValue);
-
-          //metadata for the shared key
-          var sharedMetadata = Metadata()
-            ..ccd = true
-            ..ttr = 10
-            ..isCached = true;
-          for (String invitee in group.invitees) {
-            //key that comes from me and is shared with the added invitee
-            AtKey sharedKey = AtKey()
-              ..key = groupKey.key
-              ..metadata = sharedMetadata
-              ..sharedBy = activeAtSign
-              ..sharedWith = invitee;
-
-            //share that key and value
-            await ClientSdkService.getInstance().put(sharedKey, groupValue);
-          }
-        } else {
-          print("tried updated null group");
-        }
-      }
+      await VentoService.getInstance()
+          .createAndShareEvent(widget.eventDate, activeAtSign);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => CalendarScreen()));
     } else {
       //if they did not fill the fields print
       CustomToast()
@@ -457,7 +417,7 @@ class _RecurringEventState extends State<RecurringEvent> {
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });

@@ -16,7 +16,7 @@ class GroupModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     imageURL = data['imageURL'] ?? '';
-    capacity = data['capacity'] ?? '';
+    capacity = int.parse(data['capacity']) ?? null;
     description = data['description'] ?? '';
     eventKeys = data['eventKeys'] == '[]' || data['eventKeys'] == ''
         ? []

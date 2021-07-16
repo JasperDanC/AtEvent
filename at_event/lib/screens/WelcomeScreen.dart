@@ -2,11 +2,10 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../service/client_sdk_service.dart';
+import '../service/vento_services.dart';
 import '../utils/constants.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart';
-import 'package:at_event/utils/functions.dart';
 import 'home_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -47,8 +46,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   var _logger = AtSignLogger('Plugin example app');
   @override
   void initState() {
-    ClientSdkService.getInstance().onboard();
-    ClientSdkService.getInstance()
+    VentoService.getInstance().onboard();
+    VentoService.getInstance()
         .getAtClientPreference()
         .then((value) => atClientPreference = value);
     super.initState();
@@ -265,12 +264,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         domain: MixedConstants.ROOT_DOMAIN,
                         appColor: kPrimaryBlue,
                         onboard: (value, atsign) async {
-                          ClientSdkService.getInstance().atClientServiceMap =
+                          VentoService.getInstance().atClientServiceMap =
                               value;
-                          ClientSdkService.getInstance()
+                          VentoService.getInstance()
                               .atClientServiceInstance = value[atsign];
                           _logger.finer('Successfully onboarded $atsign');
-                          await startMonitor(atsign);
+                          await VentoService.getInstance().startMonitor(atsign);
                         },
                         onError: (error) {
                           _logger.severe('Onboarding throws $error error');

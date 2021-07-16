@@ -3,7 +3,7 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/models/invite.dart';
 
 /*
-Colors and Styles
+Colours
  */
 const Color kBackgroundGrey = Color(0xFF404040);
 const Color kForegroundGrey = Color(0xFF555555);
@@ -59,6 +59,7 @@ class ContactInitialsColors {
 
 /*
 Text Styles
+and a commonly used border radius
  */
 const BorderRadius kBasicBorderRadius = BorderRadius.all(
   Radius.circular(75.0),
@@ -138,150 +139,67 @@ const kEventDetailsTextStyle = TextStyle(
   fontSize: 16,
 );
 
-List<UI_Event> kDummyEvents = [
-  UI_Event(
-      eventName: "Test Event 1",
-      from: DateTime(2021, 06, 09, 6),
-      to: DateTime(2021, 06, 09, 9)),
-  UI_Event(
-      eventName: "Test Event 2",
-      from: DateTime(2021, 06, 10, 18),
-      to: DateTime(2021, 06, 10, 21)),
-  UI_Event(
-      eventName: "Test Event 3",
-      from: DateTime(2021, 06, 14, 10),
-      to: DateTime(2021, 06, 14, 11)),
-  UI_Event(
-      eventName: "Test Event 4",
-      from: DateTime(2021, 06, 22, 6),
-      to: DateTime(2021, 06, 22, 9)),
-];
-List<EventInvite> kDummyInvites = [
-  EventInvite(
-    from: '@bobert',
-    event: UI_Event(
-        eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 6),
-        to: DateTime(2021, 06, 09, 9),
-        location: '123 Street Avenue N.',
-        description: 'Lunch at my place!\n\n' +
-            'Bring some board games, pops, and some delicious sides\n\n' +
-            'We will be eating burgers',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-        ]),
-  ),
-  EventInvite(
-    from: '@frankyG',
-    event: UI_Event(
-        eventName: "Party Time",
-        from: DateTime(2021, 06, 09, 18),
-        to: DateTime(2021, 06, 09, 22),
-        location: 'FrankyG House, Saskatoon',
-        description: 'we getting wild',
-        peopleGoing: []),
-  ),
-  EventInvite(
-    from: '@your_boss',
-    event: UI_Event(
-        eventName: "Important Business Meeting",
-        from: DateTime(2021, 06, 09, 14, 30),
-        to: DateTime(2021, 06, 09, 18, 45),
-        location: '56 Business Street',
-        description: 'business',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-        ]),
-  ),
-  EventInvite(
-    from: '@gerald',
-    event: UI_Event(
-        eventName: "Gerald + Gertrude Wedding",
-        from: DateTime(2021, 06, 09, 12),
-        to: DateTime(2021, 06, 09, 24),
-        location: ' 99 RoadName Boulevard, Prince Albert, Saskatchewan',
-        description: 'I am getting married\n\n' +
-            'pls come\n' +
-            'casual dress is prefered',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-          '@sam',
-          '@5678',
-          '@jaz',
-          '@bagelconservation',
-          '@samantha',
-          '@geralds_mom',
-          '@samuel',
-          '@sammy',
-          '@gertrude',
-          '@frank',
-          '@otherpeople',
-          '@someone',
-          '@buggs2',
-          '@george2'
-        ]),
-  ),
-  EventInvite(
-    from: '@bobert',
-    event: UI_Event(
-        eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 11),
-        to: DateTime(2021, 06, 09, 13),
-        location: '123 Street Avenue N.',
-        description: 'Lunch at my place!\n\n' +
-            'Bring some board games, pops, and some delicious sides\n\n' +
-            'We will be eating burgers',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-        ]),
-  ),
-];
+/*
+Important App Data Constants
+ */
+
 
 /*
-Important App Data
-*/
+Unusable symbols for AtKey.keys and AtSigns
+The trick is replace them with a word so the customer
+can still use these symbols in there event titles
+
+I limited the length of the replacements to 5 chars each as to not take too much space in the replacement.
+ */
+
+class KeyConstants {
+  static Map<String,String> badCharMap = {
+    '!':'EMARK',
+    '*':'ASTER',
+    "'":'APOST',
+    '(':'LBRAK',
+    ')':'RBRAK',
+    ';':'SCOLN',
+    ':':'COLON',
+    '@':'ASIGN',
+    '&':'AMPER',
+    '=':'EQUAL',
+    '+':'PLUS',
+    '\$':'DOLLA',
+    ',':'COMMA',
+    '/':'SLASH',
+    '?':'QMARK',
+    '#':'POUND',
+    '[':'LSBRK',
+    ']':'RSBRK',
+    '{':'LCBRK',
+    '}':'RCBRK',
+  };
+
+  static Map<String, KeyType> keyTypeMap = {
+    eventStart: KeyType.EVENT,
+    groupStart: KeyType.GROUP,
+    confirmStart: KeyType.CONFIRMATION,
+    profilePicStart:KeyType.PROFILE_PIC,
+  };
+
+  //reversed of last map
+  static Map<KeyType,String> keyStringMap =
+  Map.fromEntries(keyTypeMap.entries.map((e) => MapEntry(e.value, e.key)));
+
+  static const String eventStart = 'event_';
+  static const String groupStart = 'group_';
+  static const String confirmStart = 'confm_';
+  static const String profilePicStart = 'profil_';
+
+}
+
+enum KeyType {
+ EVENT,
+ GROUP,
+ CONFIRMATION,
+ PROFILE_PIC,
+}
 
 /*
  @ Protocol Essentials
@@ -304,7 +222,6 @@ class AppStrings {
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
 
-final String namespace = 'bagelconservation';
 
 /*
 API KEY/s

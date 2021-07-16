@@ -1,5 +1,4 @@
 import 'package:at_event/utils/constants.dart';
-import 'package:at_event/utils/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
@@ -8,7 +7,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'invitation_details_screen.dart';
 import 'package:intl/intl.dart';
 import 'background.dart';
-import 'package:at_event/service/client_sdk_service.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
@@ -185,7 +184,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                                             listen: false)
                                                         .getEventInvite(index),
                                                 isEvent: true);
-                                            scan(context);
+                                            VentoService.getInstance().scan(context);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -292,7 +291,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                                             listen: false)
                                                         .getGroupInvite(index),
                                                 isEvent: false);
-                                            scan(context);
+                                            VentoService.getInstance().scan(context);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -347,21 +346,20 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     AtKey atKey = AtKey();
     if (isEvent) {
       eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
-      atKey.key = 'confirm_' +
-          eventInvite.event.realEvent.key.toLowerCase().replaceAll(" ", "");
+      atKey.key =
+          KeyConstants.confirmStart + eventInvite.event.realEvent.key;
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptEventInvite(eventInvite);
     } else {
       groupInvite.group.atSignMembers.add(activeAtSign);
-      atKey.key =
-          'confirm_' + groupInvite.group.key.toLowerCase().replaceAll(" ", "");
+      atKey.key = KeyConstants.confirmStart  + groupInvite.group.key;
       atKey.sharedWith = groupInvite.group.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptGroupInvite(groupInvite);
     }
 
-    atKey.namespace = namespace;
+    atKey.namespace = MixedConstants.NAMESPACE;
     atKey.sharedBy = activeAtSign;
     Metadata metadata = Metadata();
     metadata.ccd = true;
@@ -376,7 +374,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       storedValue = GroupModel.convertGroupToJson(groupInvite.group);
     }
     var operation = OperationEnum.update;
-    await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
+    await VentoService.getInstance().notify(atKey, storedValue, operation);
   }
 
   _deleteInvitation(
@@ -386,16 +384,15 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     AtKey atKey = AtKey();
     if (isEvent) {
       atKey.key =
-          eventInvite.event.realEvent.key.toLowerCase().replaceAll(" ", "");
-      Provider.of<UIData>(context, listen: false)
-          .deleteEventInvite(eventInvite);
+          eventInvite.event.realEvent.key;
+      Provider.of<UIData>(context,listen: false).deleteEventInvite(eventInvite);
+
     } else {
-      atKey.key = groupInvite.group.key.toLowerCase().replaceAll(" ", "");
-      Provider.of<UIData>(context, listen: false)
-          .deleteGroupInvite(groupInvite);
+      atKey.key = groupInvite.group.key;
+      Provider.of<UIData>(context, listen: false).deleteGroupInvite(groupInvite);
     }
 
-    atKey.namespace = namespace;
+    atKey.namespace = MixedConstants.NAMESPACE;
     atKey.sharedWith = activeAtSign;
     atKey.sharedBy = activeAtSign.replaceAll("@", "");
     Metadata metadata = Metadata();
@@ -416,15 +413,17 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     //await ClientSdkService.getInstance().delete(atKey);
 
+
     atKey.key = atKey.key;
     print("Deleting: " + atKey.toString());
 
     var operation = OperationEnum.delete;
-    await ClientSdkService.getInstance().notify(atKey, storedValue, operation);
+    await VentoService.getInstance().notify(atKey, storedValue, operation);
+
   }
 
   getAtSign() async {
-    String currentAtSign = await ClientSdkService.getInstance().getAtSign();
+    String currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
       activeAtSign = currentAtSign;
     });
