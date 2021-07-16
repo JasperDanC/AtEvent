@@ -65,6 +65,7 @@ class _VentoState extends State<Vento> {
           ),
         ),
         turnAppbar: false,
+        loggedIn: false,
       );
     }
     return ChangeNotifierProvider<UIData>(

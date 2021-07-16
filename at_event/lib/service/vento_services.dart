@@ -453,14 +453,16 @@ class VentoService {
 
   ///places the key of an event in the UIData provider
   void handleEventKey(AtKey eventKey, String activeAtSign) async {
-    //looks up the value which is stored as a json string
-    String value = await lookup(eventKey);
-
     //deletes the key if it is a duplicated event that shouldn't exist
     if (isDuplicatedEventKey(activeAtSign, eventKey)) {
       await delete(eventKey);
       return;
     }
+
+    //looks up the value which is stored as a json string
+    String value = await lookup(eventKey);
+
+
     print("Key Value:" + value.toString());
     //decode the json string into a json map
     Map<String, dynamic> jsonValue = json.decode(value);

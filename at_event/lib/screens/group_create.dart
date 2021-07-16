@@ -134,6 +134,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
         ..title = _groupTitle
         ..description = _groupDesc
         ..imageURL = ''
+        ..capacity = 50
         ..invitees = _invitees
         ..atSignMembers = [activeAtSign]
         ..eventKeys = [];

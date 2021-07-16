@@ -139,8 +139,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           for (UI_Event e
                               in Provider.of<UIData>(context, listen: false)
                                   .events) {
-                            if (ctd.appointments[0].from == e.from &&
-                                ctd.appointments[0].to == e.to) {
+                            if (ctd.appointments[0].startTime== e.from &&
+                                ctd.appointments[0].endTime == e.to) {
                               foundEvent = e;
                             }
                           }

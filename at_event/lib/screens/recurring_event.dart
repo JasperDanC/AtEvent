@@ -183,7 +183,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                           );
 
                           if (datePicked != null) {
-
                             setState(() {
                               eventData.event.date = datePicked;
                             });
@@ -358,13 +357,6 @@ class _RecurringEventState extends State<RecurringEvent> {
                   child: CustomButton(
                     onPressed: () {
                       _update();
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CalendarScreen()),
-                      );
                     },
                     buttonText: 'Done',
                     width: 164.toWidth,
@@ -384,16 +376,39 @@ class _RecurringEventState extends State<RecurringEvent> {
 
   _update() async {
     //goes through and makes sure every field was set to something
-    bool filled = widget.eventDate.event != null;
+    bool filled = widget.eventDate.event != null ||
+        widget.eventDate.event.startTime != null ||
+        widget.eventDate.event.endTime != null;
+
+    if (widget.eventDate.event.repeatCycle == RepeatCycle.WEEK) {
+      filled = filled && widget.eventDate.event.occursOn != null;
+    } else if (widget.eventDate.event.repeatCycle == RepeatCycle.MONTH) {
+      filled = filled && widget.eventDate.event.date != null;
+    } else {
+      filled = false;
+    }
+
+    if (widget.eventDate.event.endsOn == null) {
+      widget.eventDate.event.endsOn = EndsOn.NEVER;
+    } else if (widget.eventDate.event.endsOn == EndsOn.ON){
+      filled = filled && widget.eventDate.event.endEventOnDate != null;
+    } else if (widget.eventDate.event.endsOn == EndsOn.AFTER) {
+      filled = filled && widget.eventDate.event.endEventAfterOccurrence != null;
+    }
     if (filled) {
       if (widget.eventDate.event.endsOn == null) {
         widget.eventDate.event.endsOn = EndsOn.NEVER;
       }
       widget.eventDate.event.repeatDuration = 1;
 
-      Provider.of<UIData>(context, listen: false).addEvent(widget.eventDate.toUIEvent());
-      await VentoService.getInstance().createAndShareEvent(widget.eventDate, activeAtSign);
-
+      Provider.of<UIData>(context, listen: false)
+          .addEvent(widget.eventDate.toUIEvent());
+      await VentoService.getInstance()
+          .createAndShareEvent(widget.eventDate, activeAtSign);
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => CalendarScreen()));
     } else {
       //if they did not fill the fields print
       CustomToast()
