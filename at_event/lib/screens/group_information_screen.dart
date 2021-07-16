@@ -169,6 +169,7 @@ class _GroupInformationState extends State<GroupInformation> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 InviteBox(
+                                  addToList: false,
                                   invitees: widget.group.atSignMembers,
                                   onAdd: () {
                                     CustomToast().show('Invite Sent!', context);

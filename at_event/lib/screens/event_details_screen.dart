@@ -219,6 +219,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 InviteBox(
                   invitees: widget.event.invitees,
                   onAdd: _updateAndInvite,
+                  addToList: true,
                   width: 300.0,
                   height: 200.0,
                 ),

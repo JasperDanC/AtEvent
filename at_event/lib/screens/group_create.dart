@@ -100,6 +100,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
                 InviteBox(
                   invitees: _invitees,
                   onAdd: () {},
+                  addToList: true,
                   width: 300,
                   height: 340,
                 ),

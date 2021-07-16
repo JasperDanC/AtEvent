@@ -9,11 +9,13 @@ class InviteBox extends StatefulWidget {
       {@required this.invitees,
       @required this.onAdd,
       @required this.width,
-      @required this.height});
+      @required this.height,
+      @required this.addToList});
   final double width;
   final double height;
   final List<String> invitees;
   final Function onAdd;
+  final bool addToList;
 
   @override
   _InviteBoxState createState() => _InviteBoxState();
@@ -46,10 +48,13 @@ class _InviteBoxState extends State<InviteBox> {
                     setState(() {
                       if (!withoutAtSigns
                           .contains(_inviteeAtSign.replaceAll("@", ""))) {
-                        widget.invitees.add(_inviteeAtSign);
+                        if (widget.addToList) {
+                          widget.invitees.add(_inviteeAtSign);
+                        }
+
+                        _controller.clear();
+                        widget.onAdd();
                       }
-                      _controller.clear();
-                      widget.onAdd();
                     });
                   }
                 },
