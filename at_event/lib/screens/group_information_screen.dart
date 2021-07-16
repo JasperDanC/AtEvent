@@ -157,6 +157,7 @@ class _GroupInformationState extends State<GroupInformation> {
                     elevation: 0.1,
                     child: Text('Show Members', style: kButtonTextStyle),
                     onPressed: () {
+                      CustomToast().show('Test Toast', context);
                       showModalBottomSheet(
                         context: context,
                         builder: (context) {

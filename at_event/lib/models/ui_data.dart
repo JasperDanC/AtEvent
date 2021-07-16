@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:flutter/cupertino.dart';
 import 'ui_event.dart';
@@ -5,6 +7,7 @@ import 'invite.dart';
 import 'group_model.dart';
 
 class UIData extends ChangeNotifier {
+  List<File> _images = [];
   List<String> _profilePicturePaths = [];
   List<UI_Event> _uiEvents = [];
   List<EventInvite> _eventInvites = [];
@@ -14,6 +17,18 @@ class UIData extends ChangeNotifier {
   List<GroupInvite> _acceptedGroupInvites = [];
   List<EventInvite> _acceptedEventInvites = [];
   List<GroupModel> _groups = [];
+
+  void addImage(File image) {
+    _images.add(image);
+  }
+
+  bool isImageAdded(File image) {
+    return _images.contains(image);
+  }
+
+  bool isImageEmpty() {
+    return _images.isEmpty;
+  }
 
   void addPath(String path) {
     _profilePicturePaths.add(path);
@@ -190,6 +205,7 @@ class UIData extends ChangeNotifier {
     _eventInvites.clear();
     _groupInvites.clear();
     _groups.clear();
+    _images.clear();
     notifyListeners();
   }
 
@@ -198,6 +214,7 @@ class UIData extends ChangeNotifier {
   GroupInvite getGroupInvite(int index) => _groupInvites[index];
   GroupModel getGroup(int index) => _groups[index];
   String getPath(int index) => _profilePicturePaths[index];
+  File getImage(int index) => _images[index];
 
   List<UI_Event> get events => _uiEvents;
   List<EventInvite> get eventInvites => _eventInvites;
@@ -208,9 +225,11 @@ class UIData extends ChangeNotifier {
   List<GroupInvite> get deletedGroupInvites => _deletedGroupInvites;
   List<GroupModel> get groups => _groups;
   List<String> get profilePicturePaths => _profilePicturePaths;
+  List<File> get images => _images;
   int get eventsLength => _uiEvents.length;
   int get eventInvitesLength => _eventInvites.length;
   int get groupInvitesLength => _groupInvites.length;
   int get groupsLength => _groups.length;
   int get pathsLength => _profilePicturePaths.length;
+  int get imagesLength => _images.length;
 }

@@ -15,6 +15,7 @@ class _GroupDetailsState extends State<GroupDetails> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: kColorStyle2),
       home: ListPage(group: widget.group),
     );
