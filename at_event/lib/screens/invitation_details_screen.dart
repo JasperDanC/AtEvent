@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
 import 'background.dart';
 import 'package:at_event/models/ui_event.dart';
+import 'package:at_event/models/event_datatypes.dart';
 
 void main() => runApp(InviteDetailsScreen(
-  invite:  EventInvite(
+  eventInvite:  EventInvite(
     from: '@bobert',
     event: UI_Event(
         eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 6),
-        to: DateTime(2021, 06, 09, 9),
+        startTime: DateTime(2021, 06, 09, 6),
+        endTime: DateTime(2021, 06, 09, 9),
         location: '123 Street Avenue N.',
         description: 'Lunch at my place!\n\n' +
             'Bring some board games, pops, and some delicious sides\n\n' +
@@ -38,11 +39,62 @@ void main() => runApp(InviteDetailsScreen(
 ));
 
 class InviteDetailsScreen extends StatelessWidget {
-  InviteDetailsScreen({@required this.invite});
-  final EventInvite invite;
+  InviteDetailsScreen({this.eventInvite,this.groupInvite,this.isEvent});
+  final EventInvite eventInvite;
+  final GroupInvite groupInvite;
+  final bool isEvent;
+  String timeText;
 
   @override
   Widget build(BuildContext context) {
+    if(isEvent){
+      if(!eventInvite.event.isRecurring){
+        timeText = "From: " +
+            DateFormat('MMMM').format(eventInvite.event.startTime) +
+            " " +
+            eventInvite.event.startTime.day.toString() +
+            " " +
+            eventInvite.event.startTime.hour.toString() +
+            ":" +
+            DateFormat('mm').format(eventInvite.event.startTime) +
+            "\n" +
+            "To: " +
+            DateFormat('MMMM').format(eventInvite.event.endTime) +
+            " " +
+            eventInvite.event.endTime.day.toString() +
+            " " +
+            eventInvite.event.endTime.hour.toString() +
+            ":" +
+            DateFormat('mm').format(eventInvite.event.endTime);
+      } else {
+        if (eventInvite.event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+          timeText = getWeekString(eventInvite.event.realEvent.event.occursOn) +
+              "s\nFrom: " +
+              eventInvite.event.startTime.hour.toString() +
+              ":" +
+              DateFormat('mm').format(eventInvite.event.startTime) +
+              "\n" +
+              "To: " +
+              eventInvite.event.endTime.hour.toString() +
+              ":" +
+              DateFormat('mm').format(eventInvite.event.endTime);
+        } else if (eventInvite.event.realEvent.event.repeatCycle ==
+            RepeatCycle.MONTH) {
+          timeText = eventInvite.event.startTime.day.toString() +
+              " of each Month" +
+              "\nFrom: " +
+              eventInvite.event.startTime.hour.toString() +
+              ":" +
+              DateFormat('mm').format(eventInvite.event.startTime) +
+              "\n" +
+              "To: " +
+              eventInvite.event.endTime.hour.toString() +
+              ":" +
+              DateFormat('mm').format(eventInvite.event.endTime);
+        }
+      }
+    }
+
     return Background(
       child: Expanded(
         child: Padding(
@@ -68,7 +120,7 @@ class InviteDetailsScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Invitation from ' + invite.from,
+                          'Invitation from ' + (isEvent ? eventInvite.from : groupInvite.from),
                           style: kEventDetailsTextStyle,
                         ),
                       ),
@@ -91,52 +143,40 @@ class InviteDetailsScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    invite.event.eventName,
+                    isEvent ? eventInvite.event.eventName : groupInvite.group.title,
                     style: TextStyle(
                         fontSize: 28.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
-                  Divider(
-                    color: Colors.white,
-                  ),
-                  Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "From: " +
-                                DateFormat('MMMM').format(invite.event.from) +
-                                " " +
-                                invite.event.from.day.toString() +
-                                " " +
-                                invite.event.from.hour.toString() +
-                                ":" +
-                                DateFormat('mm').format(invite.event.from) +
-                                "\n" +
-                                "To: " +
-                                DateFormat('MMMM').format(invite.event.to) +
-                                " " +
-                                invite.event.to.day.toString() +
-                                " " +
-                                invite.event.to.hour.toString() +
-                                ":" +
-                                DateFormat('mm').format(invite.event.to),
-                            textAlign: TextAlign.end,
-                            style: kEventDetailsTextStyle,
-                          ),
+                  Column(
+                    children: isEvent ? [
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      Container(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child:  Text(
+                                (isEvent ? timeText : ''),
+                                textAlign: TextAlign.end,
+                                style: kEventDetailsTextStyle,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                isEvent ? eventInvite.event.location : '',
+                                textAlign: TextAlign.end,
+                                style: kEventDetailsTextStyle,
+                              ),
+                            )
+                          ],
                         ),
-                        Expanded(
-                          child: Text(
-                            invite.event.location,
-                            textAlign: TextAlign.end,
-                            style: kEventDetailsTextStyle,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                    ] : [],
                   ),
                   Divider(
                     color: Colors.white,
@@ -144,7 +184,7 @@ class InviteDetailsScreen extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
-                        invite.event.description,
+                        isEvent ? eventInvite.event.description : groupInvite.group.description,
                         overflow: TextOverflow.visible,
 
                         style: kEventDetailsTextStyle,
@@ -155,7 +195,9 @@ class InviteDetailsScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                   Text(
-                    invite.event.peopleGoing.length.toString() + " going",
+                    isEvent ?
+                    eventInvite.event.peopleGoing.length.toString() + " going" :
+                    groupInvite.group.atSignMembers.length.toString() + " members",
                     style: kEventDetailsTextStyle,
                   ),
                   SizedBox(

@@ -120,8 +120,8 @@ class EventNotificationModel {
       location: this.setting.label,
       peopleGoing: this.peopleGoing,
       invitees: this.invitees,
-      from: event.startTime,
-      to: event.endTime,
+      startTime: event.startTime,
+      endTime: event.endTime,
       isRecurring: this.event.isRecurring,
       realEvent: this,
     );

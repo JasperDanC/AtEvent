@@ -13,8 +13,8 @@ void main() {
   runApp(EventEditScreen(
     event: UI_Event(
         eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 6),
-        to: DateTime(2021, 06, 09, 9),
+        startTime: DateTime(2021, 06, 09, 6),
+        endTime: DateTime(2021, 06, 09, 9),
         location: '123 Street Avenue N.',
         description: 'Lunch at my place!\n\n' +
             'Bring some board games, pops, and some delicious sides\n\n' +
@@ -258,7 +258,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.date,
-                          initialDate: widget.event.to,
+                          initialDate: widget.event.endTime,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -282,7 +282,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-                          initialDate: widget.event.to,
+                          initialDate: widget.event.endTime,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -308,7 +308,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-                          initialDate: widget.event.from,
+                          initialDate: widget.event.startTime,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),

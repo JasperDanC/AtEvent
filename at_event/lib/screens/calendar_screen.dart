@@ -40,8 +40,6 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-
-
   String activeAtSign = '';
   @override
   void initState() {
@@ -136,14 +134,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         if (ctd.appointments != null ||
                             ctd.appointments.length != null) {
                           UI_Event foundEvent;
-                          for (UI_Event e
-                              in Provider.of<UIData>(context, listen: false)
-                                  .events) {
-                            if (ctd.appointments[0].startTime== e.from &&
-                                ctd.appointments[0].endTime == e.to) {
-                              foundEvent = e;
-                            }
+                          if(ctd.appointments[0] is Appointment) {
+                            foundEvent = Provider.of<UIData>(
+                                context, listen: false).getUIEventByName(
+                                ctd.appointments[0].subject);
+                          } else {
+                            foundEvent = Provider.of<UIData>(
+                                context, listen: false).getUIEventByName(
+                                ctd.appointments[0].eventName);
                           }
+
                           if (foundEvent != null) {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {

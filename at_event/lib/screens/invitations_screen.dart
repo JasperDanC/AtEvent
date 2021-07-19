@@ -95,6 +95,67 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                           itemCount:
                               Provider.of<UIData>(context).eventInvitesLength,
                           itemBuilder: (context, index) {
+                            String timeText;
+                            if(!Provider.of<UIData>(context)
+                                .getEventInvite(index).event.isRecurring){
+                              timeText = DateFormat('yyyy MMMM dd  hh:mm a')
+                                  .format(Provider.of<
+                                  UIData>(context)
+                                  .eventInvites[index]
+                                  .event
+                                  .startTime)
+                                  .toString() +
+                                  " - " +
+                                  DateFormat('hh:mm a')
+                                      .format(Provider.of<
+                                      UIData>(context)
+                                      .eventInvites[index]
+                                      .event
+                                      .endTime)
+                                      .toString();
+                            } else {
+                               EventInvite eventInvite = Provider.of<UIData>(context)
+                                   .getEventInvite(index);
+                              if (eventInvite.event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+                                timeText = getWeekString(eventInvite.event.realEvent.event.occursOn) +
+                                    "s\nFrom: " +
+                                    DateFormat('hh:mm a')
+                                        .format(Provider.of<
+                                        UIData>(context)
+                                        .eventInvites[index]
+                                        .event
+                                        .startTime)
+                                        .toString() +
+                                    "\n" +
+                                    "To: " + DateFormat('hh:mm a')
+                                    .format(Provider.of<
+                                    UIData>(context)
+                                    .eventInvites[index]
+                                    .event
+                                    .endTime)
+                                    .toString();
+                              } else if (eventInvite.event.realEvent.event.repeatCycle ==
+                                  RepeatCycle.MONTH) {
+                                timeText = eventInvite.event.startTime.day.toString() +
+                                    " each month" +
+                                    "\nFrom: " +DateFormat('hh:mm a')
+                                    .format(Provider.of<
+                                    UIData>(context)
+                                    .eventInvites[index]
+                                    .event
+                                    .startTime)
+                                    .toString() +
+                                    " " +
+                                    "To: " +
+                                    DateFormat('hh:mm a')
+                                        .format(Provider.of<
+                                        UIData>(context)
+                                        .eventInvites[index]
+                                        .event
+                                        .endTime)
+                                        .toString();
+                              }
+                            }
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -109,9 +170,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) {
                                           return InviteDetailsScreen(
-                                              invite:
-                                                  Provider.of<UIData>(context)
-                                                      .eventInvites[index]);
+                                            eventInvite:
+                                                Provider.of<UIData>(context)
+                                                    .getEventInvite(index),
+                                            isEvent: true,
+                                          );
                                         }));
                                       },
                                       padding: EdgeInsets.zero,
@@ -134,21 +197,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                                           FontWeight.bold),
                                             ),
                                             Text(
-                                              DateFormat('yyyy MMMM dd  hh:mm')
-                                                      .format(Provider.of<
-                                                              UIData>(context)
-                                                          .eventInvites[index]
-                                                          .event
-                                                          .from)
-                                                      .toString() +
-                                                  " - " +
-                                                  DateFormat('hh:mm')
-                                                      .format(Provider.of<
-                                                              UIData>(context)
-                                                          .eventInvites[index]
-                                                          .event
-                                                          .to)
-                                                      .toString(),
+                                              timeText,
                                               style: kEventDetailsTextStyle,
                                             ),
                                             SizedBox(
@@ -184,7 +233,8 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                                             listen: false)
                                                         .getEventInvite(index),
                                                 isEvent: true);
-                                            VentoService.getInstance().scan(context);
+                                            VentoService.getInstance()
+                                                .scan(context);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -238,11 +288,16 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        // Navigator.push(context,
-                                        //     MaterialPageRoute(builder: (context) {
-                                        //       return InviteDetailsScreen(
-                                        //           invite: Provider.of<UIData>(context).eventInvites[index]);
-                                        //     }));
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return InviteDetailsScreen(
+                                            groupInvite:
+                                                Provider.of<UIData>(context)
+                                                    .getGroupInvite(index),
+                                            isEvent: false,
+                                          );
+                                        }));
                                       },
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
@@ -291,7 +346,8 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                                             listen: false)
                                                         .getGroupInvite(index),
                                                 isEvent: false);
-                                            VentoService.getInstance().scan(context);
+                                            VentoService.getInstance()
+                                                .scan(context);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -346,14 +402,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     AtKey atKey = AtKey();
     if (isEvent) {
       eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
-      atKey.key =
-          KeyConstants.confirmStart + eventInvite.event.realEvent.key;
+      atKey.key = KeyConstants.confirmStart + eventInvite.event.realEvent.key;
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptEventInvite(eventInvite);
     } else {
       groupInvite.group.atSignMembers.add(activeAtSign);
-      atKey.key = KeyConstants.confirmStart  + groupInvite.group.key;
+      atKey.key = KeyConstants.confirmStart + groupInvite.group.key;
       atKey.sharedWith = groupInvite.group.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptGroupInvite(groupInvite);
@@ -383,13 +438,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       @required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      atKey.key =
-          eventInvite.event.realEvent.key;
-      Provider.of<UIData>(context,listen: false).deleteEventInvite(eventInvite);
-
+      atKey.key = eventInvite.event.realEvent.key;
+      Provider.of<UIData>(context, listen: false)
+          .deleteEventInvite(eventInvite);
     } else {
       atKey.key = groupInvite.group.key;
-      Provider.of<UIData>(context, listen: false).deleteGroupInvite(groupInvite);
+      Provider.of<UIData>(context, listen: false)
+          .deleteGroupInvite(groupInvite);
     }
 
     atKey.namespace = MixedConstants.NAMESPACE;
@@ -413,13 +468,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     //await ClientSdkService.getInstance().delete(atKey);
 
-
     atKey.key = atKey.key;
     print("Deleting: " + atKey.toString());
 
     var operation = OperationEnum.delete;
     await VentoService.getInstance().notify(atKey, storedValue, operation);
-
   }
 
   getAtSign() async {
