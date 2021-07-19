@@ -30,7 +30,18 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    setState(() {
+
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
     return Background(
       child: Expanded(
         child: Container(
@@ -166,16 +177,18 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return InviteDetailsScreen(
-                                            eventInvite:
-                                                Provider.of<UIData>(context)
-                                                    .getEventInvite(index),
-                                            isEvent: true,
-                                          );
-                                        }));
+                                        if(index < Provider.of<UIData>(context, listen: false).eventInvitesLength ) {
+                                          Navigator.pushReplacement(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return InviteDetailsScreen(
+                                                      eventInvite:
+                                                      Provider.of<UIData>(context)
+                                                          .getEventInvite(index),
+                                                      isEvent: true,
+                                                    );
+                                                  }));
+                                        }
                                       },
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
@@ -288,16 +301,18 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return InviteDetailsScreen(
-                                            groupInvite:
-                                                Provider.of<UIData>(context)
-                                                    .getGroupInvite(index),
-                                            isEvent: false,
-                                          );
-                                        }));
+                                        if(index <Provider.of<UIData>(context, listen: false).groupInvitesLength  ){
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return InviteDetailsScreen(
+                                                      groupInvite:
+                                                      Provider.of<UIData>(context)
+                                                          .getGroupInvite(index),
+                                                      isEvent: false,
+                                                    );
+                                                  }));
+                                        }
                                       },
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
