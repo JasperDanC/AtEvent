@@ -52,6 +52,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   String activeAtSign = '';
   VentoService clientSdkService;
   String timeText;
+  bool isCreator = false;
 
   @override
   void initState() {
@@ -102,6 +103,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       }
     }
     getAtSign();
+
     super.initState();
   }
 
@@ -131,6 +133,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         categoryString = 'Student Club Event';
         break;
     }
+    if(VentoService.getInstance().compareAtSigns(activeAtSign, widget.event.realEvent.atSignCreator)) isCreator = true;
     return Background(
       child: Expanded(
         child: Container(
@@ -221,11 +224,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   onAdd: _updateAndInvite,
                   addToList: true,
                   width: 300.0,
+                  isCreator: isCreator,
                   height: 200.0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children: isCreator ? [
                     FloatingActionButton(
                       heroTag: 'different_tag',
                       onPressed: () {
@@ -255,7 +259,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         color: Colors.white,
                       ),
                     ),
-                  ],
+                  ] :  [],
                 ),
               ],
             ),

@@ -24,19 +24,24 @@ class _GroupInformationState extends State<GroupInformation> {
   final _picker = ImagePicker();
   String activeAtSign = '';
   File _image;
+  bool isCreator;
 
   @override
   void initState() {
     getAtSign();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    isCreator = VentoService.getInstance()
+        .compareAtSigns(activeAtSign, widget.group.atSignCreator);
     SizeConfig().init(context);
     InviteBox inviteBox = InviteBox(
       addToList: false,
       invitees: widget.group.atSignMembers,
+      isCreator: isCreator,
       width: 300,
       height: 300,
     );
@@ -75,21 +80,29 @@ class _GroupInformationState extends State<GroupInformation> {
                     SizedBox(height: 60.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Icon(
-                          Icons.group,
-                          color: Colors.white,
-                          size: 40.0,
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.add_photo_alternate,
-                            size: 40.0,
-                            color: Colors.white,
-                          ),
-                          onPressed: () => _showPicker(context),
-                        )
-                      ],
+                      children: isCreator
+                          ? [
+                              Icon(
+                                Icons.group,
+                                color: Colors.white,
+                                size: 40.0,
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.add_photo_alternate,
+                                  size: 40.0,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () => _showPicker(context),
+                              )
+                            ]
+                          : [
+                              Icon(
+                                Icons.group,
+                                color: Colors.white,
+                                size: 40.0,
+                              ),
+                            ],
                     ),
                     Container(
                       width: 90.0,
@@ -205,6 +218,7 @@ class _GroupInformationState extends State<GroupInformation> {
       ),
     );
   }
+
   //simple atSign getter
   getAtSign() async {
     String currentAtSign = await VentoService.getInstance().getAtSign();
@@ -229,7 +243,8 @@ class _GroupInformationState extends State<GroupInformation> {
     String storedValue = GroupModel.convertGroupToJson(widget.group);
 
     await VentoService.getInstance().put(atKey, storedValue);
-    await VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.group.invitees);
+    await VentoService.getInstance().shareWithMany(
+        atKey.key, storedValue, activeAtSign, widget.group.invitees);
   }
 
   _imgFromCamera() async {

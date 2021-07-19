@@ -66,12 +66,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     ));
     int nextValue = 1;
     for (GroupModel g in groups) {
-      groupDropDownItems.add(DropdownMenuItem(
-        child: Text(g.title),
-        value: nextValue,
-      ));
-      groupValueMap[nextValue] = g;
-      nextValue += 1;
+      if(VentoService.getInstance().compareAtSigns(g.atSignCreator, activeAtSign)){
+        groupDropDownItems.add(DropdownMenuItem(
+          child: Text(g.title),
+          value: nextValue,
+        ));
+        groupValueMap[nextValue] = g;
+        nextValue += 1;
+      }
     }
     return Background(
       child: Expanded(
@@ -226,75 +228,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 SizedBox(
                   height: 25,
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.start,
-                //   children: [
-                //     MaterialButton(
-                //       padding: EdgeInsets.zero,
-                //       minWidth: 0,
-                //       onPressed: () {
-                //         _invitees.add(_inviteTextController.value.toString());
-                //         _inviteTextController.clear();
-                //       },
-                //       shape: CircleBorder(),
-                //       child: Icon(
-                //         Icons.add_circle_outline,
-                //         color: Colors.white,
-                //         size: 33,
-                //       ),
-                //     ),
-                //     Text(
-                //       '@',
-                //       style: TextStyle(color: Color(0xFFaae5e6), fontSize: 22),
-                //     ),
-                //     Expanded(
-                //       child: TextField(
-                //         controller: _inviteTextController,
-                //         cursorColor: Colors.white,
-                //         style: kEventDetailsTextStyle,
-                //         decoration: InputDecoration(
-                //           hintStyle: kEventDetailsTextStyle.copyWith(
-                //               color: Colors.grey[400]),
-                //           hintText: 'signs to invite',
-                //           enabledBorder: UnderlineInputBorder(
-                //               borderSide: BorderSide(color: Colors.white)),
-                //           focusedBorder: UnderlineInputBorder(
-                //               borderSide: BorderSide(color: Colors.white)),
-                //         ),
-                //       ),
-                //     )
-                //   ],
-                // ),
-                // Expanded(
-                //   child: Padding(
-                //     padding: const EdgeInsets.symmetric(
-                //         horizontal: 8.0, vertical: 20.0),
-                //     child: Container(
-                //       decoration: BoxDecoration(
-                //           color: kForegroundGrey,
-                //           borderRadius:
-                //               BorderRadius.all(Radius.circular(40.0))),
-                //       child: Padding(
-                //         padding: const EdgeInsets.all(8.0),
-                //         child: ListView.builder(
-                //             shrinkWrap: true,
-                //             padding: EdgeInsets.symmetric(
-                //                 vertical: 0, horizontal: 12.0),
-                //             controller: _scrollController,
-                //             itemCount: invites.length,
-                //             itemBuilder: (context, index) {
-                //               return Padding(
-                //                 padding: const EdgeInsets.all(4.0),
-                //                 child: Text(
-                //                   invites[index],
-                //                   style: kEventDetailsTextStyle,
-                //                 ),
-                //               );
-                //             }),
-                //       ),
-                //     ),
-                //   ),
-                // ),
+
                 Expanded(
                     child: DropdownButtonFormField(
                   items: groupDropDownItems,
