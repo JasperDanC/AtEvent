@@ -8,6 +8,8 @@ import 'dart:math';
 import 'package:at_event/Widgets/invite_box.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:at_commons/at_commons.dart';
+import 'package:at_event/service/vento_services.dart';
 
 class GroupInformation extends StatefulWidget {
   final GroupModel group;
@@ -20,10 +22,29 @@ class GroupInformation extends StatefulWidget {
 
 class _GroupInformationState extends State<GroupInformation> {
   final _picker = ImagePicker();
+  String activeAtSign = '';
   File _image;
+
+  @override
+  void initState() {
+    getAtSign();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
+    InviteBox inviteBox = InviteBox(
+      addToList: false,
+      invitees: widget.group.atSignMembers,
+      width: 300,
+      height: 300,
+    );
+    inviteBox.onAdd = () async {
+      CustomToast().show('Invite Sent!', context);
+      widget.group.invitees.add(inviteBox.controller.value.text);
+      await _updateAndInvite();
+    };
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -168,15 +189,7 @@ class _GroupInformationState extends State<GroupInformation> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                InviteBox(
-                                  addToList: false,
-                                  invitees: widget.group.atSignMembers,
-                                  onAdd: () {
-                                    CustomToast().show('Invite Sent!', context);
-                                  },
-                                  width: 300,
-                                  height: 300,
-                                )
+                                inviteBox,
                               ],
                             ),
                           );
@@ -191,6 +204,32 @@ class _GroupInformationState extends State<GroupInformation> {
         ],
       ),
     );
+  }
+  //simple atSign getter
+  getAtSign() async {
+    String currentAtSign = await VentoService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign;
+    });
+  }
+
+  _updateAndInvite() async {
+    setState(() {});
+    //create and update the event in the secondary so that the invitee added
+    //is kept track of in the secondary as well
+    AtKey atKey = AtKey();
+    atKey.key = widget.group.key;
+    atKey.namespace = MixedConstants.NAMESPACE;
+    atKey.sharedWith = activeAtSign;
+    atKey.sharedBy = activeAtSign;
+    Metadata metadata = Metadata();
+    metadata.ccd = true;
+    atKey.metadata = metadata;
+
+    String storedValue = GroupModel.convertGroupToJson(widget.group);
+
+    await VentoService.getInstance().put(atKey, storedValue);
+    await VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.group.invitees);
   }
 
   _imgFromCamera() async {

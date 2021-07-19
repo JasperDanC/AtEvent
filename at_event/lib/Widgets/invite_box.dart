@@ -7,22 +7,23 @@ import 'package:at_event/utils/constants.dart';
 class InviteBox extends StatefulWidget {
   InviteBox(
       {@required this.invitees,
-      @required this.onAdd,
+        this.onAdd,
       @required this.width,
       @required this.height,
       @required this.addToList});
   final double width;
   final double height;
   final List<String> invitees;
-  final Function onAdd;
+  Function onAdd;
   final bool addToList;
+  final TextEditingController controller =  TextEditingController();
 
   @override
   _InviteBoxState createState() => _InviteBoxState();
 }
 
 class _InviteBoxState extends State<InviteBox> {
-  TextEditingController _controller = TextEditingController();
+
   final ScrollController _scrollController = ScrollController();
   String _inviteeAtSign;
 
@@ -51,9 +52,9 @@ class _InviteBoxState extends State<InviteBox> {
                         if (widget.addToList) {
                           widget.invitees.add(_inviteeAtSign);
                         }
-
-                        _controller.clear();
                         widget.onAdd();
+                        widget.controller.clear();
+
                       }
                     });
                   }
@@ -74,7 +75,7 @@ class _InviteBoxState extends State<InviteBox> {
                   onChanged: (value) {
                     _inviteeAtSign = value;
                   },
-                  controller: _controller,
+                  controller: widget.controller,
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
