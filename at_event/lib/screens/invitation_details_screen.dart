@@ -13,6 +13,8 @@ import 'package:at_event/models/ui_data.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 
+import 'home_screen.dart';
+
 class InviteDetailsScreen extends StatefulWidget {
   InviteDetailsScreen({this.eventInvite, this.groupInvite, this.isEvent});
   final EventInvite eventInvite;
@@ -287,9 +289,8 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
     }
     var operation = OperationEnum.update;
     await VentoService.getInstance().notify(atKey, storedValue, operation);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return InvitationsScreen();
-    }));
+    VentoService.getInstance().scan(context);
+    Navigator.pop(context);
   }
 
   _deleteInvitation(
@@ -333,9 +334,8 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
 
     var operation = OperationEnum.delete;
     await VentoService.getInstance().notify(atKey, storedValue, operation);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      return InvitationsScreen();
-    }));
+    VentoService.getInstance().scan(context);
+    Navigator.pop(context);
   }
 
   getAtSign() async {
