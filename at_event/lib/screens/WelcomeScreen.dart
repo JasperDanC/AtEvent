@@ -1,3 +1,4 @@
+import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/cupertino.dart';
