@@ -244,6 +244,7 @@ class _SelectLocationState extends State<SelectLocation> {
       ),
     );
   }
+
   getAtSign() async {
     String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
@@ -253,11 +254,10 @@ class _SelectLocationState extends State<SelectLocation> {
       VentoService.getInstance().atClientServiceInstance!.atClient!,
       activeAtSign,
       NavService.navKey,
-      apiKey: '477b-876u-bcez-c42z-6a3d',
-      mapKey: 'CApl5ixiInUnNCiwzcec',
+      apiKey: 'dews3SyOoBzfMirwbjE7IL8OaiapjWWqZGAD1eGr0qU',
+      mapKey: 'xp4B6kQBGFBAnrEpXEEd',
     );
   }
-
 
   void onLocationSelect(BuildContext context, LatLng? point,
       {String? displayName}) {
