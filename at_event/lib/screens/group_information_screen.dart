@@ -4,7 +4,6 @@ import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
-import 'dart:math';
 import 'package:at_event/Widgets/invite_box.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -157,7 +156,6 @@ class _GroupInformationState extends State<GroupInformation> {
                     elevation: 0.1,
                     child: Text('Show Members', style: kButtonTextStyle),
                     onPressed: () {
-                      CustomToast().show('Test Toast', context);
                       showModalBottomSheet(
                         context: context,
                         builder: (context) {

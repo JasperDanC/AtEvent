@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/invitations_screen.dart';
-import 'package:at_event/service/vento_image_handling_service.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/Widgets/event_tiles.dart';
@@ -25,6 +26,14 @@ import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/Widgets/group_cardUI.dart';
 import 'package:at_event/screens/group_create.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
+import 'package:image/image.dart' as ImD;
+import 'package:at_event/screens/something_went_wrong.dart';
+
+final Reference storageReference =
+    FirebaseStorage.instance.ref().child("Profile Pictures");
+
+final uploadReference = FirebaseFirestore.instance.collection("Uploads");
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -39,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String activeAtSign = '';
   GlobalKey<ScaffoldState> scaffoldKey;
   File _image;
+  bool uploading = false;
+  String postId = Uuid().v4();
   final _picker = ImagePicker();
   bool _nonAsset = false;
 
@@ -125,170 +136,175 @@ class _HomeScreenState extends State<HomeScreen> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-      backgroundColor: kBackgroundGrey,
-      key: scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text("Your Invitations"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => InvitationsScreen()));
-              },
+          backgroundColor: kBackgroundGrey,
+          key: scaffoldKey,
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                ListTile(
+                  title: Text("Your Invitations"),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InvitationsScreen()));
+                  },
+                ),
+                ListTile(
+                  title: Text("Contacts"),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => HomeScreen(),
+                    ));
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ContactsScreen(),
+                    ));
+                  },
+                ),
+                ListTile(
+                  title: Text("Blocked"),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => BlockedScreen(),
+                    ));
+                  },
+                ),
+                ListTile(
+                  title: Text("Delete All Info on Secondary"),
+                  onTap: () {
+                    VentoService.getInstance().deleteAll(context);
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              title: Text("Contacts"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => HomeScreen(),
-                ));
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ContactsScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              title: Text("Blocked"),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => BlockedScreen(),
-                ));
-              },
-            ),
-            ListTile(
-              title: Text("Delete All Info on Secondary"),
-              onTap: () {
-                VentoService.getInstance().deleteAll(context);
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-        /// Box Decoration
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: kPrimaryBlue),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 5, bottom: 10),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 60.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "Hello, $activeAtSign",
-                                    style: kHeadingTextStyle,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                MaterialButton(
-                                  padding: EdgeInsets.zero,
-                                  shape: CircleBorder(),
-                                  onPressed: () {
-                                    scaffoldKey.currentState.openDrawer();
-                                  },
-                                  child: Icon(
-                                    Icons.menu,
-                                    color: Colors.white,
-                                    size: 40.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
+          body: Container(
+            /// Box Decoration
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), color: kPrimaryBlue),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 5, bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 60.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                SizedBox(
-                                  height: 20,
-                                  child: Text(
-                                      "Let's see what is happening today!",
-                                      style: kNormalTextStyle.copyWith(
-                                          fontSize: 16)),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "Hello, $activeAtSign",
+                                        style: kHeadingTextStyle,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    MaterialButton(
+                                      padding: EdgeInsets.zero,
+                                      shape: CircleBorder(),
+                                      onPressed: () {
+                                        scaffoldKey.currentState.openDrawer();
+                                      },
+                                      child: Icon(
+                                        Icons.menu,
+                                        color: Colors.white,
+                                        size: 40.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    _showPicker(context);
-                                    _nonAsset = true;
-                                  },
-                                  child: CustomCircleAvatar(
-                                    nonAsset: _nonAsset,
-                                    image: _image == null
-                                        ? 'assets/images/Profile.jpg'
-                                        : null,
-                                    fileImage: _image != null ? _image : null,
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 20,
+                                      child: Text(
+                                          "Let's see what is happening today!",
+                                          style: kNormalTextStyle.copyWith(
+                                              fontSize: 16)),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _showPicker(context);
+                                        _nonAsset = true;
+                                        uploading
+                                            ? null
+                                            : _controlUploadAndSave();
+                                      },
+                                      child: CustomCircleAvatar(
+                                        nonAsset: _nonAsset,
+                                        image: _image == null
+                                            ? 'assets/images/Profile.jpg'
+                                            : null,
+                                        fileImage:
+                                            _image != null ? _image : null,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Column(
-              children: <Widget>[
-                Card(
-                  clipBehavior: Clip.antiAlias,
-                  margin: const EdgeInsets.all(4.0),
-                  child: TableCalendar(
-                    calendarFormat: CalendarFormat.week,
-                    firstDay: DateTime(2010, 01, 01),
-                    lastDay: DateTime(2050, 12, 31),
-                    focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) {
-                      return isSameDay(_selectedDay, day);
-                    },
-                    onPageChanged: (focusedDay) {
-                      _focusedDay = focusedDay;
-                    },
-                    onFormatChanged: (format) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CalendarScreen()));
-                    },
-                    onDaySelected: (selectedDay, today) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return CalendarScreen(specificDay: selectedDay);
-                      }));
-                    },
-                    headerStyle: HeaderStyle(
-                      titleTextStyle: kHeadingTextStyle,
-                      formatButtonDecoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
-                          borderRadius: BorderRadius.circular(20)),
-                      formatButtonTextStyle: kNormalTextStyle,
-                      leftChevronIcon: Icon(
-                        Icons.chevron_left,
-                        color: Colors.white,
-                      ),
-                      rightChevronIcon: Icon(
-                        Icons.chevron_right,
-                        color: Colors.white,
-                      ),
-                      decoration: BoxDecoration(
-                        color: kColorStyle1,
-                      ),
-                      headerMargin: const EdgeInsets.only(bottom: 6),
-                    ),
-                    calendarStyle: CalendarStyle(
-                      canMarkersOverflow: true,
-                    ),
-                    eventLoader: (day) {
-                      List<UI_Event> allEvents = [];
+                ),
+                Column(
+                  children: <Widget>[
+                    Card(
+                      clipBehavior: Clip.antiAlias,
+                      margin: const EdgeInsets.all(4.0),
+                      child: TableCalendar(
+                        calendarFormat: CalendarFormat.week,
+                        firstDay: DateTime(2010, 01, 01),
+                        lastDay: DateTime(2050, 12, 31),
+                        focusedDay: _focusedDay,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(_selectedDay, day);
+                        },
+                        onPageChanged: (focusedDay) {
+                          _focusedDay = focusedDay;
+                        },
+                        onFormatChanged: (format) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CalendarScreen()));
+                        },
+                        onDaySelected: (selectedDay, today) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return CalendarScreen(specificDay: selectedDay);
+                          }));
+                        },
+                        headerStyle: HeaderStyle(
+                          titleTextStyle: kHeadingTextStyle,
+                          formatButtonDecoration: BoxDecoration(
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(20)),
+                          formatButtonTextStyle: kNormalTextStyle,
+                          leftChevronIcon: Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                          ),
+                          rightChevronIcon: Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
+                          decoration: BoxDecoration(
+                            color: kColorStyle1,
+                          ),
+                          headerMargin: const EdgeInsets.only(bottom: 6),
+                        ),
+                        calendarStyle: CalendarStyle(
+                          canMarkersOverflow: true,
+                        ),
+                        eventLoader: (day) {
+                          List<UI_Event> allEvents = [];
 
                           for (int i = 0;
                               i < Provider.of<UIData>(context).eventsLength;
@@ -342,8 +358,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             return TodayEventTile(
                               desc: events[index].eventName,
                               address: events[index].location,
-                              imgAssetPath:
-                                  'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
+                              imgAssetPath: 'assets/images/none.png',
+                              // If for some reason any image fails to load or something, it will default to the unknown category icon.
                               date: DateFormat('hh:mm a')
                                   .format(events[index].from),
                               event: events[index],
@@ -493,7 +509,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _image = File(image.path);
       Provider.of<UIData>(context, listen: false).addPath(_image.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
-      print('Image path: ' + _image.path);
     });
   }
 
@@ -505,8 +520,12 @@ class _HomeScreenState extends State<HomeScreen> {
       _image = File(image.path);
       Provider.of<UIData>(context, listen: false).addPath(_image.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
-      uploadNetworkImage(_image.path);
-      print('Image path: ' + _image.path);
+    });
+  }
+
+  removeImage() {
+    setState(() {
+      _image = null;
     });
   }
 
@@ -534,10 +553,82 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.of(context).pop();
                     },
                   ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      MaterialButton(
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete),
+                            Text(
+                              'Remove Image',
+                              style: kButtonTextStyle.copyWith(fontSize: 18.0),
+                            )
+                          ],
+                        ),
+                        color: kColorStyle1,
+                        padding: EdgeInsets.all(5.0),
+                        onPressed: () => removeImage(),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           );
         });
+  }
+
+  Future<void> _controlUploadAndSave() async {
+    setState(() {
+      uploading = true;
+    });
+    await compressImage();
+
+    String downloadUrl = await uploadPhoto(_image);
+
+    savePostInfoToFireStore(url: downloadUrl);
+
+    setState(() {
+      _image = null;
+      uploading = false;
+      postId = Uuid().v4();
+    });
+  }
+
+  Future<void> compressImage() async {
+    final tempDirectory = await getTemporaryDirectory();
+    final path = tempDirectory.path;
+    ImD.Image mImageFile = ImD.decodeImage(_image.readAsBytesSync());
+    final compressedImageFile = File('$path/img_$postId')
+      ..writeAsBytesSync(ImD.encodeJpg(mImageFile, quality: 90));
+    _image = compressedImageFile;
+  }
+
+  // ignore: missing_return
+  Future<String> uploadPhoto(mImageFile) async {
+    try {
+      UploadTask mstorageUploadTask =
+          storageReference.child('post_$postId.jpg').putFile(mImageFile);
+      var downloadUrl = mstorageUploadTask.snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } on FirebaseException catch (e) {
+      print(e);
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => SomethingWentWrongScreen()));
+    }
+  }
+
+  void savePostInfoToFireStore({String url}) {
+    uploadReference
+        .doc(activeAtSign)
+        .collection("atSignUpload")
+        .doc(postId)
+        .set({
+      "postId": postId,
+      "ownerId": activeAtSign,
+      "timeStamp": DateTime.now().millisecondsSinceEpoch,
+      "url": url,
+    });
   }
 }

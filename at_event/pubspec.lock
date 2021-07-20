@@ -446,7 +446,7 @@ packages:
     source: hosted
     version: "2.0.4"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -459,6 +459,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image:
+    dependency: "direct main"
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.2"
   image_picker:
     dependency: "direct main"
     description:
@@ -920,7 +927,7 @@ packages:
     source: hosted
     version: "0.2.1"
   uuid:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: uuid
       url: "https://pub.dartlang.org"

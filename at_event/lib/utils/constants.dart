@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:at_event/models/ui_event.dart';
-import 'package:at_event/models/invite.dart';
 
 /*
 Colours
@@ -143,7 +141,6 @@ const kEventDetailsTextStyle = TextStyle(
 Important App Data Constants
  */
 
-
 /*
 Unusable symbols for AtKey.keys and AtSigns
 The trick is replace them with a word so the customer
@@ -153,52 +150,51 @@ I limited the length of the replacements to 5 chars each as to not take too much
  */
 
 class KeyConstants {
-  static Map<String,String> badCharMap = {
-    '!':'EMARK',
-    '*':'ASTER',
-    "'":'APOST',
-    '(':'LBRAK',
-    ')':'RBRAK',
-    ';':'SCOLN',
-    ':':'COLON',
-    '@':'ASIGN',
-    '&':'AMPER',
-    '=':'EQUAL',
-    '+':'PLUS',
-    '\$':'DOLLA',
-    ',':'COMMA',
-    '/':'SLASH',
-    '?':'QMARK',
-    '#':'POUND',
-    '[':'LSBRK',
-    ']':'RSBRK',
-    '{':'LCBRK',
-    '}':'RCBRK',
+  static Map<String, String> badCharMap = {
+    '!': 'EMARK',
+    '*': 'ASTER',
+    "'": 'APOST',
+    '(': 'LBRAK',
+    ')': 'RBRAK',
+    ';': 'SCOLN',
+    ':': 'COLON',
+    '@': 'ASIGN',
+    '&': 'AMPER',
+    '=': 'EQUAL',
+    '+': 'PLUS',
+    '\$': 'DOLLA',
+    ',': 'COMMA',
+    '/': 'SLASH',
+    '?': 'QMARK',
+    '#': 'POUND',
+    '[': 'LSBRK',
+    ']': 'RSBRK',
+    '{': 'LCBRK',
+    '}': 'RCBRK',
   };
 
   static Map<String, KeyType> keyTypeMap = {
     eventStart: KeyType.EVENT,
     groupStart: KeyType.GROUP,
     confirmStart: KeyType.CONFIRMATION,
-    profilePicStart:KeyType.PROFILE_PIC,
+    profilePicStart: KeyType.PROFILE_PIC,
   };
 
   //reversed of last map
-  static Map<KeyType,String> keyStringMap =
-  Map.fromEntries(keyTypeMap.entries.map((e) => MapEntry(e.value, e.key)));
+  static Map<KeyType, String> keyStringMap =
+      Map.fromEntries(keyTypeMap.entries.map((e) => MapEntry(e.value, e.key)));
 
   static const String eventStart = 'event_';
   static const String groupStart = 'group_';
   static const String confirmStart = 'confm_';
   static const String profilePicStart = 'profil_';
-
 }
 
 enum KeyType {
- EVENT,
- GROUP,
- CONFIRMATION,
- PROFILE_PIC,
+  EVENT,
+  GROUP,
+  CONFIRMATION,
+  PROFILE_PIC,
 }
 
 /*
@@ -222,10 +218,9 @@ class AppStrings {
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
 
-
 /*
 API KEY/s
  */
 
-const String tinyPNG_base64 =
-    'YXBpOnY3QzM0M2wxeFlWQ1p3aGtCUkdIOEJZNDRWUDh5Zno0';
+/*const String tinyPNG_base64 =
+    'YXBpOnY3QzM0M2wxeFlWQ1p3aGtCUkdIOEJZNDRWUDh5Zno0';*/ // Not needed anymore
