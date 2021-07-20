@@ -129,7 +129,7 @@ class _BackgroundState extends State<Background> {
   }
 
   getAtSignAndInitContacts() async {
-    String currentAtSign = await (VentoService.getInstance().getAtSign() as FutureOr<String>);
+    String currentAtSign = await (VentoService.getInstance().getAtSign() as Future<String>);
 
     activeAtSign = currentAtSign;
     initializeContactsService(clientSdkService.atClientInstance!, activeAtSign,

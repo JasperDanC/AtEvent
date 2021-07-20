@@ -232,9 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onTap: () {
                                         _showPicker(context);
                                         _nonAsset = true;
-                                        uploading
-                                            ? null
-                                            : _controlUploadAndSave();
+                                         _controlUploadAndSave();
                                       },
                                       child: CustomCircleAvatar(
                                         nonAsset: _nonAsset,
@@ -310,27 +308,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               i < Provider.of<UIData>(context).eventsLength;
                               i++) {
                             if (Provider.of<UIData>(context)
-                                    .getEvent(i)
-                                    .startTime !=
-                                null) {
-                              if (Provider.of<UIData>(context)
-                                          .getEvent(i)
-                                          .startTime
-                                          .day ==
-                                      day.day &&
-                                  Provider.of<UIData>(context)
-                                          .getEvent(i)
-                                          .startTime
-                                          .month ==
-                                      day.month &&
-                                  Provider.of<UIData>(context)
-                                          .getEvent(i)
-                                          .startTime
-                                          .year ==
-                                      day.year) {
-                                allEvents.add(
-                                    Provider.of<UIData>(context).getEvent(i));
-                              }
+                                        .getEvent(i)
+                                        .startTime
+                                        .day ==
+                                    day.day &&
+                                Provider.of<UIData>(context)
+                                        .getEvent(i)
+                                        .startTime
+                                        .month ==
+                                    day.month &&
+                                Provider.of<UIData>(context)
+                                        .getEvent(i)
+                                        .startTime
+                                        .year ==
+                                    day.year) {
+                              allEvents.add(
+                                  Provider.of<UIData>(context).getEvent(i));
                             }
                           }
                           return allEvents;
@@ -479,6 +472,8 @@ class _HomeScreenState extends State<HomeScreen> {
           case Week.SATURDAY:
             currentWeekday = 6;
             break;
+          case null:
+            break;
         }
         return DateTime.now().isAfter(uiEvent.startTime) &&
             DateTime.now().weekday == currentWeekday &&
@@ -619,6 +614,7 @@ class _HomeScreenState extends State<HomeScreen> {
       print(e);
       Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => SomethingWentWrongScreen()));
+      return 'upload failed';
     }
   }
 

@@ -9,34 +9,7 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 
-void main() {
-  runApp(EventEditScreen(
-    event: UI_Event(
-        eventName: "Lunch with Thomas",
-        startTime: DateTime(2021, 06, 09, 6),
-        endTime: DateTime(2021, 06, 09, 9),
-        location: '123 Street Avenue N.',
-        description: 'Lunch at my place!\n\n' +
-            'Bring some board games, pops, and some delicious sides\n\n' +
-            'We will be eating burgers',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-        ]),
-  ));
-}
+
 
 class EventEditScreen extends StatefulWidget {
   EventEditScreen({this.event});

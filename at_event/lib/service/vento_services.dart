@@ -128,7 +128,7 @@ class VentoService {
   }
 
   Future<bool> startMonitor(currentAtSign) async {
-    var privateKey = await (getPrivateKey(currentAtSign) as FutureOr<String>);
+    var privateKey = await (getPrivateKey(currentAtSign) as Future<String>);
 
     await _getAtClientForAtsign()!.startMonitor(privateKey, _callback);
     print('Monitor started');
@@ -143,9 +143,6 @@ class VentoService {
     String? operation = translated[0];
     AtKey notifKey = translated[1];
 
-    // the activeAtSign is the sharedWith person as it could have not been
-    // got this notification otherwise
-    String? activeAtSign = notifKey.sharedWith;
 
     //if the notification was sent to yourself ignore it.
     bool sentToSelf = compareAtSigns(notifKey.sharedBy!, notifKey.sharedWith!);
@@ -171,7 +168,6 @@ class VentoService {
             await put(notifKey, value);
             scan(_currentKnownContext);
             return;
-            break;
           case conf.KeyType.GROUP:
             String? value = await lookup(notifKey);
             print("Notification Value: " + value.toString());
@@ -180,7 +176,6 @@ class VentoService {
             await VentoService.getInstance().put(notifKey, value);
             scan(_currentKnownContext);
             return;
-            break;
           case conf.KeyType.CONFIRMATION:
             _handleConfirm(notifKey);
             break;
@@ -188,6 +183,8 @@ class VentoService {
             // Profile pic not yet implemented
             // Also I imagine that when implemented people won't send
             // them as notifications
+            break;
+          case null:
             break;
         }
         break;
@@ -208,7 +205,7 @@ class VentoService {
       ..sharedBy = notifKey.sharedWith;
 
     //get the original event
-    String value = await (lookup(atKeyOfObject) as FutureOr<String>);
+    String value = await (lookup(atKeyOfObject) as Future<String>);
     Map<String, dynamic>? jsonValue = json.decode(value);
 
     conf.KeyType? type = getKeyType(atKeyOfObject);
@@ -258,7 +255,7 @@ class VentoService {
             ..sharedWith = notifKey.sharedWith;
 
           //get the event
-          String value = await (lookup(eventKey) as FutureOr<String>);
+          String value = await (lookup(eventKey) as Future<String>);
           Map<String, dynamic> jsonValue = json.decode(value);
           EventNotificationModel eventModel =
               EventNotificationModel.fromJson(jsonValue);
@@ -369,6 +366,9 @@ class VentoService {
         case conf.KeyType.PROFILE_PIC:
           // Profile Pictures not yet implement on secondary server
           break;
+        case null:
+          print("Got key with null type");
+          break;
       }
     }
 
@@ -460,7 +460,7 @@ class VentoService {
     }
 
     //looks up the value which is stored as a json string
-    String value = await (lookup(eventKey) as FutureOr<String>);
+    String value = await (lookup(eventKey) as Future<String>);
 
 
     print("Key Value:" + value.toString());
@@ -586,7 +586,7 @@ class VentoService {
         ..sharedBy = activeAtSign
         ..sharedWith = activeAtSign;
 
-      GroupModel group = await (lookupGroup(groupKey) as FutureOr<GroupModel>);
+      GroupModel group = await (lookupGroup(groupKey) as Future<GroupModel>);
 
       //make a list of group members other than the active user to share updated
       //group and event with the right people
@@ -684,10 +684,7 @@ class VentoService {
   /// basically just a wrapper for get function
   Future<String?> lookup(AtKey atKey) async {
     // If an AtKey object exists
-    if (atKey != null) {
-      return await get(atKey);
-    }
-    return '';
+    return await get(atKey);
   }
 
   Future<GroupModel?> lookupGroup(AtKey groupKey) async {

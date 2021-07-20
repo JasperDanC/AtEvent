@@ -10,36 +10,6 @@ import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/Widgets/invite_box.dart';
 
-void main() {
-  runApp(EventDetailsScreen(
-    event: UI_Event(
-        eventName: "Lunch with Thomas",
-        startTime: DateTime(2021, 06, 09, 6),
-        endTime: DateTime(2021, 06, 09, 9),
-        location: '123 Street Avenue N.',
-        description: 'Lunch at my place!\n\n' +
-            'Bring some board games, pops, and some delicious sides\n\n' +
-            'We will be eating burgers',
-        peopleGoing: [
-          '@gerald',
-          '@norton',
-          '@thomas',
-          '@MrSmith',
-          '@Harriet',
-          '@funkyfrog',
-          '@3frogs',
-          '@dagoth_ur',
-          '@clavicus_vile',
-          '@BenjaminButton',
-          '@samus',
-          '@atom_eve',
-          '@buggs',
-          '@george',
-        ],
-        category: EventCategory.Class),
-  ));
-}
-
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
   final UI_Event? event;
@@ -132,8 +102,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       case EventCategory.StudentClubEvent:
         categoryString = 'Student Club Event';
         break;
+      case null:
+        categoryString = 'No Category';
     }
-    if(VentoService.getInstance().compareAtSigns(activeAtSign, widget.event!.realEvent.atSignCreator)) isCreator = true;
+    if (VentoService.getInstance().compareAtSigns(
+        activeAtSign, widget.event!.realEvent.atSignCreator)) isCreator = true;
     return Background(
       child: Expanded(
         child: Container(
@@ -175,7 +148,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   ],
                 ),
                 Text(
-                  categoryString != null ? categoryString : "",
+                  categoryString,
                   style: kEventDetailsTextStyle,
                 ),
                 Divider(
@@ -229,37 +202,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: isCreator ? [
-                    FloatingActionButton(
-                      heroTag: 'different_tag',
-                      onPressed: () {
-                        _delete(context);
-                      },
-                      backgroundColor: Colors.red,
-                      child: Icon(
-                        Icons.delete,
-                        size: 38,
-                        color: Colors.white,
-                      ),
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EventEditScreen(event: widget.event),
+                  children: isCreator
+                      ? [
+                          FloatingActionButton(
+                            heroTag: 'different_tag',
+                            onPressed: () {
+                              _delete(context);
+                            },
+                            backgroundColor: Colors.red,
+                            child: Icon(
+                              Icons.delete,
+                              size: 38,
+                              color: Colors.white,
+                            ),
                           ),
-                        );
-                      },
-                      backgroundColor: kPrimaryBlue,
-                      child: Icon(
-                        Icons.edit,
-                        size: 38,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ] :  [],
+                          FloatingActionButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      EventEditScreen(event: widget.event),
+                                ),
+                              );
+                            },
+                            backgroundColor: kPrimaryBlue,
+                            child: Icon(
+                              Icons.edit,
+                              size: 38,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ]
+                      : [],
                 ),
               ],
             ),
@@ -273,42 +248,39 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   //which makes sense because we don't want people to delete other people's
   //events
   _delete(BuildContext context) async {
-    if (widget.event!.eventName != null) {
-      // just a safety check
+    // just a safety check
 
-      //get that client
-      VentoService clientSdkService = VentoService.getInstance();
+    //get that client
+    VentoService clientSdkService = VentoService.getInstance();
 
-      //create a key
+    //create a key
+    AtKey atKey = AtKey();
+    atKey.key = widget.event!.realEvent.key;
+    atKey.sharedWith = activeAtSign;
+    atKey.sharedBy = widget.event!.realEvent.atSignCreator;
+    Metadata metaData = Metadata()..ccd = true;
+    atKey.metadata = metaData;
+
+    print("Deleting key:" + atKey.toString());
+    //delete the key from the secondary
+    bool deleteResult = await clientSdkService.delete(atKey);
+
+    print("Delete Result:" + deleteResult.toString());
+
+    //delete the event that exists as a invitation to someone else
+    for (String invitee in widget.event!.invitees) {
+      //make a key again with the right sharedWith + sharedBy
       AtKey atKey = AtKey();
-      atKey.key = widget.event!.realEvent.key;
-      atKey.sharedWith = activeAtSign;
-      atKey.sharedBy = widget.event!.realEvent.atSignCreator;
+      atKey.key = widget.event!.realEvent.key.toLowerCase().replaceAll(' ', '');
+      atKey.sharedWith = invitee;
+      atKey.sharedBy =
+          widget.event!.realEvent.atSignCreator.replaceAll("@", "");
       Metadata metaData = Metadata()..ccd = true;
       atKey.metadata = metaData;
-
-      print("Deleting key:" + atKey.toString());
-      //delete the key from the secondary
-      bool deleteResult = await clientSdkService.delete(atKey);
-
-      print("Delete Result:" + deleteResult.toString());
-
-      //delete the event that exists as a invitation to someone else
-      for (String invitee in widget.event!.invitees) {
-        //make a key again with the right sharedWith + sharedBy
-        AtKey atKey = AtKey();
-        atKey.key =
-            widget.event!.realEvent.key.toLowerCase().replaceAll(' ', '');
-        atKey.sharedWith = invitee;
-        atKey.sharedBy =
-            widget.event!.realEvent.atSignCreator.replaceAll("@", "");
-        Metadata metaData = Metadata()..ccd = true;
-        atKey.metadata = metaData;
-        await clientSdkService.delete(atKey);
-      }
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => CalendarScreen()));
+      await clientSdkService.delete(atKey);
     }
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => CalendarScreen()));
   }
 
   _updateAndInvite() async {
@@ -328,7 +300,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         widget.event!.realEvent);
 
     await VentoService.getInstance().put(atKey, storedValue);
-    await VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.event!.invitees);
+    await VentoService.getInstance().shareWithMany(
+        atKey.key, storedValue, activeAtSign, widget.event!.invitees);
   }
 
   //simple atSign getter

@@ -27,7 +27,7 @@ class InviteDetailsScreen extends StatefulWidget {
 
 class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
   late String timeText;
-  String activeAtSign;
+  String activeAtSign = '';
   @override
   void initState() {
     getAtSign();
