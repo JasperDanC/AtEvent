@@ -10,6 +10,7 @@ import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/screens/selected_location.dart';
 import 'event_create_screen.dart';
+import 'package:at_event/service/vento_services.dart';
 import 'package:latlong2/latlong.dart';
 
 class SelectLocation extends StatefulWidget {
@@ -23,11 +24,13 @@ class SelectLocation extends StatefulWidget {
 
 class _SelectLocationState extends State<SelectLocation> {
   String inputText = '';
+  String activeAtSign = '';
   bool isLoader = false;
   LatLng? currentLocation;
   bool? nearMe;
   @override
   void initState() {
+    getAtSign();
     calculateLocation();
     super.initState();
   }
@@ -241,6 +244,20 @@ class _SelectLocationState extends State<SelectLocation> {
       ),
     );
   }
+  getAtSign() async {
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
+    setState(() {
+      activeAtSign = currentAtSign!;
+    });
+    initializeLocationService(
+      VentoService.getInstance().atClientServiceInstance!.atClient!,
+      activeAtSign,
+      NavService.navKey,
+      apiKey: '477b-876u-bcez-c42z-6a3d',
+      mapKey: 'CApl5ixiInUnNCiwzcec',
+    );
+  }
+
 
   void onLocationSelect(BuildContext context, LatLng? point,
       {String? displayName}) {
@@ -253,4 +270,8 @@ class _SelectLocationState extends State<SelectLocation> {
                   point: point,
                 )));
   }
+}
+
+class NavService {
+  static GlobalKey<NavigatorState> navKey = GlobalKey();
 }
