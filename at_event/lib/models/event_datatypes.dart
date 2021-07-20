@@ -4,18 +4,17 @@ import 'ui_event.dart';
 import 'group_model.dart';
 
 class EventNotificationModel {
-  EventNotificationModel();
-  String atSignCreator;
+  late String atSignCreator;
   bool? isCancelled;
-  String title;
+  late String title;
   String? description;
   Setting? setting;
   String? groupKey;
   late List<String> peopleGoing;
   late List<String> invitees;
   EventCategory? category;
-  Event event;
-  String key;
+  late Event event;
+  late final String key;
   bool? isSharing;
   bool?
       isUpdating; // This becomes true when event data is being updated, should be true
@@ -63,7 +62,6 @@ class EventNotificationModel {
           : 'null' as Event;
     }
     groupKey = data['groupKey'] ?? '';
-
   }
 
   static String convertEventNotificationToJson(
@@ -75,8 +73,9 @@ class EventNotificationModel {
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
       'description': eventNotification.description,
-
-      'invitees' : eventNotification.invitees.length > 0 ?eventNotification.invitees.join(',') : '[]',
+      'invitees': eventNotification.invitees.length > 0
+          ? eventNotification.invitees.join(',')
+          : '[]',
       'peopleGoing': eventNotification.peopleGoing.length > 0
           ? eventNotification.peopleGoing.join(',')
           : '[]',
