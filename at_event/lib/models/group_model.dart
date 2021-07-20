@@ -1,16 +1,15 @@
 import 'dart:convert';
 
 class GroupModel {
-  GroupModel();
-  String title;
-  String description;
+  String? title;
+  String? description;
   String? imageURL;
   int? capacity;
   late List<String> eventKeys;
-  List<String> atSignMembers;
+  late List<String> atSignMembers;
   late List<String> invitees;
-  String atSignCreator;
-  String key;
+  late String atSignCreator;
+  late final String key;
 
   GroupModel.fromJson(Map<String, dynamic> data) {
     title = data['title'] ?? '';
