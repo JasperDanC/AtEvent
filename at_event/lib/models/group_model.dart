@@ -16,7 +16,7 @@ class GroupModel {
     title = data['title'] ?? '';
     key = data['key'] ?? '';
     imageURL = data['imageURL'] ?? '';
-    capacity = int.parse(data['capacity']) ?? null;
+    capacity = int.parse(data['capacity']);
     description = data['description'] ?? '';
     eventKeys = data['eventKeys'] == '[]' || data['eventKeys'] == ''
         ? []
@@ -27,7 +27,7 @@ class GroupModel {
     invitees = data['invitees'] == '[]' || data['invitees'] == ''
         ? []
         : data['invitees'].split(',') ?? [];
-    atSignCreator = data['atSignCreator' ?? ''];
+    atSignCreator = data['atSignCreator'];
   }
 
   static String convertGroupToJson(GroupModel group) {

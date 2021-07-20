@@ -460,12 +460,12 @@ class VentoService {
     }
 
     //looks up the value which is stored as a json string
-    String value = await (lookup(eventKey) as Future<String>);
+    String? value = await lookup(eventKey) ;
 
 
     print("Key Value:" + value.toString());
     //decode the json string into a json map
-    Map<String, dynamic> jsonValue = json.decode(value);
+    Map<String, dynamic> jsonValue = json.decode(value!);
     //make the event Model from the json
     EventNotificationModel eventModel =
         EventNotificationModel.fromJson(jsonValue);

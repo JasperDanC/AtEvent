@@ -50,7 +50,7 @@ class EventNotificationModel {
     invitees = data['invitees'] == '[]' || data['invitees'] == ''
         ? []
         : data['invitees'].split(',') ?? [];
-    atSignCreator = data['atSignCreator' ?? ''];
+    atSignCreator = data['atSignCreator'];
     isCancelled = data['isCancelled'] == 'true' ? true : false;
     isSharing = data['isSharing'] == 'true' ? true : false;
     isUpdating = data['isUpdating'] == 'true' ? true : false;

@@ -86,7 +86,6 @@ class _VentoState extends State<Vento> {
               '/InvitationsScreen': (BuildContext context) =>
                   InvitationsScreen(),
               '/RecurringEvent': (BuildContext context) => RecurringEvent(),
-              '/GroupEvents': (BuildContext context) => GroupDetails(),
             }),
       );
     }
