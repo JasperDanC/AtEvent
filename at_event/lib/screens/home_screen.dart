@@ -306,124 +306,126 @@ class _HomeScreenState extends State<HomeScreen> {
                         eventLoader: (day) {
                           List<UI_Event> allEvents = [];
 
-                      for (int i = 0;
-                          i < Provider.of<UIData>(context).eventsLength;
-                          i++) {
-                        if (Provider.of<UIData>(context).getEvent(i).startTime !=
-                            null) {
-                          if (Provider.of<UIData>(context)
-                                      .getEvent(i)
-                                      .startTime
-                                      .day ==
-                                  day.day &&
-                              Provider.of<UIData>(context)
-                                      .getEvent(i)
-                                      .startTime
-                                      .month ==
-                                  day.month &&
-                              Provider.of<UIData>(context)
-                                      .getEvent(i)
-                                      .startTime
-                                      .year ==
-                                  day.year) {
-                            allEvents
-                                .add(Provider.of<UIData>(context).getEvent(i));
+                          for (int i = 0;
+                              i < Provider.of<UIData>(context).eventsLength;
+                              i++) {
+                            if (Provider.of<UIData>(context)
+                                    .getEvent(i)
+                                    .startTime !=
+                                null) {
+                              if (Provider.of<UIData>(context)
+                                          .getEvent(i)
+                                          .startTime
+                                          .day ==
+                                      day.day &&
+                                  Provider.of<UIData>(context)
+                                          .getEvent(i)
+                                          .startTime
+                                          .month ==
+                                      day.month &&
+                                  Provider.of<UIData>(context)
+                                          .getEvent(i)
+                                          .startTime
+                                          .year ==
+                                      day.year) {
+                                allEvents.add(
+                                    Provider.of<UIData>(context).getEvent(i));
+                              }
+                            }
                           }
-                        }
-                      }
-                      return allEvents;
-                    },
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            Text(
-              "Today's Events",
-              style: kSubHeadingTextStyle,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              height: SizeConfig().screenHeight * 0.36,
-              child: events.length > 0
-                  ? ListView.builder(
-                      padding: EdgeInsets.only(top: 8),
-                      shrinkWrap: true,
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        return TodayEventTile(
-                          desc: events[index].eventName,
-                          address: events[index].location,
-                          imgAssetPath:
-                              'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
-                          date:
-                              DateFormat('hh:mm a').format(events[index].startTime),
-                          event: events[index],
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  EventDetailsScreen(
-                                event: events[index],
+                          return allEvents;
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Text(
+                  "Today's Events",
+                  style: kSubHeadingTextStyle,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: SizeConfig().screenHeight * 0.36,
+                  child: events.length > 0
+                      ? ListView.builder(
+                          padding: EdgeInsets.only(top: 8),
+                          shrinkWrap: true,
+                          itemCount: events.length,
+                          itemBuilder: (context, index) {
+                            return TodayEventTile(
+                              desc: events[index].eventName,
+                              address: events[index].location,
+                              imgAssetPath:
+                                  'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
+                              date: DateFormat('hh:mm a')
+                                  .format(events[index].startTime),
+                              event: events[index],
+                              onPressed: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      EventDetailsScreen(
+                                    event: events[index],
+                                  ),
+                                ),
+                              ),
+                            );
+                          })
+                      : Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Container(
+                              width: 250,
+                              child: Text(
+                                'Seems that you have no events today',
+                                style: kSubHeadingTextStyle,
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          ),
-                        );
-                      })
-                  : Column(
-                      children: [
-                        SizedBox(
-                          height: 40,
+                          ],
                         ),
-                        Container(
-                          width: 250,
-                          child: Text(
-                            'Seems that you have no events today',
-                            style: kSubHeadingTextStyle,
-                            textAlign: TextAlign.center,
-                          ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(10.0),
+                        gradient: LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            stops: [0.4, 0.9],
+                            colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.blueGrey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: Offset(0, 2))
+                        ],
+                        backgroundBlendMode: BlendMode.modulate),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: groupCards,
                         ),
-                      ],
-                    ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(10.0),
-                    gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        stops: [0.4, 0.9],
-                        colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.blueGrey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 2))
-                    ],
-                    backgroundBlendMode: BlendMode.modulate),
-                child: Center(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: groupCards,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 
   ///
@@ -492,7 +494,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return DateTime.now().day == uiEvent.endTime.day &&
             ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
-                    DateTime.now().difference(uiEvent.startTime).inDays / 30.436875 <
+                    DateTime.now().difference(uiEvent.startTime).inDays /
+                            30.436875 <
                         uiEvent.realEvent.event.endEventAfterOccurrence) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
                     DateTime.now()

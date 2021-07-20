@@ -8,27 +8,45 @@ import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/location_modal/location_modal.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter/material.dart';
-import 'package:latlng/latlng.dart';
 import 'package:at_event/screens/selected_location.dart';
 import 'event_create_screen.dart';
+import 'package:latlong2/latlong.dart';
 
 class SelectLocation extends StatefulWidget {
-
   SelectLocation({@required this.createScreen});
 
   final EventCreateScreen createScreen;
 
-
   @override
   _SelectLocationState createState() => _SelectLocationState();
-
-
 }
 
 class _SelectLocationState extends State<SelectLocation> {
   String inputText = '';
   bool isLoader = false;
+  LatLng currentLocation;
+  bool nearMe;
   @override
+  void initState() {
+    calculateLocation();
+    super.initState();
+  }
+
+  /// nearMe == null => loading
+  /// nearMe == false => dont search nearme
+  /// nearMe == true => search nearme
+  /// nearMe == false && currentLocation == null =>dont search nearme
+  // ignore: always_declare_return_types
+  calculateLocation() async {
+    currentLocation = await getMyLocation();
+    if (currentLocation != null) {
+      nearMe = true;
+    } else {
+      nearMe = false;
+    }
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
     return Container(
       height: SizeConfig().screenHeight * 0.8,
@@ -47,7 +65,14 @@ class _SelectLocationState extends State<SelectLocation> {
                       isLoader = true;
                     });
                     // ignore: await_only_futures
-                    await SearchLocationService().getAddressLatLng(str);
+                    if (nearMe == null) {
+                      // ignore: await_only_futures
+                      SearchLocationService().getAddressLatLng(str, null);
+                    } else {
+                      // ignore: await_only_futures
+                      SearchLocationService()
+                          .getAddressLatLng(str, currentLocation);
+                    }
                     setState(() {
                       isLoader = false;
                     });
@@ -61,7 +86,14 @@ class _SelectLocationState extends State<SelectLocation> {
                       isLoader = true;
                     });
                     // ignore: await_only_futures
-                    await SearchLocationService().getAddressLatLng(inputText);
+                    if (nearMe == null) {
+                      // ignore: await_only_futures
+                      SearchLocationService().getAddressLatLng(inputText, null);
+                    } else {
+                      // ignore: await_only_futures
+                      SearchLocationService()
+                          .getAddressLatLng(inputText, currentLocation);
+                    }
                     setState(() {
                       isLoader = false;
                     });
@@ -160,17 +192,16 @@ class _SelectLocationState extends State<SelectLocation> {
       ),
     );
   }
+
   void onLocationSelect(BuildContext context, LatLng point,
       {String displayName}) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => SelectedLocation(
-              createScreen: widget.createScreen,
-              displayName: displayName ?? 'Your location',
-              point: point,
-            )));
+                  createScreen: widget.createScreen,
+                  displayName: displayName ?? 'Your location',
+                  point: point,
+                )));
   }
 }
-
-

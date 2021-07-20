@@ -7,7 +7,7 @@ import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:latlng/latlng.dart';
+import 'package:latlong2/latlong.dart';
 import 'event_create_screen.dart';
 
 // ignore: must_be_immutable
@@ -23,6 +23,7 @@ class SelectedLocation extends StatefulWidget {
 }
 
 class _SelectedLocationState extends State<SelectedLocation> {
+  var mapController = MapController();
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -30,7 +31,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
       child: Scaffold(
         body: Stack(
           children: <Widget>[
-            ShowLocation(UniqueKey(),
+            showLocation(UniqueKey(), mapController,
                 location:
                     LatLng(widget.point.latitude, widget.point.longitude)),
             Positioned(
