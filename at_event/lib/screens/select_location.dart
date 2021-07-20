@@ -65,13 +65,13 @@ class _SelectLocationState extends State<SelectLocation> {
                       isLoader = true;
                     });
                     // ignore: await_only_futures
-                    if (nearMe == null) {
+                    if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
                       SearchLocationService().getAddressLatLng(str, null);
                     } else {
                       // ignore: await_only_futures
                       SearchLocationService()
-                          .getAddressLatLng(str, currentLocation);
+                          .getAddressLatLng(str, currentLocation!);
                     }
                     setState(() {
                       isLoader = false;
@@ -86,13 +86,13 @@ class _SelectLocationState extends State<SelectLocation> {
                       isLoader = true;
                     });
                     // ignore: await_only_futures
-                    if (nearMe == null) {
+                    if ((nearMe == null) || (!nearMe!)) {
                       // ignore: await_only_futures
                       SearchLocationService().getAddressLatLng(inputText, null);
                     } else {
                       // ignore: await_only_futures
                       SearchLocationService()
-                          .getAddressLatLng(inputText, currentLocation);
+                          .getAddressLatLng(inputText, currentLocation!);
                     }
                     setState(() {
                       isLoader = false;
@@ -109,7 +109,56 @@ class _SelectLocationState extends State<SelectLocation> {
                       ))),
             ],
           ),
-          SizedBox(height: 20.toHeight),
+          SizedBox(height: 5.toHeight),
+          Row(
+            children: <Widget>[
+              Checkbox(
+                value: nearMe,
+                tristate: true,
+                onChanged: (value) async {
+                  if (nearMe == null) return;
+
+                  if (!nearMe!) {
+                    currentLocation = await getMyLocation();
+                  }
+
+                  if (currentLocation == null) {
+                    CustomToast().show('Unable to access location', context);
+                    setState(() {
+                      nearMe = false;
+                    });
+                    return;
+                  }
+
+                  setState(() {
+                    nearMe = !nearMe!;
+                  });
+                },
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Near me', style: kNormalTextStyle),
+                    ((nearMe == null) ||
+                            ((nearMe == false) && (currentLocation == null)))
+                        ? Flexible(
+                            child: Text('(Cannot access location permission)',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: kNormalTextStyle.copyWith(
+                                    color: Colors.red, fontSize: 12.0)),
+                          )
+                        : SizedBox()
+                  ],
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 5.toHeight,
+          ),
           Divider(),
           SizedBox(height: 18.toHeight),
           InkWell(
@@ -119,7 +168,7 @@ class _SelectLocationState extends State<SelectLocation> {
                   CustomToast().show('Unable to access location', context);
                   return;
                 }
-                onLocationSelect(context, point);
+                onLocationSelect(context, currentLocation);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +242,7 @@ class _SelectLocationState extends State<SelectLocation> {
     );
   }
 
-  void onLocationSelect(BuildContext context, LatLng point,
+  void onLocationSelect(BuildContext context, LatLng? point,
       {String? displayName}) {
     Navigator.push(
         context,
