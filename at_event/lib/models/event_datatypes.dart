@@ -4,6 +4,7 @@ import 'ui_event.dart';
 import 'group_model.dart';
 
 class EventNotificationModel {
+  EventNotificationModel();
   late String atSignCreator;
   bool? isCancelled;
   late String title;
