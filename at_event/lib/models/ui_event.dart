@@ -86,8 +86,8 @@ class UI_Event {
   late RecurrenceProperties recurrenceProperties;
   bool isRecurring;
   String eventName;
-  DateTime startTime;
-  DateTime endTime;
+  DateTime? startTime;
+  DateTime? endTime;
   String description;
   List<String> peopleGoing;
   List<String> invitees;

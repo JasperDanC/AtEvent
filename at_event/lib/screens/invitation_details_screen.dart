@@ -39,49 +39,49 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
     if (widget.isEvent) {
       if (!widget.eventInvite!.event.isRecurring) {
         timeText = "From: " +
-            DateFormat('MMMM').format(widget.eventInvite!.event.startTime) +
+            DateFormat('MMMM').format(widget.eventInvite!.event.startTime!) +
             " " +
-            widget.eventInvite!.event.startTime.day.toString() +
+            widget.eventInvite!.event.startTime!.day.toString() +
             " " +
-            widget.eventInvite!.event.startTime.hour.toString() +
+            widget.eventInvite!.event.startTime!.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.eventInvite!.event.startTime) +
+            DateFormat('mm').format(widget.eventInvite!.event.startTime!) +
             "\n" +
             "To: " +
-            DateFormat('MMMM').format(widget.eventInvite!.event.endTime) +
+            DateFormat('MMMM').format(widget.eventInvite!.event.endTime!) +
             " " +
-            widget.eventInvite!.event.endTime.day.toString() +
+            widget.eventInvite!.event.endTime!.day.toString() +
             " " +
-            widget.eventInvite!.event.endTime.hour.toString() +
+            widget.eventInvite!.event.endTime!.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.eventInvite!.event.endTime);
+            DateFormat('mm').format(widget.eventInvite!.event.endTime!);
       } else {
         if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.WEEK) {
           timeText =
               getWeekString(widget.eventInvite!.event.realEvent.event.occursOn)! +
                   "s\nFrom: " +
-                  widget.eventInvite!.event.startTime.hour.toString() +
+                  widget.eventInvite!.event.startTime!.hour.toString() +
                   ":" +
-                  DateFormat('mm').format(widget.eventInvite!.event.startTime) +
+                  DateFormat('mm').format(widget.eventInvite!.event.startTime!) +
                   "\n" +
                   "To: " +
-                  widget.eventInvite!.event.endTime.hour.toString() +
+                  widget.eventInvite!.event.endTime!.hour.toString() +
                   ":" +
-                  DateFormat('mm').format(widget.eventInvite!.event.endTime);
+                  DateFormat('mm').format(widget.eventInvite!.event.endTime!);
         } else if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.MONTH) {
-          timeText = widget.eventInvite!.event.startTime.day.toString() +
+          timeText = widget.eventInvite!.event.startTime!.day.toString() +
               " of each Month" +
               "\nFrom: " +
-              widget.eventInvite!.event.startTime.hour.toString() +
+              widget.eventInvite!.event.startTime!.hour.toString() +
               ":" +
-              DateFormat('mm').format(widget.eventInvite!.event.startTime) +
+              DateFormat('mm').format(widget.eventInvite!.event.startTime!) +
               "\n" +
               "To: " +
-              widget.eventInvite!.event.endTime.hour.toString() +
+              widget.eventInvite!.event.endTime!.hour.toString() +
               ":" +
-              DateFormat('mm').format(widget.eventInvite!.event.endTime);
+              DateFormat('mm').format(widget.eventInvite!.event.endTime!);
         }
       }
     }

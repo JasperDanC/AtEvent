@@ -35,28 +35,19 @@ class VentoService {
   }
 
   _sync() async {
-    await _getAtClientForAtsign()!.getSyncManager()!.sync();
+    await _getAtClientForAtsign().getSyncManager()!.sync();
   }
 
-  AtClientImpl? _getAtClientForAtsign({String? atsign}) {
-    atsign ??= _atsign;
-    if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign]!.atClient;
-    }
-    return null;
-  }
+  AtClientImpl _getAtClientForAtsign({String? atsign}) => atClientInstance ??=
+  _getAtClientServiceForAtSign(atsign: atsign).atClient!;
 
   void updateContext(BuildContext context) {
     _currentKnownContext = context;
   }
 
-  AtClientService? _getClientServiceForAtSign(String? atsign) {
-    if (atsign == null) {}
-    if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign];
-    }
-    return AtClientService();
-  }
+  AtClientService _getAtClientServiceForAtSign({String? atsign}) =>
+      atClientServiceInstance ??=
+          atClientServiceMap[atsign] ?? AtClientService();
 
   Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
     final appDocumentDirectory =
@@ -82,7 +73,7 @@ class VentoService {
 
   Future<bool> onboard({String? atsign}) async {
     // atClientServiceInstance = AtClientService();
-    atClientServiceInstance = _getClientServiceForAtSign(atsign);
+    atClientServiceInstance = _getAtClientServiceForAtSign(atsign: atsign);
     // atClientServiceInstance = _getClientServiceForAtSign(atClientServiceInstance.);
 
     var atClientPreference = await getAtClientPreference();
@@ -128,9 +119,9 @@ class VentoService {
   }
 
   Future<bool> startMonitor(currentAtSign) async {
-    var privateKey = await (getPrivateKey(currentAtSign) as Future<String?>);
+    var privateKey = await getPrivateKey(currentAtSign);
 
-    await _getAtClientForAtsign()!.startMonitor(privateKey!, _callback);
+    await _getAtClientForAtsign().startMonitor(privateKey!, _callback);
     print('Monitor started');
     return true;
   }
@@ -205,8 +196,8 @@ class VentoService {
       ..sharedBy = notifKey.sharedWith;
 
     //get the original event
-    String value = await (lookup(atKeyOfObject) as Future<String>);
-    Map<String, dynamic>? jsonValue = json.decode(value);
+    String? value = await lookup(atKeyOfObject);
+    Map<String, dynamic>? jsonValue = json.decode(value!);
 
     conf.KeyType? type = getKeyType(atKeyOfObject);
 
@@ -255,8 +246,8 @@ class VentoService {
             ..sharedWith = notifKey.sharedWith;
 
           //get the event
-          String value = await (lookup(eventKey) as Future<String>);
-          Map<String, dynamic> jsonValue = json.decode(value);
+          String? value = await lookup(eventKey) ;
+          Map<String, dynamic> jsonValue = json.decode(value!);
           EventNotificationModel eventModel =
               EventNotificationModel.fromJson(jsonValue);
 
@@ -328,7 +319,7 @@ class VentoService {
 
   ///Fetches privatekey for [atsign] from device keychain.
   Future<String?> getPrivateKey(String atsign) async {
-    return await _getAtClientForAtsign()!.getPrivateKey(atsign);
+    return await _getAtClientForAtsign().getPrivateKey(atsign);
   }
 
   ///scans all keys and puts there data in the appropriate places in the data
@@ -586,12 +577,12 @@ class VentoService {
         ..sharedBy = activeAtSign
         ..sharedWith = activeAtSign;
 
-      GroupModel group = await (lookupGroup(groupKey) as Future<GroupModel>);
+      GroupModel? group = await lookupGroup(groupKey);
 
       //make a list of group members other than the active user to share updated
       //group and event with the right people
       List<String> groupMembersExcludingMe = [];
-      for (String member in group.atSignMembers) {
+      for (String member in group!.atSignMembers) {
         if (!VentoService.getInstance().compareAtSigns(member, activeAtSign)) {
           groupMembersExcludingMe.add(member);
         }
@@ -676,7 +667,7 @@ class VentoService {
   }
 
   Future<String?> get(AtKey atKey) async {
-    var result = await  _getAtClientForAtsign()!.get(atKey);
+    var result = await  _getAtClientForAtsign().get(atKey);
     return result.value;
   }
 
@@ -707,23 +698,23 @@ class VentoService {
     }
     var result;
     try {
-      result = await _getAtClientForAtsign()!.put(atKey, value);
+      result = await _getAtClientForAtsign().put(atKey, value);
     } catch (Exception) {
-      result = await _getAtClientForAtsign()!.put(atKey, value);
+      result = await _getAtClientForAtsign().put(atKey, value);
     }
     return result;
   }
 
   Future<bool> delete(AtKey atKey) async {
-    return await _getAtClientForAtsign()!.delete(atKey);
+    return await _getAtClientForAtsign().delete(atKey);
   }
 
   Future<List<AtKey>> getAtKeys({String? sharedBy, String? regex}) async {
     if (regex == null) {
-      return await _getAtClientForAtsign()!
+      return await _getAtClientForAtsign()
           .getAtKeys(regex: conf.MixedConstants.NAMESPACE, sharedBy: sharedBy);
     } else {
-      return await _getAtClientForAtsign()!
+      return await _getAtClientForAtsign()
           .getAtKeys(regex: regex, sharedBy: sharedBy);
     }
   }
@@ -744,6 +735,6 @@ class VentoService {
 
   Future<bool> notify(
       AtKey atKey, String value, OperationEnum operation) async {
-    return await _getAtClientForAtsign()!.notify(atKey, value, operation);
+    return await _getAtClientForAtsign().notify(atKey, value, operation);
   }
 }

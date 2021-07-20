@@ -298,17 +298,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               i++) {
                             if (Provider.of<UIData>(context)
                                         .getEvent(i)
-                                        .startTime
+                                        .startTime!
                                         .day ==
                                     day.day &&
                                 Provider.of<UIData>(context)
                                         .getEvent(i)
-                                        .startTime
+                                        .startTime!
                                         .month ==
                                     day.month &&
                                 Provider.of<UIData>(context)
                                         .getEvent(i)
-                                        .startTime
+                                        .startTime!
                                         .year ==
                                     day.year) {
                               allEvents.add(
@@ -345,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               imgAssetPath:
                                   'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
                               date: DateFormat('hh:mm a')
-                                  .format(events[index].startTime),
+                                  .format(events[index].startTime!),
                               event: events[index],
                               onPressed: () => Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool isToday(UI_Event uiEvent) {
     if (!uiEvent.isRecurring) {
-      return calculateDifference(uiEvent.startTime) == 0;
+      return calculateDifference(uiEvent.startTime!) == 0;
     } else {
       if (uiEvent.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
         int? currentWeekday;
@@ -464,21 +464,21 @@ class _HomeScreenState extends State<HomeScreen> {
           case null:
             break;
         }
-        return DateTime.now().isAfter(uiEvent.startTime) &&
+        return DateTime.now().isAfter(uiEvent.startTime!) &&
             DateTime.now().weekday == currentWeekday &&
             ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
-                    (DateTime.now().difference(uiEvent.startTime).inDays / 7) *
+                    (DateTime.now().difference(uiEvent.startTime!).inDays / 7) *
                             uiEvent.realEvent.event.repeatDuration! <
                         uiEvent.realEvent.event.endEventAfterOccurrence!) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
                     DateTime.now()
                         .isBefore(uiEvent.realEvent.event.endEventOnDate!)));
       } else {
-        return DateTime.now().day == uiEvent.endTime.day &&
+        return DateTime.now().day == uiEvent.endTime!.day &&
             ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
-                    DateTime.now().difference(uiEvent.startTime).inDays /
+                    DateTime.now().difference(uiEvent.startTime!).inDays /
                             30.436875 <
                         uiEvent.realEvent.event.endEventAfterOccurrence!) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.ON &&

@@ -29,47 +29,47 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     clientSdkService = VentoService.getInstance();
     if (!widget.event!.isRecurring) {
       timeText = "From: " +
-          DateFormat('MMMM').format(widget.event!.startTime) +
+          DateFormat('MMMM').format(widget.event!.startTime!) +
           " " +
-          widget.event!.startTime.day.toString() +
+          widget.event!.startTime!.day.toString() +
           " " +
-          widget.event!.startTime.hour.toString() +
+          widget.event!.startTime!.hour.toString() +
           ":" +
-          DateFormat('mm').format(widget.event!.startTime) +
+          DateFormat('mm').format(widget.event!.startTime!) +
           "\n" +
           "To: " +
-          DateFormat('MMMM').format(widget.event!.endTime) +
+          DateFormat('MMMM').format(widget.event!.endTime!) +
           " " +
-          widget.event!.endTime.day.toString() +
+          widget.event!.endTime!.day.toString() +
           " " +
-          widget.event!.endTime.hour.toString() +
+          widget.event!.endTime!.hour.toString() +
           ":" +
-          DateFormat('mm').format(widget.event!.endTime);
+          DateFormat('mm').format(widget.event!.endTime!);
     } else {
       if (widget.event!.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
         timeText = getWeekString(widget.event!.realEvent.event.occursOn)! +
             "s\nFrom: " +
-            widget.event!.startTime.hour.toString() +
+            widget.event!.startTime!.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event!.startTime) +
+            DateFormat('mm').format(widget.event!.startTime!) +
             "\n" +
             "To: " +
-            widget.event!.endTime.hour.toString() +
+            widget.event!.endTime!.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event!.endTime);
+            DateFormat('mm').format(widget.event!.endTime!);
       } else if (widget.event!.realEvent.event.repeatCycle ==
           RepeatCycle.MONTH) {
-        timeText = widget.event!.startTime.day.toString() +
+        timeText = widget.event!.startTime!.day.toString() +
             " of each Month" +
             "\nFrom: " +
-            widget.event!.startTime.hour.toString() +
+            widget.event!.startTime!.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event!.startTime) +
+            DateFormat('mm').format(widget.event!.startTime!) +
             "\n" +
             "To: " +
-            widget.event!.endTime.hour.toString() +
+            widget.event!.endTime!.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event!.endTime);
+            DateFormat('mm').format(widget.event!.endTime!);
       }
     }
     getAtSign();

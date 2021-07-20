@@ -106,11 +106,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                             if (!eventInvites[index].event.isRecurring) {
                               timeText = DateFormat('yyyy MMMM dd  hh:mm a')
                                       .format(
-                                          eventInvites[index].event.startTime)
+                                          eventInvites[index].event.startTime!)
                                       .toString() +
                                   " - " +
                                   DateFormat('hh:mm a')
-                                      .format(eventInvites[index].event.endTime)
+                                      .format(eventInvites[index].event.endTime!)
                                       .toString();
                             } else {
                               EventInvite eventInvite = eventInvites[index];
@@ -122,30 +122,30 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                     "s\nFrom: " +
                                     DateFormat('hh:mm a')
                                         .format(
-                                            eventInvites[index].event.startTime)
+                                            eventInvites[index].event.startTime!)
                                         .toString() +
                                     "\n" +
                                     "To: " +
                                     DateFormat('hh:mm a')
                                         .format(
-                                            eventInvites[index].event.endTime)
+                                            eventInvites[index].event.endTime!)
                                         .toString();
                               } else if (eventInvite
                                       .event.realEvent.event.repeatCycle ==
                                   RepeatCycle.MONTH) {
-                                timeText = eventInvite.event.startTime.day
+                                timeText = eventInvite.event.startTime!.day
                                         .toString() +
                                     " each month" +
                                     "\nFrom: " +
                                     DateFormat('hh:mm a')
                                         .format(
-                                            eventInvites[index].event.startTime)
+                                            eventInvites[index].event.startTime!)
                                         .toString() +
                                     " " +
                                     "To: " +
                                     DateFormat('hh:mm a')
                                         .format(
-                                            eventInvites[index].event.endTime)
+                                            eventInvites[index].event.endTime!)
                                         .toString();
                               }
                             }
