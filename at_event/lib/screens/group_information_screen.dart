@@ -111,7 +111,7 @@ class _GroupInformationState extends State<GroupInformation> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      widget.group!.title,
+                      widget.group!.title!,
                       style: kTitleTextStyle.copyWith(fontSize: 35.0),
                     ),
                     SizedBox(
@@ -177,7 +177,7 @@ class _GroupInformationState extends State<GroupInformation> {
                 Padding(
                   padding: EdgeInsets.all(40.0),
                   child: Text(
-                    widget.group!.description,
+                    widget.group!.description!,
                     style: kNormalTextStyle.copyWith(
                         fontSize: 18.0, color: Colors.white),
                   ),

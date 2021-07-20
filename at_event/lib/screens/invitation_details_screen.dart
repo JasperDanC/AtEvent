@@ -137,7 +137,7 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                     Text(
                       widget.isEvent
                           ? widget.eventInvite!.event.eventName
-                          : widget.groupInvite!.group.title,
+                          : widget.groupInvite!.group.title!,
                       style: TextStyle(
                           fontSize: 28.0,
                           fontWeight: FontWeight.bold,
@@ -185,7 +185,7 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                         child: Text(
                           widget.isEvent
                               ? widget.eventInvite!.event.description
-                              : widget.groupInvite!.group.description,
+                              : widget.groupInvite!.group.description!,
                           overflow: TextOverflow.visible,
                           style: kEventDetailsTextStyle,
                         ),

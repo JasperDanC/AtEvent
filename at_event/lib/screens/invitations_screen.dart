@@ -293,7 +293,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              groupInvites[index].group.title,
+                                              groupInvites[index].group.title!,
                                               style: kEventDetailsTextStyle
                                                   .copyWith(
                                                       fontSize: 22,

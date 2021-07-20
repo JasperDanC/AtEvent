@@ -56,18 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
   List<Widget> groupCards = [];
-  List<GroupModel> groups = [
-    GroupModel()
-      ..title = 'Group Title'
-      ..description = 'This is a hard coded test for our group model',
-    GroupModel()
-      ..title = 'CMPT 222'
-      ..description =
-          'Welcome to Computer Science 222 where we learn about computers and stuff.',
-    GroupModel()
-      ..title = 'Study Buddies'
-      ..description = 'For those who do not want to repeat any classes'
-  ];
+
 
   @override
   void initState() {

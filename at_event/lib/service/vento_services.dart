@@ -444,7 +444,7 @@ class VentoService {
               .isDeletedGroupInvite(newInvite);
 
       if (!isDeletedInvite) {
-        print("adding invite " + newInvite.group.title);
+        print("adding invite " + newInvite.group.title!);
         Provider.of<UIData>(_currentKnownContext, listen: false)
             .addGroupInvite(newInvite);
       }
