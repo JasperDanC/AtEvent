@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 /// taken after closing the bottom sheet
 
 void bottomSheet(BuildContext context, T, double height,
-    {Function onSheetClosed}) {
+    {Function? onSheetClosed}) {
   var future = showModalBottomSheet(
       context: context,
       isScrollControlled: true,

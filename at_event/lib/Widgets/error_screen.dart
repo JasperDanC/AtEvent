@@ -6,7 +6,7 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 /// [required] onPressed function..
 
 class ErrorScreen extends StatelessWidget {
-  final Function onPressed;
+  final Function? onPressed;
   ErrorScreen({this.onPressed});
 
   @override
@@ -30,7 +30,7 @@ class ErrorScreen extends StatelessWidget {
                   : Colors.white,
               onPressed: () async {
                 if (onPressed != null) {
-                  onPressed();
+                  onPressed!();
                 }
               }),
         ],

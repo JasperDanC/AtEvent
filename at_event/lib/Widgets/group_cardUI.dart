@@ -7,7 +7,7 @@ import 'package:at_event/screens/group_details.dart';
 
 class GroupCard extends StatefulWidget {
   final GroupModel group;
-  GroupCard({this.group});
+  GroupCard({required this.group});
   @override
   _GroupCardState createState() => _GroupCardState();
 }

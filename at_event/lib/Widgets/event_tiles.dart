@@ -12,15 +12,15 @@ class TodayEventTile extends StatefulWidget {
   final String date;
   final String address;
   String imgAssetPath;
-  final Function onPressed;
+  final Function? onPressed;
   final UI_Event event;
   TodayEventTile({
-    @required this.address,
-    @required this.date,
-    @required this.imgAssetPath,
-    @required this.desc,
+    required this.address,
+    required this.date,
+    required this.imgAssetPath,
+    required this.desc,
     this.onPressed,
-    this.event,
+    required this.event,
   });
 
   @override
@@ -32,7 +32,7 @@ class _TodayEventTileState extends State<TodayEventTile> {
   Widget build(BuildContext context) {
     setCategoryAsset(widget.event.realEvent);
     return GestureDetector(
-      onTap: widget.onPressed,
+      onTap: widget.onPressed as void Function()?,
       child: Container(
         height: 100,
         margin: EdgeInsets.only(bottom: 16),

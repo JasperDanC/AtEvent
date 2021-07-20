@@ -1,4 +1,4 @@
-import 'package:at_event/Widgets/custom_toast.dart';
+import '../Widgets/custom_toast.dart';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +11,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 
 class GroupInformation extends StatefulWidget {
-  final GroupModel group;
+  final GroupModel? group;
 
   const GroupInformation({this.group});
 
@@ -22,8 +22,8 @@ class GroupInformation extends StatefulWidget {
 class _GroupInformationState extends State<GroupInformation> {
   final _picker = ImagePicker();
   String activeAtSign = '';
-  File _image;
-  bool isCreator;
+  File? _image;
+  late bool isCreator;
 
   @override
   void initState() {
@@ -35,18 +35,18 @@ class _GroupInformationState extends State<GroupInformation> {
   @override
   Widget build(BuildContext context) {
     isCreator = VentoService.getInstance()
-        .compareAtSigns(activeAtSign, widget.group.atSignCreator);
+        .compareAtSigns(activeAtSign, widget.group!.atSignCreator);
     SizeConfig().init(context);
     InviteBox inviteBox = InviteBox(
       addToList: false,
-      invitees: widget.group.atSignMembers,
+      invitees: widget.group!.atSignMembers,
       isCreator: isCreator,
       width: 300,
       height: 300,
     );
     inviteBox.onAdd = () async {
       CustomToast().show('Invite Sent!', context);
-      widget.group.invitees.add(inviteBox.controller.value.text);
+      widget.group!.invitees.add(inviteBox.controller.value.text);
       await _updateAndInvite();
     };
     return Scaffold(
@@ -60,9 +60,9 @@ class _GroupInformationState extends State<GroupInformation> {
                 height: SizeConfig().screenHeight * 0.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: _image == null
+                      image: (_image == null
                           ? AssetImage('assets/images/group_landscape.jpg')
-                          : FileImage(_image),
+                          : FileImage(_image!)) as ImageProvider<Object>,
                       fit: BoxFit.cover),
                 ),
               ),
@@ -111,7 +111,7 @@ class _GroupInformationState extends State<GroupInformation> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      widget.group.title,
+                      widget.group!.title,
                       style: kTitleTextStyle.copyWith(fontSize: 35.0),
                     ),
                     SizedBox(
@@ -126,8 +126,8 @@ class _GroupInformationState extends State<GroupInformation> {
                             child: LinearProgressIndicator(
                               backgroundColor:
                                   Color.fromRGBO(209, 224, 224, 0.2),
-                              value: widget.group.atSignMembers.length /
-                                  widget.group.capacity,
+                              value: widget.group!.atSignMembers.length /
+                                  widget.group!.capacity!,
                               valueColor: AlwaysStoppedAnimation(Colors.green),
                             ),
                           ),
@@ -154,7 +154,7 @@ class _GroupInformationState extends State<GroupInformation> {
                             child: Center(
                               child: Text(
                                   'Total:\n  ' +
-                                      widget.group.atSignMembers.length
+                                      widget.group!.atSignMembers.length
                                           .toString(),
                                   style: kSubHeadingTextStyle.copyWith(
                                       fontSize: 20.0)),
@@ -177,7 +177,7 @@ class _GroupInformationState extends State<GroupInformation> {
                 Padding(
                   padding: EdgeInsets.all(40.0),
                   child: Text(
-                    widget.group.description,
+                    widget.group!.description,
                     style: kNormalTextStyle.copyWith(
                         fontSize: 18.0, color: Colors.white),
                   ),
@@ -220,9 +220,9 @@ class _GroupInformationState extends State<GroupInformation> {
 
   //simple atSign getter
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 
@@ -231,7 +231,7 @@ class _GroupInformationState extends State<GroupInformation> {
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();
-    atKey.key = widget.group.key;
+    atKey.key = widget.group!.key;
     atKey.namespace = MixedConstants.NAMESPACE;
     atKey.sharedWith = activeAtSign;
     atKey.sharedBy = activeAtSign;
@@ -239,30 +239,30 @@ class _GroupInformationState extends State<GroupInformation> {
     metadata.ccd = true;
     atKey.metadata = metadata;
 
-    String storedValue = GroupModel.convertGroupToJson(widget.group);
+    String storedValue = GroupModel.convertGroupToJson(widget.group!);
 
     await VentoService.getInstance().put(atKey, storedValue);
     await VentoService.getInstance().shareWithMany(
-        atKey.key, storedValue, activeAtSign, widget.group.invitees);
+        atKey.key, storedValue, activeAtSign, widget.group!.invitees);
   }
 
   _imgFromCamera() async {
-    PickedFile image =
+    PickedFile? image =
         await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-      _image = File(image.path);
-      print('Image path: ' + _image.path);
+      _image = File(image!.path);
+      print('Image path: ' + _image!.path);
     });
   }
 
   _imgFromGallery() async {
-    PickedFile image =
+    PickedFile? image =
         await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _image = File(image.path);
-      print('Image path: ' + _image.path);
+      _image = File(image!.path);
+      print('Image path: ' + _image!.path);
     });
   }
 

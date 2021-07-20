@@ -40,7 +40,7 @@ void main() {
 
 class EventEditScreen extends StatefulWidget {
   EventEditScreen({this.event});
-  final UI_Event event;
+  final UI_Event? event;
 
   @override
   _EventEditScreenState createState() => _EventEditScreenState();
@@ -49,21 +49,21 @@ class EventEditScreen extends StatefulWidget {
 class _EventEditScreenState extends State<EventEditScreen> {
   List<String> invites = [];
 
-  int _dropDownValue;
-  VentoService clientSdkService;
-  String _eventTitle;
-  String _eventDesc;
-  String _eventLocation;
-  String _eventDay;
-  String _eventStartTime;
-  String _eventEndTime;
-  EventCategory _eventCategory;
+  int? _dropDownValue;
+  late VentoService clientSdkService;
+  String? _eventTitle;
+  String? _eventDesc;
+  String? _eventLocation;
+  String? _eventDay;
+  String? _eventStartTime;
+  String? _eventEndTime;
+  EventCategory? _eventCategory;
   String activeAtSign = '';
 
   @override
   void initState() {
     getAtSign();
-    switch (widget.event.category) {
+    switch (widget.event!.category) {
       case EventCategory.Class:
         _dropDownValue = 2;
         break;
@@ -105,7 +105,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "Editing event: " + widget.event.eventName,
+                  "Editing event: " + widget.event!.eventName,
                   style: TextStyle(
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,
@@ -117,11 +117,11 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   onChanged: (value) {
                     _eventTitle = value;
                     setState(() {
-                      widget.event.eventName = value;
+                      widget.event!.eventName = value;
                     });
                   },
                   decoration: InputDecoration(
-                    hintText: widget.event.eventName,
+                    hintText: widget.event!.eventName,
                     hintStyle: kEventDetailsTextStyle.copyWith(
                         color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
@@ -137,14 +137,14 @@ class _EventEditScreenState extends State<EventEditScreen> {
                     onChanged: (value) {
                       _eventDesc = value;
                       setState(() {
-                        widget.event.description = value;
+                        widget.event!.description = value;
                       });
                     },
                     maxLines: 4,
                     cursorColor: Colors.white,
                     style: kEventDetailsTextStyle,
                     decoration: InputDecoration(
-                      hintText: widget.event.description,
+                      hintText: widget.event!.description,
                       hintStyle: kEventDetailsTextStyle.copyWith(
                           color: Colors.grey[400]),
                       enabledBorder: UnderlineInputBorder(
@@ -160,11 +160,11 @@ class _EventEditScreenState extends State<EventEditScreen> {
                   onChanged: (value) {
                     _eventLocation = value;
                     setState(() {
-                      widget.event.location = value;
+                      widget.event!.location = value;
                     });
                   },
                   decoration: InputDecoration(
-                    hintText: widget.event.location,
+                    hintText: widget.event!.location,
                     hintStyle: kEventDetailsTextStyle.copyWith(
                         color: Colors.grey[400]),
                     enabledBorder: UnderlineInputBorder(
@@ -185,7 +185,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                       child: DropdownButtonFormField(
                         style: kEventDetailsTextStyle,
                         dropdownColor: kBackgroundGrey,
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           _dropDownValue = value;
                         },
                         value: _dropDownValue,
@@ -258,7 +258,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.date,
-                          initialDate: widget.event.endTime,
+                          initialDate: widget.event!.endTime,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -282,7 +282,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-                          initialDate: widget.event.endTime,
+                          initialDate: widget.event!.endTime,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -308,7 +308,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
                                 borderSide: BorderSide(color: Colors.white)),
                           ),
                           type: DateTimePickerType.time,
-                          initialDate: widget.event.startTime,
+                          initialDate: widget.event!.startTime,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
                         ),
@@ -356,19 +356,19 @@ class _EventEditScreenState extends State<EventEditScreen> {
       default:
         _eventCategory = EventCategory.None;
     }
-    EventNotificationModel oldEventModel = widget.event.realEvent;
+    EventNotificationModel oldEventModel = widget.event!.realEvent;
     Event newEvent;
     if (_eventDay == null || _eventStartTime == null || _eventEndTime == null) {
       newEvent = oldEventModel.event;
     } else {
       newEvent = Event()
-        ..date = DateTime.parse(_eventDay)
-        ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
-        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime);
+        ..date = DateTime.parse(_eventDay!)
+        ..startTime = DateTime.parse(_eventDay! + " " + _eventStartTime!)
+        ..endTime = DateTime.parse(_eventDay! + " " + _eventEndTime!);
     }
 
     Setting location = Setting()
-      ..label = _eventLocation != null ? _eventLocation : widget.event.location;
+      ..label = _eventLocation != null ? _eventLocation : widget.event!.location;
 
     EventNotificationModel newEventNotification = EventNotificationModel()
       ..event = newEvent
@@ -376,8 +376,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
       ..category = _eventCategory
       ..peopleGoing = oldEventModel.peopleGoing
       ..groupKey = ''
-      ..title = _eventTitle != null ? _eventTitle : widget.event.eventName
-      ..description = _eventDesc != null ? _eventDesc : widget.event.description
+      ..title = _eventTitle != null ? _eventTitle! : widget.event!.eventName
+      ..description = _eventDesc != null ? _eventDesc : widget.event!.description
       ..setting = location
       ..key = oldEventModel.key;
 
@@ -412,9 +412,9 @@ class _EventEditScreenState extends State<EventEditScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

@@ -41,9 +41,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   bool showSpinner = false;
-  String atSign;
+  String? atSign;
   // ClientSdkService clientSdkService = ClientSdkService.getInstance();
-  var atClientPreference;
+  late var atClientPreference;
   var _logger = AtSignLogger('Plugin example app');
   @override
   void initState() {

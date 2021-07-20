@@ -12,12 +12,12 @@ class EventDataSource extends CalendarDataSource {
 
   @override
   DateTime getStartTime(int index) {
-    return appointments[index].startTime;
+    return appointments![index].startTime;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return appointments[index].endTime;
+    return appointments![index].endTime;
   }
 
   @override
@@ -26,15 +26,15 @@ class EventDataSource extends CalendarDataSource {
   }
 
   @override
-  String getRecurrenceRule(int index) {
+  String? getRecurrenceRule(int index) {
 
-    return appointments[index].recurrenceRule;
+    return appointments![index].recurrenceRule;
   }
 
 
   @override
   String getSubject(int index) {
-    return appointments[index].eventName;
+    return appointments![index].eventName;
   }
 
   @override

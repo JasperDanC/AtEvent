@@ -4,11 +4,11 @@ class GroupModel {
   GroupModel();
   String title;
   String description;
-  String imageURL;
-  int capacity;
-  List<String> eventKeys;
+  String? imageURL;
+  int? capacity;
+  late List<String> eventKeys;
   List<String> atSignMembers;
-  List<String> invitees;
+  late List<String> invitees;
   String atSignCreator;
   String key;
 

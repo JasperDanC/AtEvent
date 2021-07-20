@@ -21,11 +21,11 @@ class VentoService {
     return _singleton;
   }
 
-  AtClientService atClientServiceInstance;
-  AtClientImpl atClientInstance;
-  Map<String, AtClientService> atClientServiceMap = {};
-  String _atsign;
-  BuildContext _currentKnownContext;
+  AtClientService? atClientServiceInstance;
+  AtClientImpl? atClientInstance;
+  Map<String?, AtClientService?> atClientServiceMap = {};
+  String? _atsign;
+  late BuildContext _currentKnownContext;
 
   _reset() {
     atClientServiceInstance = null;
@@ -35,13 +35,13 @@ class VentoService {
   }
 
   _sync() async {
-    await _getAtClientForAtsign().getSyncManager().sync();
+    await _getAtClientForAtsign()!.getSyncManager()!.sync();
   }
 
-  AtClientImpl _getAtClientForAtsign({String atsign}) {
+  AtClientImpl? _getAtClientForAtsign({String? atsign}) {
     atsign ??= _atsign;
     if (atClientServiceMap.containsKey(atsign)) {
-      return atClientServiceMap[atsign].atClient;
+      return atClientServiceMap[atsign]!.atClient;
     }
     return null;
   }
@@ -50,7 +50,7 @@ class VentoService {
     _currentKnownContext = context;
   }
 
-  AtClientService _getClientServiceForAtSign(String atsign) {
+  AtClientService? _getClientServiceForAtSign(String? atsign) {
     if (atsign == null) {}
     if (atClientServiceMap.containsKey(atsign)) {
       return atClientServiceMap[atsign];
@@ -58,7 +58,7 @@ class VentoService {
     return AtClientService();
   }
 
-  Future<AtClientPreference> getAtClientPreference({String cramSecret}) async {
+  Future<AtClientPreference> getAtClientPreference({String? cramSecret}) async {
     final appDocumentDirectory =
         await path_provider.getApplicationSupportDirectory();
     String path = appDocumentDirectory.path;
@@ -80,13 +80,13 @@ class VentoService {
     return status.serverStatus;
   }
 
-  Future<bool> onboard({String atsign}) async {
+  Future<bool> onboard({String? atsign}) async {
     // atClientServiceInstance = AtClientService();
     atClientServiceInstance = _getClientServiceForAtSign(atsign);
     // atClientServiceInstance = _getClientServiceForAtSign(atClientServiceInstance.);
 
     var atClientPreference = await getAtClientPreference();
-    var result = await atClientServiceInstance.onboard(
+    var result = await atClientServiceInstance!.onboard(
         atClientPreference: atClientPreference, atsign: atsign);
     _atsign = atsign == null ? await this.getAtSign() : atsign;
     atClientServiceMap.putIfAbsent(_atsign, () => atClientServiceInstance);
@@ -97,9 +97,9 @@ class VentoService {
   ///Returns `false` if fails in authenticating [atsign] with [cramSecret]/[privateKey].
   Future<bool> authenticate(
     String atsign, {
-    String privateKey,
-    String jsonData,
-    String decryptKey,
+    String? privateKey,
+    String? jsonData,
+    String? decryptKey,
   }) async {
     var atsignStatus = await _checkAtSignStatus(atsign);
     if (atsignStatus != ServerStatus.teapot &&
@@ -107,7 +107,7 @@ class VentoService {
       throw atsignStatus;
     }
     var atClientPreference = await getAtClientPreference();
-    var result = await atClientServiceInstance.authenticate(
+    var result = await atClientServiceInstance!.authenticate(
         atsign, atClientPreference,
         jsonData: jsonData, decryptKey: decryptKey);
     _atsign = atsign;
@@ -121,16 +121,16 @@ class VentoService {
   }
 
   String getCreatorOfKey(AtKey key) {
-    List<String> keyParts = key.key.split('.');
+    List<String> keyParts = key.key!.split('.');
     print(key.key);
     print(keyParts);
     return keyParts[1];
   }
 
   Future<bool> startMonitor(currentAtSign) async {
-    var privateKey = await getPrivateKey(currentAtSign);
+    var privateKey = await (getPrivateKey(currentAtSign) as FutureOr<String>);
 
-    await _getAtClientForAtsign().startMonitor(privateKey, _callback);
+    await _getAtClientForAtsign()!.startMonitor(privateKey, _callback);
     print('Monitor started');
     return true;
   }
@@ -140,15 +140,15 @@ class VentoService {
 
     //translates the notification to its operation and atKey
     List translated = _translateResponseToKey(response);
-    String operation = translated[0];
+    String? operation = translated[0];
     AtKey notifKey = translated[1];
 
     // the activeAtSign is the sharedWith person as it could have not been
     // got this notification otherwise
-    String activeAtSign = notifKey.sharedWith;
+    String? activeAtSign = notifKey.sharedWith;
 
     //if the notification was sent to yourself ignore it.
-    bool sentToSelf = compareAtSigns(notifKey.sharedBy, notifKey.sharedWith);
+    bool sentToSelf = compareAtSigns(notifKey.sharedBy!, notifKey.sharedWith!);
     //if the notification was sent by null ignore it.
     bool nullNotif = notifKey.sharedBy == null || notifKey.sharedBy == 'null';
     //ignores those two circumstances
@@ -160,11 +160,11 @@ class VentoService {
         _handleDeleteNotif(notifKey);
         break;
       case 'update':
-        conf.KeyType type = getKeyType(notifKey);
+        conf.KeyType? type = getKeyType(notifKey);
         print("got notif of type " + type.toString());
         switch (type) {
           case conf.KeyType.EVENT:
-            String value = await lookup(notifKey);
+            String? value = await lookup(notifKey);
             print("Notification Value: " + value.toString());
             Provider.of<UIData>(_currentKnownContext, listen: false)
                 .clearAcceptedGroups();
@@ -173,7 +173,7 @@ class VentoService {
             return;
             break;
           case conf.KeyType.GROUP:
-            String value = await lookup(notifKey);
+            String? value = await lookup(notifKey);
             print("Notification Value: " + value.toString());
             Provider.of<UIData>(_currentKnownContext, listen: false)
                 .clearAcceptedEvents();
@@ -195,9 +195,9 @@ class VentoService {
   }
 
   void _handleConfirm(AtKey notifKey) async {
-    print("got confirmation " + notifKey.key);
+    print("got confirmation " + notifKey.key!);
     String keyOfObject =
-        notifKey.key.replaceFirst(conf.KeyConstants.confirmStart, "");
+        notifKey.key!.replaceFirst(conf.KeyConstants.confirmStart, "");
 
     //create a replacement atKey to update the peopleGoing
     Metadata metadata = Metadata()..ccd = true;
@@ -208,10 +208,10 @@ class VentoService {
       ..sharedBy = notifKey.sharedWith;
 
     //get the original event
-    String value = await lookup(atKeyOfObject);
-    Map<String, dynamic> jsonValue = json.decode(value);
+    String value = await (lookup(atKeyOfObject) as FutureOr<String>);
+    Map<String, dynamic>? jsonValue = json.decode(value);
 
-    conf.KeyType type = getKeyType(atKeyOfObject);
+    conf.KeyType? type = getKeyType(atKeyOfObject);
 
     // ignore other types of keys as you cant confirm profile pics
     // or confirmations
@@ -219,10 +219,10 @@ class VentoService {
     switch (type) {
       case conf.KeyType.EVENT:
         EventNotificationModel eventModel =
-            EventNotificationModel.fromJson(jsonValue);
+            EventNotificationModel.fromJson(jsonValue!);
 
         //add the person who confirmed to the event
-        eventModel.peopleGoing.add(notifKey.sharedBy);
+        eventModel.peopleGoing.add(notifKey.sharedBy!);
 
         //convert to back to string
         value =
@@ -236,9 +236,9 @@ class VentoService {
       case conf.KeyType.GROUP:
         print("group confirmation");
         // get the group model
-        GroupModel groupModel = GroupModel.fromJson(jsonValue);
+        GroupModel groupModel = GroupModel.fromJson(jsonValue!);
         // add the one who sent the confirmation to the members
-        groupModel.atSignMembers.add(notifKey.sharedBy);
+        groupModel.atSignMembers.add(notifKey.sharedBy!);
         //convert back to string
         String updatedGroupValue = GroupModel.convertGroupToJson(groupModel);
 
@@ -258,14 +258,14 @@ class VentoService {
             ..sharedWith = notifKey.sharedWith;
 
           //get the event
-          String value = await lookup(eventKey);
+          String value = await (lookup(eventKey) as FutureOr<String>);
           Map<String, dynamic> jsonValue = json.decode(value);
           EventNotificationModel eventModel =
               EventNotificationModel.fromJson(jsonValue);
 
           //add the person
-          eventModel.invitees.add(notifKey.sharedBy);
-          eventModel.peopleGoing.add(notifKey.sharedBy);
+          eventModel.invitees.add(notifKey.sharedBy!);
+          eventModel.peopleGoing.add(notifKey.sharedBy!);
 
           //retranslate to string
           String storedValue =
@@ -281,13 +281,13 @@ class VentoService {
   }
 
   void _handleDeleteNotif(AtKey notifKey) async {
-    String activeAtSign = notifKey.sharedWith;
+    String activeAtSign = notifKey.sharedWith!;
     String keyCreator = getCreatorOfKey(notifKey);
     bool isKeyCreator = compareAtSigns(activeAtSign, keyCreator);
     if (isKeyCreator) {
       //swap shared with and shared by
-      String temp = notifKey.sharedBy;
-      notifKey.sharedBy = notifKey.sharedWith.replaceAll("@", "");
+      String? temp = notifKey.sharedBy;
+      notifKey.sharedBy = notifKey.sharedWith!.replaceAll("@", "");
       notifKey.sharedWith = temp;
       print('deleting event: ' + notifKey.toString());
       //delete the shared version of the key.
@@ -313,11 +313,11 @@ class VentoService {
 
     //get all the important values from the json
     String notificationKey = responseJson['key'];
-    String fromAtSign = responseJson['from'];
+    String? fromAtSign = responseJson['from'];
     //var value = responseJson['value'];
-    String to = responseJson['to'];
+    String? to = responseJson['to'];
     String atKey = notificationKey.split(':')[1];
-    String operation = responseJson['operation'];
+    String? operation = responseJson['operation'];
 
     //create a real AtKey from data collected from the json
     AtKey realKey = AtKey.fromString(atKey);
@@ -330,8 +330,8 @@ class VentoService {
   }
 
   ///Fetches privatekey for [atsign] from device keychain.
-  Future<String> getPrivateKey(String atsign) async {
-    return await _getAtClientForAtsign().getPrivateKey(atsign);
+  Future<String?> getPrivateKey(String atsign) async {
+    return await _getAtClientForAtsign()!.getPrivateKey(atsign);
   }
 
   ///scans all keys and puts there data in the appropriate places in the data
@@ -343,7 +343,7 @@ class VentoService {
     List<AtKey> response = await getAtKeys();
     List<AtKey> groupAtKeys = [];
     List<AtKey> eventAtKeys = [];
-    String activeAtSign = await getAtSign();
+    String? activeAtSign = await getAtSign();
 
     Provider.of<UIData>(context, listen: false).clear();
     print("Found ${response.length} keys");
@@ -353,7 +353,7 @@ class VentoService {
       //these keys only generate when something has gone wrong
       if (keySentByNull(atKey)) return;
 
-      conf.KeyType keyType = getKeyType(atKey);
+      conf.KeyType? keyType = getKeyType(atKey);
       print("Key Type:" + keyType.toString());
       switch (keyType) {
         case conf.KeyType.EVENT:
@@ -396,9 +396,9 @@ class VentoService {
   }
 
   ///handles putting keys/values for groups in the ui
-  void handleGroupKey(AtKey groupKey, String activeAtSign) async {
+  void handleGroupKey(AtKey groupKey, String? activeAtSign) async {
     //looks up the value which is stored as a json string
-    String value = await lookup(groupKey);
+    String? value = await lookup(groupKey);
 
     //deletes the key if it is a duplicated event that shouldn't exist
     if (isDuplicatedGroupKey(activeAtSign, groupKey)) {
@@ -408,18 +408,18 @@ class VentoService {
     }
     print("Key Value:" + value.toString());
     //decode the json string into a json map
-    Map<String, dynamic> jsonValue = json.decode(value);
+    Map<String, dynamic> jsonValue = json.decode(value!);
     GroupModel groupModel = GroupModel.fromJson(jsonValue);
 
     // saves all the important names (+other important vars)
     // and removes any existing @ symbols so that
     // finding out if this is a group the active has is straight forward
     String eventMaker = groupModel.atSignCreator.replaceAll("@", "");
-    String sharedWith = groupKey.sharedWith.replaceAll("@", "");
+    String sharedWith = groupKey.sharedWith!.replaceAll("@", "");
     List<String> members = [
       for (var x in groupModel.atSignMembers) x.replaceAll("@", "")
     ];
-    String currentUser = activeAtSign.replaceAll("@", "");
+    String currentUser = activeAtSign!.replaceAll("@", "");
 
     //figures out if this is a group the active user has
     List<bool> isSharedAndMyGroup = isGoingToKey(
@@ -452,7 +452,7 @@ class VentoService {
   }
 
   ///places the key of an event in the UIData provider
-  void handleEventKey(AtKey eventKey, String activeAtSign) async {
+  void handleEventKey(AtKey eventKey, String? activeAtSign) async {
     //deletes the key if it is a duplicated event that shouldn't exist
     if (isDuplicatedEventKey(activeAtSign, eventKey)) {
       await delete(eventKey);
@@ -460,7 +460,7 @@ class VentoService {
     }
 
     //looks up the value which is stored as a json string
-    String value = await lookup(eventKey);
+    String value = await (lookup(eventKey) as FutureOr<String>);
 
 
     print("Key Value:" + value.toString());
@@ -473,11 +473,11 @@ class VentoService {
     // and removes any existing @ symbols so that
     // finding out if this is a calendar event is straight forward
     String eventMaker = eventModel.atSignCreator.replaceAll("@", "");
-    String sharedWith = eventKey.sharedWith.replaceAll("@", "");
+    String sharedWith = eventKey.sharedWith!.replaceAll("@", "");
     List<String> peopleGoing = [
       for (var x in eventModel.peopleGoing) x.replaceAll("@", "")
     ];
-    String currentSign = activeAtSign.replaceAll("@", "");
+    String currentSign = activeAtSign!.replaceAll("@", "");
 
     bool eventWithGroup = false;
     //if the current event is in a group the user has
@@ -539,7 +539,7 @@ class VentoService {
   }
 
   shareWithMany(
-      String key, String value, String sharedBy, List<String> invitees) async {
+      String? key, String value, String? sharedBy, List<String> invitees) async {
     //metadata for the shared key
     var sharedMetadata = Metadata()
       ..ccd = true
@@ -586,7 +586,7 @@ class VentoService {
         ..sharedBy = activeAtSign
         ..sharedWith = activeAtSign;
 
-      GroupModel group = await lookupGroup(groupKey);
+      GroupModel group = await (lookupGroup(groupKey) as FutureOr<GroupModel>);
 
       //make a list of group members other than the active user to share updated
       //group and event with the right people
@@ -616,11 +616,11 @@ class VentoService {
 
   ///Function for deciding if a event or group is not an invite.
   List<bool> isGoingToKey(
-      {String keyMaker,
-      String sharedWith,
-      List<String> goingMembers,
-      String activeAtSign,
-      bool isEventAndHasGroup}) {
+      {required String keyMaker,
+      String? sharedWith,
+      required List<String> goingMembers,
+      required String activeAtSign,
+      bool? isEventAndHasGroup}) {
     //active user is going to the event or group with this key
     bool activeIsGoing = goingMembers.contains(activeAtSign);
     //active made this event
@@ -628,30 +628,30 @@ class VentoService {
     //active made this event and this key is the shared version. So the version
     //that an invitee has
     bool activeSharedThisKey =
-        activeIsKeyMaker && !compareAtSigns(sharedWith, activeAtSign);
+        activeIsKeyMaker && !compareAtSigns(sharedWith!, activeAtSign);
 
     // it is a key that active has when active is going or
     // event is in a group that active has
     // and this isn't the shared version of the key.
     return [
       activeSharedThisKey,
-      !activeSharedThisKey && (activeIsGoing || isEventAndHasGroup)
+      !activeSharedThisKey && (activeIsGoing || isEventAndHasGroup!)
     ];
   }
 
   ///occasionally when sending invitations the receiver will receive two keys
   ///one of these is a duplicated version that they have shared with themself
   /// this function marks if it is that type.
-  bool isDuplicatedEventKey(String activeAtSign, AtKey atKey) {
-    if (compareAtSigns(atKey.sharedBy, atKey.sharedWith)) {
-      return !compareAtSigns(activeAtSign, getCreatorOfKey(atKey));
+  bool isDuplicatedEventKey(String? activeAtSign, AtKey atKey) {
+    if (compareAtSigns(atKey.sharedBy!, atKey.sharedWith!)) {
+      return !compareAtSigns(activeAtSign!, getCreatorOfKey(atKey));
     }
     return false;
   }
 
-  bool isDuplicatedGroupKey(String activeAtSign, AtKey atKey) {
-    if (compareAtSigns(atKey.sharedBy, atKey.sharedWith)) {
-      return !compareAtSigns(activeAtSign, getCreatorOfKey(atKey));
+  bool isDuplicatedGroupKey(String? activeAtSign, AtKey atKey) {
+    if (compareAtSigns(atKey.sharedBy!, atKey.sharedWith!)) {
+      return !compareAtSigns(activeAtSign!, getCreatorOfKey(atKey));
     }
     return false;
   }
@@ -666,8 +666,8 @@ class VentoService {
       atKey.sharedBy == 'null' || atKey.sharedBy == null;
 
   ///gets the type of the atKey e.i. is it a key for event? group?
-  conf.KeyType getKeyType(AtKey atKey) {
-    String keyStart = atKey.key.substring(0, 6);
+  conf.KeyType? getKeyType(AtKey atKey) {
+    String keyStart = atKey.key!.substring(0, 6);
 
     if (!conf.KeyConstants.keyTypeMap.containsKey(keyStart)) {
       return null;
@@ -675,14 +675,14 @@ class VentoService {
     return conf.KeyConstants.keyTypeMap[keyStart];
   }
 
-  Future<String> get(AtKey atKey) async {
-    var result = await  _getAtClientForAtsign().get(atKey);
+  Future<String?> get(AtKey atKey) async {
+    var result = await  _getAtClientForAtsign()!.get(atKey);
     return result.value;
   }
 
   /// Look up a value corresponding to an [AtKey] instance.
   /// basically just a wrapper for get function
-  Future<String> lookup(AtKey atKey) async {
+  Future<String?> lookup(AtKey atKey) async {
     // If an AtKey object exists
     if (atKey != null) {
       return await get(atKey);
@@ -690,8 +690,8 @@ class VentoService {
     return '';
   }
 
-  Future<GroupModel> lookupGroup(AtKey groupKey) async {
-    String stringValue = await lookup(groupKey);
+  Future<GroupModel?> lookupGroup(AtKey groupKey) async {
+    String? stringValue = await lookup(groupKey);
     if (stringValue == null || stringValue == 'null') return null;
     print(stringValue);
     Map<String, dynamic> jsonValue = json.decode(stringValue);
@@ -699,54 +699,54 @@ class VentoService {
     return groupModel;
   }
 
-  Future<bool> put(AtKey atKey, String value) async {
+  Future<bool> put(AtKey atKey, String? value) async {
     if (atKey.sharedWith != null) {
-      if (!atKey.sharedWith.startsWith("@"))
-        atKey.sharedWith = "@" + atKey.sharedWith;
+      if (!atKey.sharedWith!.startsWith("@"))
+        atKey.sharedWith = "@" + atKey.sharedWith!;
     }
     if (atKey.sharedBy != null) {
-      if (!atKey.sharedBy.startsWith("@"))
-        atKey.sharedBy = "@" + atKey.sharedBy;
+      if (!atKey.sharedBy!.startsWith("@"))
+        atKey.sharedBy = "@" + atKey.sharedBy!;
     }
     var result;
     try {
-      result = await _getAtClientForAtsign().put(atKey, value);
+      result = await _getAtClientForAtsign()!.put(atKey, value);
     } catch (Exception) {
-      result = await _getAtClientForAtsign().put(atKey, value);
+      result = await _getAtClientForAtsign()!.put(atKey, value);
     }
     return result;
   }
 
   Future<bool> delete(AtKey atKey) async {
-    return await _getAtClientForAtsign().delete(atKey);
+    return await _getAtClientForAtsign()!.delete(atKey);
   }
 
-  Future<List<AtKey>> getAtKeys({String sharedBy, String regex}) async {
+  Future<List<AtKey>> getAtKeys({String? sharedBy, String? regex}) async {
     if (regex == null) {
-      return await _getAtClientForAtsign()
+      return await _getAtClientForAtsign()!
           .getAtKeys(regex: conf.MixedConstants.NAMESPACE, sharedBy: sharedBy);
     } else {
-      return await _getAtClientForAtsign()
+      return await _getAtClientForAtsign()!
           .getAtKeys(regex: regex, sharedBy: sharedBy);
     }
   }
 
   ///Fetches atsign from device keychain.
-  Future<String> getAtSign() async {
-    return await atClientServiceInstance.getAtSign();
+  Future<String?> getAtSign() async {
+    return await atClientServiceInstance!.getAtSign();
   }
 
   deleteAtSignFromKeyChain() async {
     // List<String> atSignList = await getAtsignList();
-    String _atsign = atClientServiceInstance.atClient.currentAtSign;
+    String _atsign = atClientServiceInstance!.atClient!.currentAtSign!;
 
-    await atClientServiceMap[_atsign].deleteAtSignFromKeychain(_atsign);
+    await atClientServiceMap[_atsign]!.deleteAtSignFromKeychain(_atsign);
 
     _reset();
   }
 
   Future<bool> notify(
       AtKey atKey, String value, OperationEnum operation) async {
-    return await _getAtClientForAtsign().notify(atKey, value, operation);
+    return await _getAtClientForAtsign()!.notify(atKey, value, operation);
   }
 }

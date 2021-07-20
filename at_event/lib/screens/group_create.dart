@@ -22,13 +22,13 @@ class GroupCreateScreen extends StatefulWidget {
 
 class _GroupCreateScreenState extends State<GroupCreateScreen> {
 
-  VentoService clientSdkService;
-  String _groupTitle;
-  String _groupDesc;
+  late VentoService clientSdkService;
+  String? _groupTitle;
+  String? _groupDesc;
   List<String> _invitees = [];
   String activeAtSign = '';
 
-  TextEditingController _inviteTextController;
+  TextEditingController? _inviteTextController;
 
   @override
   void initState() {
@@ -133,8 +133,8 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
       GroupModel group = GroupModel()
         ..atSignCreator = activeAtSign
         ..key = VentoService.getInstance().generateKeyName(activeAtSign, KeyType.GROUP)
-        ..title = _groupTitle
-        ..description = _groupDesc
+        ..title = _groupTitle!
+        ..description = _groupDesc!
         ..imageURL = ''
         ..capacity = 50
         ..invitees = _invitees
@@ -173,9 +173,9 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

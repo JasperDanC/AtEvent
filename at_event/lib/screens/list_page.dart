@@ -21,7 +21,7 @@ import '../Widgets/event_tiles.dart';
 
 class ListPage extends StatefulWidget {
   final GroupModel group;
-  ListPage({this.group});
+  ListPage({required this.group});
   @override
   _ListPageState createState() => _ListPageState();
 }
@@ -29,7 +29,7 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
-  String activeAtSign;
+  String activeAtSign = '';
   @override
   void initState() {
     getAtSign();
@@ -196,9 +196,9 @@ class _ListPageState extends State<ListPage> {
   }
 
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

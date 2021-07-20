@@ -10,12 +10,12 @@ import 'package:at_event/utils/constants.dart';
 ///
 
 class CustomCircleAvatar extends StatelessWidget {
-  final String image;
+  final String? image;
   final bool nonAsset;
-  final File fileImage;
+  final File? fileImage;
 
   const CustomCircleAvatar(
-      {Key key, this.image, this.nonAsset = false, this.fileImage})
+      {Key? key, this.image, this.nonAsset = false, this.fileImage})
       : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class CustomCircleAvatar extends StatelessWidget {
               ? ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                   child: Image.file(
-                    fileImage,
+                    fileImage!,
                     width: 50,
                     height: 50,
                     fit: BoxFit.fill,
@@ -41,7 +41,7 @@ class CustomCircleAvatar extends StatelessWidget {
               : CircleAvatar(
                   backgroundColor: kColorStyle3,
                   radius: 25,
-                  backgroundImage: AssetImage(image),
+                  backgroundImage: AssetImage(image!),
                 ),
         ),
       ),

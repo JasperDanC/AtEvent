@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 
 class ContactListTile extends StatefulWidget {
-  final String name;
-  final String atSign;
-  final Widget image;
-  final Function onAdd;
-  final Function onRemove;
-  final bool isSelected;
-  final bool onlyRemoveMethod;
-  final Function onTileTap;
-  final bool plainView;
+  final String? name;
+  final String? atSign;
+  final Widget? image;
+  final Function? onAdd;
+  final Function? onRemove;
+  final bool? isSelected;
+  final bool? onlyRemoveMethod;
+  final Function? onTileTap;
+  final bool? plainView;
   const ContactListTile(
       {this.name,
       this.atSign,
@@ -40,30 +40,30 @@ class _ContactListTileState extends State<ContactListTile> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        onTap: (widget.onlyRemoveMethod)
+        onTap: widget.onlyRemoveMethod!
             ? () {
-                widget?.onTileTap();
+                widget?.onTileTap!();
               }
             : () {
                 setState(() {
                   selected = !selected;
-                  !selected ? widget.onRemove() : widget.onAdd();
+                  !selected ? widget.onRemove!() : widget.onAdd!();
                 });
               },
         title: Text(
-          widget.name,
+          widget.name!,
           style: kNormalTextStyle,
         ),
         subtitle: Text(
-          widget.atSign,
+          widget.atSign!,
           style: kNormalTextStyle,
         ),
-        trailing: (widget.plainView)
+        trailing: widget.plainView!
             ? Container()
-            : (widget.isSelected)
+            : widget.isSelected!
                 ? GestureDetector(
                     onTap: () {
-                      widget.onRemove();
+                      widget.onRemove!();
                     },
                     child: Icon(
                       Icons.close,
@@ -86,17 +86,17 @@ class _ContactListTileState extends State<ContactListTile> {
               child: widget.image,
             ),
             Positioned(
-              child: (widget.onlyRemoveMethod)
+              child: widget.onlyRemoveMethod!
                   ? Container()
                   : Container(
                       height: 15.toHeight,
                       width: 15.toHeight,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: (widget.isSelected)
+                          color: widget.isSelected!
                               ? Colors.black
                               : Colors.transparent),
-                      child: (widget.isSelected)
+                      child: widget.isSelected!
                           ? Icon(
                               Icons.check,
                               color: Colors.white,

@@ -22,7 +22,7 @@ void main() => runApp(EventCreateScreen());
 
 // ignore: must_be_immutable
 class EventCreateScreen extends StatefulWidget {
-  Setting setting;
+  Setting? setting;
   TextEditingController locationController = TextEditingController();
   @override
   _EventCreateScreenState createState() => _EventCreateScreenState();
@@ -31,22 +31,22 @@ class EventCreateScreen extends StatefulWidget {
 class _EventCreateScreenState extends State<EventCreateScreen> {
   List<String> invites = [];
   List<DropdownMenuItem> groupDropDownItems = [];
-  Map<int, GroupModel> groupValueMap = {0: null};
-  int _categoryDropDownValue = 1;
-  int _groupDropDownValue = 0;
+  Map<int, GroupModel?> groupValueMap = {0: null};
+  int? _categoryDropDownValue = 1;
+  int? _groupDropDownValue = 0;
 
   final ScrollController _scrollController = ScrollController();
-  VentoService clientSdkService;
-  String _eventTitle;
-  String _eventDesc;
-  EventCategory _eventCategory;
-  List<String> _invitees;
-  String _eventDay;
-  String _eventStartTime;
-  String _eventEndTime;
+  VentoService? clientSdkService;
+  String? _eventTitle;
+  String? _eventDesc;
+  EventCategory? _eventCategory;
+  List<String>? _invitees;
+  String? _eventDay;
+  String? _eventStartTime;
+  String? _eventEndTime;
   String activeAtSign = '';
 
-  TextEditingController _inviteTextController;
+  TextEditingController? _inviteTextController;
 
   @override
   void initState() {
@@ -173,7 +173,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       child: DropdownButtonFormField(
                         dropdownColor: kBackgroundGrey,
                         style: kEventDetailsTextStyle,
-                        onChanged: (value) {
+                        onChanged: (dynamic value) {
                           _categoryDropDownValue = value;
                         },
                         value: _categoryDropDownValue,
@@ -235,7 +235,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   value: _groupDropDownValue,
                   dropdownColor: kBackgroundGrey,
                   style: kEventDetailsTextStyle,
-                  onChanged: (value) {
+                  onChanged: (dynamic value) {
                     setState(() {
                       _groupDropDownValue = value;
                     });
@@ -419,14 +419,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       }
       //Create an Event Object  with correct times
       Event newEvent = Event()
-        ..date = DateTime.parse(_eventDay)
-        ..startTime = DateTime.parse(_eventDay + " " + _eventStartTime)
-        ..endTime = DateTime.parse(_eventDay + " " + _eventEndTime)
+        ..date = DateTime.parse(_eventDay!)
+        ..startTime = DateTime.parse(_eventDay! + " " + _eventStartTime!)
+        ..endTime = DateTime.parse(_eventDay! + " " + _eventEndTime!)
         ..isRecurring = false;
 
       //Create Location object with correct label
       // map thing will be implemented later
-      Setting location = widget.setting;
+      Setting? location = widget.setting;
 
       //create the overarching summary object of everything the event will need
       EventNotificationModel newEventNotification = EventNotificationModel()
@@ -435,8 +435,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..category = _eventCategory
         ..peopleGoing = [activeAtSign]
         ..invitees = []
-        ..groupKey = _groupDropDownValue == 0 ? '' : groupValueMap[_groupDropDownValue].key
-        ..title = _eventTitle
+        ..groupKey = _groupDropDownValue == 0 ? '' : groupValueMap[_groupDropDownValue!]!.key
+        ..title = _eventTitle!
         ..description = _eventDesc
         ..setting = location
         ..key = VentoService.getInstance()
@@ -492,7 +492,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
           _eventCategory = EventCategory.None;
       }
 
-      Setting location = widget.setting;
+      Setting? location = widget.setting;
 
       EventNotificationModel newEventNotification = EventNotificationModel()
         ..event = Event()
@@ -500,8 +500,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..category = _eventCategory
         ..peopleGoing = [activeAtSign]
         ..invitees = []
-        ..groupKey =  _groupDropDownValue == 0 ? '' : groupValueMap[_groupDropDownValue].key
-        ..title = _eventTitle
+        ..groupKey =  _groupDropDownValue == 0 ? '' : groupValueMap[_groupDropDownValue!]!.key
+        ..title = _eventTitle!
         ..description = _eventDesc
         ..setting = location
         ..key = VentoService.getInstance().generateKeyName(activeAtSign, KeyType.EVENT);
@@ -513,9 +513,9 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

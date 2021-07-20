@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class GroupDetails extends StatefulWidget {
   GroupModel group;
-  GroupDetails({this.group});
+  GroupDetails({required this.group});
   @override
   _GroupDetailsState createState() => _GroupDetailsState();
 }

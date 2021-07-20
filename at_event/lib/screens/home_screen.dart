@@ -41,13 +41,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Color scaffoldColor;
-  DateTime _selectedDay;
+  Color? scaffoldColor;
+  DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
   VentoService clientSdkService = VentoService.getInstance();
   String activeAtSign = '';
-  GlobalKey<ScaffoldState> scaffoldKey;
-  File _image;
+  GlobalKey<ScaffoldState>? scaffoldKey;
+  File? _image;
   bool uploading = false;
   String postId = Uuid().v4();
   final _picker = ImagePicker();
@@ -207,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding: EdgeInsets.zero,
                                       shape: CircleBorder(),
                                       onPressed: () {
-                                        scaffoldKey.currentState.openDrawer();
+                                        scaffoldKey!.currentState!.openDrawer();
                                       },
                                       child: Icon(
                                         Icons.menu,
@@ -434,12 +434,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Initializes the AtSign contact instance
   getAtSignAndInitContacts() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
 
-    initializeContactsService(clientSdkService.atClientInstance, activeAtSign,
+    initializeContactsService(clientSdkService.atClientInstance!, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
@@ -456,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return calculateDifference(uiEvent.startTime) == 0;
     } else {
       if (uiEvent.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
-        int currentWeekday;
+        int? currentWeekday;
         switch (uiEvent.realEvent.event.occursOn) {
           case Week.SUNDAY:
             currentWeekday = 7;
@@ -485,43 +485,43 @@ class _HomeScreenState extends State<HomeScreen> {
             ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
                     (DateTime.now().difference(uiEvent.startTime).inDays / 7) *
-                            uiEvent.realEvent.event.repeatDuration <
-                        uiEvent.realEvent.event.endEventAfterOccurrence) ||
+                            uiEvent.realEvent.event.repeatDuration! <
+                        uiEvent.realEvent.event.endEventAfterOccurrence!) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
                     DateTime.now()
-                        .isBefore(uiEvent.realEvent.event.endEventOnDate)));
+                        .isBefore(uiEvent.realEvent.event.endEventOnDate!)));
       } else {
         return DateTime.now().day == uiEvent.endTime.day &&
             ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
                     DateTime.now().difference(uiEvent.startTime).inDays /
                             30.436875 <
-                        uiEvent.realEvent.event.endEventAfterOccurrence) ||
+                        uiEvent.realEvent.event.endEventAfterOccurrence!) ||
                 (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
                     DateTime.now()
-                        .isBefore(uiEvent.realEvent.event.endEventOnDate)));
+                        .isBefore(uiEvent.realEvent.event.endEventOnDate!)));
       }
     }
   }
 
   _imgFromCamera() async {
-    PickedFile image =
+    PickedFile? image =
         await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-      _image = File(image.path);
-      Provider.of<UIData>(context, listen: false).addPath(_image.path);
+      _image = File(image!.path);
+      Provider.of<UIData>(context, listen: false).addPath(_image!.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
     });
   }
 
   _imgFromGallery() async {
-    PickedFile image =
+    PickedFile? image =
         await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _image = File(image.path);
-      Provider.of<UIData>(context, listen: false).addPath(_image.path);
+      _image = File(image!.path);
+      Provider.of<UIData>(context, listen: false).addPath(_image!.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
     });
   }
@@ -602,7 +602,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> compressImage() async {
     final tempDirectory = await getTemporaryDirectory();
     final path = tempDirectory.path;
-    ImD.Image mImageFile = ImD.decodeImage(_image.readAsBytesSync());
+    ImD.Image mImageFile = ImD.decodeImage(_image!.readAsBytesSync())!;
     final compressedImageFile = File('$path/img_$postId')
       ..writeAsBytesSync(ImD.encodeJpg(mImageFile, quality: 90));
     _image = compressedImageFile;
@@ -622,7 +622,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void savePostInfoToFireStore({String url}) {
+  void savePostInfoToFireStore({String? url}) {
     uploadReference
         .doc(activeAtSign)
         .collection("atSignUpload")

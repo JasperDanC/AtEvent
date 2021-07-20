@@ -6,17 +6,17 @@ import 'package:at_event/utils/constants.dart';
 
 class InviteBox extends StatefulWidget {
   InviteBox(
-      {@required this.invitees,
+      {required this.invitees,
         this.onAdd,
-      @required this.width,
-      @required this.height,
-      @required this.addToList,
-      @required this.isCreator});
+      required this.width,
+      required this.height,
+      required this.addToList,
+      required this.isCreator});
   final bool isCreator;
   final double width;
   final double height;
-  final List<String> invitees;
-  Function onAdd;
+  final List<String?> invitees;
+  Function? onAdd;
   final bool addToList;
   final TextEditingController controller =  TextEditingController();
 
@@ -27,7 +27,7 @@ class InviteBox extends StatefulWidget {
 class _InviteBoxState extends State<InviteBox> {
 
   final ScrollController _scrollController = ScrollController();
-  String _inviteeAtSign;
+  String? _inviteeAtSign;
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +45,16 @@ class _InviteBoxState extends State<InviteBox> {
                 onPressed: () {
                   if (_inviteeAtSign != null) {
                     List<String> withoutAtSigns = [];
-                    for (String sign in widget.invitees) {
-                      withoutAtSigns.add(sign.replaceAll("@", ""));
+                    for (String? sign in widget.invitees) {
+                      withoutAtSigns.add(sign!.replaceAll("@", ""));
                     }
                     setState(() {
                       if (!withoutAtSigns
-                          .contains(_inviteeAtSign.replaceAll("@", ""))) {
+                          .contains(_inviteeAtSign!.replaceAll("@", ""))) {
                         if (widget.addToList) {
                           widget.invitees.add(_inviteeAtSign);
                         }
-                        widget.onAdd();
+                        widget.onAdd!();
                         widget.controller.clear();
 
                       }
@@ -110,9 +110,9 @@ class _InviteBoxState extends State<InviteBox> {
                         return Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Text(
-                            widget.invitees[index].startsWith("@")
-                                ? widget.invitees[index]
-                                : "@" + widget.invitees[index],
+                            widget.invitees[index]!.startsWith("@")
+                                ? widget.invitees[index]!
+                                : "@" + widget.invitees[index]!,
                             style: kEventDetailsTextStyle,
                           ),
                         );

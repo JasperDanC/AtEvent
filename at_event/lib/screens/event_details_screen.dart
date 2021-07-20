@@ -42,7 +42,7 @@ void main() {
 
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
-  final UI_Event event;
+  final UI_Event? event;
 
   @override
   _EventDetailsScreenState createState() => _EventDetailsScreenState();
@@ -50,56 +50,56 @@ class EventDetailsScreen extends StatefulWidget {
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
   String activeAtSign = '';
-  VentoService clientSdkService;
-  String timeText;
+  VentoService? clientSdkService;
+  late String timeText;
   bool isCreator = false;
 
   @override
   void initState() {
     clientSdkService = VentoService.getInstance();
-    if (!widget.event.isRecurring) {
+    if (!widget.event!.isRecurring) {
       timeText = "From: " +
-          DateFormat('MMMM').format(widget.event.startTime) +
+          DateFormat('MMMM').format(widget.event!.startTime) +
           " " +
-          widget.event.startTime.day.toString() +
+          widget.event!.startTime.day.toString() +
           " " +
-          widget.event.startTime.hour.toString() +
+          widget.event!.startTime.hour.toString() +
           ":" +
-          DateFormat('mm').format(widget.event.startTime) +
+          DateFormat('mm').format(widget.event!.startTime) +
           "\n" +
           "To: " +
-          DateFormat('MMMM').format(widget.event.endTime) +
+          DateFormat('MMMM').format(widget.event!.endTime) +
           " " +
-          widget.event.endTime.day.toString() +
+          widget.event!.endTime.day.toString() +
           " " +
-          widget.event.endTime.hour.toString() +
+          widget.event!.endTime.hour.toString() +
           ":" +
-          DateFormat('mm').format(widget.event.endTime);
+          DateFormat('mm').format(widget.event!.endTime);
     } else {
-      if (widget.event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
-        timeText = getWeekString(widget.event.realEvent.event.occursOn) +
+      if (widget.event!.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+        timeText = getWeekString(widget.event!.realEvent.event.occursOn)! +
             "s\nFrom: " +
-            widget.event.startTime.hour.toString() +
+            widget.event!.startTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.startTime) +
+            DateFormat('mm').format(widget.event!.startTime) +
             "\n" +
             "To: " +
-            widget.event.endTime.hour.toString() +
+            widget.event!.endTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.endTime);
-      } else if (widget.event.realEvent.event.repeatCycle ==
+            DateFormat('mm').format(widget.event!.endTime);
+      } else if (widget.event!.realEvent.event.repeatCycle ==
           RepeatCycle.MONTH) {
-        timeText = widget.event.startTime.day.toString() +
+        timeText = widget.event!.startTime.day.toString() +
             " of each Month" +
             "\nFrom: " +
-            widget.event.startTime.hour.toString() +
+            widget.event!.startTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.startTime) +
+            DateFormat('mm').format(widget.event!.startTime) +
             "\n" +
             "To: " +
-            widget.event.endTime.hour.toString() +
+            widget.event!.endTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.endTime);
+            DateFormat('mm').format(widget.event!.endTime);
       }
     }
     getAtSign();
@@ -109,8 +109,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String categoryString;
-    switch (widget.event.category) {
+    String? categoryString;
+    switch (widget.event!.category) {
       case EventCategory.Class:
         categoryString = 'Class';
         break;
@@ -133,7 +133,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         categoryString = 'Student Club Event';
         break;
     }
-    if(VentoService.getInstance().compareAtSigns(activeAtSign, widget.event.realEvent.atSignCreator)) isCreator = true;
+    if(VentoService.getInstance().compareAtSigns(activeAtSign, widget.event!.realEvent.atSignCreator)) isCreator = true;
     return Background(
       child: Expanded(
         child: Container(
@@ -149,7 +149,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        widget.event.eventName,
+                        widget.event!.eventName,
                         style: TextStyle(
                             fontSize: 28.0,
                             fontWeight: FontWeight.bold,
@@ -192,7 +192,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        widget.event.location,
+                        widget.event!.location,
                         textAlign: TextAlign.end,
                         style: kEventDetailsTextStyle,
                       ),
@@ -205,7 +205,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 Expanded(
                   child: SingleChildScrollView(
                     child: Text(
-                      widget.event.description,
+                      widget.event!.description,
                       overflow: TextOverflow.visible,
                       style: kEventDetailsTextStyle,
                     ),
@@ -215,12 +215,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   color: Colors.white,
                 ),
                 Text(
-                  widget.event.realEvent.invitees.length.toString() +
+                  widget.event!.realEvent.invitees.length.toString() +
                       " invited:",
                   style: kEventDetailsTextStyle,
                 ),
                 InviteBox(
-                  invitees: widget.event.invitees,
+                  invitees: widget.event!.invitees,
                   onAdd: _updateAndInvite,
                   addToList: true,
                   width: 300.0,
@@ -273,7 +273,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   //which makes sense because we don't want people to delete other people's
   //events
   _delete(BuildContext context) async {
-    if (widget.event.eventName != null) {
+    if (widget.event!.eventName != null) {
       // just a safety check
 
       //get that client
@@ -281,9 +281,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
       //create a key
       AtKey atKey = AtKey();
-      atKey.key = widget.event.realEvent.key;
+      atKey.key = widget.event!.realEvent.key;
       atKey.sharedWith = activeAtSign;
-      atKey.sharedBy = widget.event.realEvent.atSignCreator;
+      atKey.sharedBy = widget.event!.realEvent.atSignCreator;
       Metadata metaData = Metadata()..ccd = true;
       atKey.metadata = metaData;
 
@@ -294,14 +294,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       print("Delete Result:" + deleteResult.toString());
 
       //delete the event that exists as a invitation to someone else
-      for (String invitee in widget.event.invitees) {
+      for (String invitee in widget.event!.invitees) {
         //make a key again with the right sharedWith + sharedBy
         AtKey atKey = AtKey();
         atKey.key =
-            widget.event.realEvent.key.toLowerCase().replaceAll(' ', '');
+            widget.event!.realEvent.key.toLowerCase().replaceAll(' ', '');
         atKey.sharedWith = invitee;
         atKey.sharedBy =
-            widget.event.realEvent.atSignCreator.replaceAll("@", "");
+            widget.event!.realEvent.atSignCreator.replaceAll("@", "");
         Metadata metaData = Metadata()..ccd = true;
         atKey.metadata = metaData;
         await clientSdkService.delete(atKey);
@@ -316,7 +316,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     //create and update the event in the secondary so that the invitee added
     //is kept track of in the secondary as well
     AtKey atKey = AtKey();
-    atKey.key = widget.event.realEvent.key;
+    atKey.key = widget.event!.realEvent.key;
     atKey.namespace = MixedConstants.NAMESPACE;
     atKey.sharedWith = activeAtSign;
     atKey.sharedBy = activeAtSign;
@@ -325,17 +325,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     atKey.metadata = metadata;
 
     String storedValue = EventNotificationModel.convertEventNotificationToJson(
-        widget.event.realEvent);
+        widget.event!.realEvent);
 
     await VentoService.getInstance().put(atKey, storedValue);
-    await VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.event.invitees);
+    await VentoService.getInstance().shareWithMany(atKey.key, storedValue, activeAtSign, widget.event!.invitees);
   }
 
   //simple atSign getter
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

@@ -1,8 +1,8 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_event/Widgets/custom_toast.dart';
+import '../Widgets/custom_toast.dart';
 import 'package:at_event/Widgets/floating_icon.dart';
-import 'package:at_event/Widgets/input_field.dart';
+import '../Widgets/input_field.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
@@ -12,11 +12,11 @@ import 'event_create_screen.dart';
 
 // ignore: must_be_immutable
 class SelectedLocation extends StatefulWidget {
-  final LatLng point;
-  String displayName;
+  final LatLng? point;
+  String? displayName;
   final EventCreateScreen createScreen;
 
-  SelectedLocation({this.displayName, this.point, @required this.createScreen});
+  SelectedLocation({this.displayName, this.point, required this.createScreen});
 
   @override
   _SelectedLocationState createState() => _SelectedLocationState();
@@ -33,7 +33,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
           children: <Widget>[
             showLocation(UniqueKey(), mapController,
                 location:
-                    LatLng(widget.point.latitude, widget.point.longitude)),
+                    LatLng(widget.point!.latitude, widget.point!.longitude)),
             Positioned(
               top: 0,
               left: 0,
@@ -110,15 +110,15 @@ class _SelectedLocationState extends State<SelectedLocation> {
                     buttonText: 'Save',
                     onPressed: () {
                       if ((widget.displayName != null) &&
-                          widget.displayName.isNotEmpty) {
+                          widget.displayName!.isNotEmpty) {
                         Setting setting = Setting()
                           ..label = widget.displayName
-                          ..latitude = widget.point.latitude
-                          ..longitude = widget.point.longitude;
+                          ..latitude = widget.point!.latitude
+                          ..longitude = widget.point!.longitude;
                         setState(() {
                           widget.createScreen.setting = setting;
                           widget.createScreen.locationController.text =
-                              setting.label;
+                              setting.label!;
                         });
 
                         Navigator.of(context).pop();

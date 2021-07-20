@@ -102,7 +102,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                           padding: EdgeInsets.zero,
                           itemCount: eventInvites.length,
                           itemBuilder: (context, index) {
-                            String timeText;
+                            late String timeText;
                             if (!eventInvites[index].event.isRecurring) {
                               timeText = DateFormat('yyyy MMMM dd  hh:mm a')
                                       .format(
@@ -118,7 +118,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       .event.realEvent.event.repeatCycle ==
                                   RepeatCycle.WEEK) {
                                 timeText = getWeekString(eventInvite
-                                        .event.realEvent.event.occursOn) +
+                                        .event.realEvent.event.occursOn)! +
                                     "s\nFrom: " +
                                     DateFormat('hh:mm a')
                                         .format(
@@ -372,18 +372,18 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   _sendConfirmation(
-      {EventInvite eventInvite,
-      GroupInvite groupInvite,
-      @required bool isEvent}) async {
+      {EventInvite? eventInvite,
+      GroupInvite? groupInvite,
+      required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
+      eventInvite!.event.realEvent.peopleGoing.add(activeAtSign);
       atKey.key = KeyConstants.confirmStart + eventInvite.event.realEvent.key;
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptEventInvite(eventInvite);
     } else {
-      groupInvite.group.atSignMembers.add(activeAtSign);
+      groupInvite!.group.atSignMembers.add(activeAtSign);
       atKey.key = KeyConstants.confirmStart + groupInvite.group.key;
       atKey.sharedWith = groupInvite.group.atSignCreator;
       Provider.of<UIData>(context, listen: false)
@@ -400,25 +400,25 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
-          eventInvite.event.realEvent);
+          eventInvite!.event.realEvent);
     } else {
-      storedValue = GroupModel.convertGroupToJson(groupInvite.group);
+      storedValue = GroupModel.convertGroupToJson(groupInvite!.group);
     }
     var operation = OperationEnum.update;
     await VentoService.getInstance().notify(atKey, storedValue, operation);
   }
 
   _deleteInvitation(
-      {EventInvite eventInvite,
-      GroupInvite groupInvite,
-      @required bool isEvent}) async {
+      {EventInvite? eventInvite,
+      GroupInvite? groupInvite,
+      required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      atKey.key = eventInvite.event.realEvent.key;
+      atKey.key = eventInvite!.event.realEvent.key;
       Provider.of<UIData>(context, listen: false)
           .deleteEventInvite(eventInvite);
     } else {
-      atKey.key = groupInvite.group.key;
+      atKey.key = groupInvite!.group.key;
       Provider.of<UIData>(context, listen: false)
           .deleteGroupInvite(groupInvite);
     }
@@ -434,11 +434,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
-          eventInvite.event.realEvent);
+          eventInvite!.event.realEvent);
       atKey.sharedWith =
           eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
     } else {
-      storedValue = GroupModel.convertGroupToJson(groupInvite.group);
+      storedValue = GroupModel.convertGroupToJson(groupInvite!.group);
       atKey.sharedWith = groupInvite.group.atSignCreator.replaceAll("@", "");
     }
 
@@ -452,9 +452,9 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

@@ -4,10 +4,10 @@ import 'package:at_common_flutter/at_common_flutter.dart';
 /// Floating IconButton widget
 ///
 class FloatingIcon extends StatelessWidget {
-  final Color bgColor, iconColor;
-  final IconData icon;
+  final Color? bgColor, iconColor;
+  final IconData? icon;
   final bool isTopLeft;
-  final Function onPressed;
+  final Function? onPressed;
 
   FloatingIcon(
       {this.bgColor,
@@ -43,7 +43,7 @@ class FloatingIcon extends StatelessWidget {
             color: iconColor ?? Colors.white,
             size: 27.toFont,
           ),
-          onPressed: onPressed ?? () => Scaffold.of(context).openEndDrawer()),
+          onPressed: onPressed as void Function()? ?? () => Scaffold.of(context).openEndDrawer()),
     );
   }
 }

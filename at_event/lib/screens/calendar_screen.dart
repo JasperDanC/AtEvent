@@ -18,7 +18,7 @@ void main() {
 
 // ignore: must_be_immutable
 class CalendarScreen extends StatefulWidget {
-  final DateTime specificDay;
+  final DateTime? specificDay;
   CalendarScreen({this.specificDay}) {
     //if the calendar was set to open to a specific day
     if (specificDay != null) {
@@ -132,16 +132,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         });
                       } else {
                         if (ctd.appointments != null ||
-                            ctd.appointments.length != null) {
-                          UI_Event foundEvent;
-                          if(ctd.appointments[0] is Appointment) {
+                            ctd.appointments!.length != null) {
+                          UI_Event? foundEvent;
+                          if(ctd.appointments![0] is Appointment) {
                             foundEvent = Provider.of<UIData>(
                                 context, listen: false).getUIEventByName(
-                                ctd.appointments[0].subject);
+                                ctd.appointments![0].subject);
                           } else {
                             foundEvent = Provider.of<UIData>(
                                 context, listen: false).getUIEventByName(
-                                ctd.appointments[0].eventName);
+                                ctd.appointments![0].eventName);
                           }
 
                           if (foundEvent != null) {
@@ -290,9 +290,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   //straightforward getting the logged in at sign function
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

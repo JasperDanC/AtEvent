@@ -6,7 +6,7 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 
 class Background extends StatefulWidget {
   Background({this.child, this.turnAppbar = true, this.loggedIn = true});
-  final Widget child;
+  final Widget? child;
   final bool turnAppbar;
   final bool loggedIn;
   @override
@@ -18,7 +18,7 @@ class _BackgroundState extends State<Background> {
 
   String activeAtSign = '';
 
-  GlobalKey<ScaffoldState> scaffoldKey;
+  GlobalKey<ScaffoldState>? scaffoldKey;
   @override
   void initState() {
     if (widget.loggedIn) {
@@ -82,7 +82,7 @@ class _BackgroundState extends State<Background> {
                 SizedBox(
                   height: widget.turnAppbar ? 120 : 0,
                 ),
-                widget.child
+                widget.child!
               ],
             )
           ],
@@ -129,10 +129,10 @@ class _BackgroundState extends State<Background> {
   }
 
   getAtSignAndInitContacts() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String currentAtSign = await (VentoService.getInstance().getAtSign() as FutureOr<String>);
 
     activeAtSign = currentAtSign;
-    initializeContactsService(clientSdkService.atClientInstance, activeAtSign,
+    initializeContactsService(clientSdkService.atClientInstance!, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }

@@ -6,18 +6,18 @@ import 'group_model.dart';
 class EventNotificationModel {
   EventNotificationModel();
   String atSignCreator;
-  bool isCancelled;
+  bool? isCancelled;
   String title;
-  String description;
-  Setting setting;
-  String groupKey;
-  List<String> peopleGoing;
-  List<String> invitees;
-  EventCategory category;
+  String? description;
+  Setting? setting;
+  String? groupKey;
+  late List<String> peopleGoing;
+  late List<String> invitees;
+  EventCategory? category;
   Event event;
   String key;
-  bool isSharing;
-  bool
+  bool? isSharing;
+  bool?
       isUpdating; // This becomes true when event data is being updated, should be true
   EventNotificationModel.fromJson(Map<String, dynamic> data) {
     title = data['title'] ?? '';
@@ -60,7 +60,7 @@ class EventNotificationModel {
     if (data['event'] != 'null' && data['event'] != null) {
       event = data['event'] != null
           ? Event.fromJson(jsonDecode(data['event']))
-          : 'null';
+          : 'null' as Event;
     }
     groupKey = data['groupKey'] ?? '';
 
@@ -86,19 +86,19 @@ class EventNotificationModel {
       'key': '${eventNotification.key}',
       'groupKey': '${eventNotification.groupKey}',
       'setting': json.encode({
-        'latitude': eventNotification.setting.latitude.toString(),
-        'longitude': eventNotification.setting.longitude.toString(),
-        'label': eventNotification.setting.label
+        'latitude': eventNotification.setting!.latitude.toString(),
+        'longitude': eventNotification.setting!.longitude.toString(),
+        'label': eventNotification.setting!.label
       }),
       'event': json.encode({
         'isRecurring': eventNotification.event.isRecurring.toString(),
         'date': eventNotification.event.date.toString(),
         'endDate': eventNotification.event.endDate.toString(),
         'startTime': eventNotification.event.startTime != null
-            ? eventNotification.event.startTime.toUtc().toString()
+            ? eventNotification.event.startTime!.toUtc().toString()
             : null,
         'endTime': eventNotification.event.endTime != null
-            ? eventNotification.event.endTime.toUtc().toString()
+            ? eventNotification.event.endTime!.toUtc().toString()
             : null,
         'repeatDuration': eventNotification.event.repeatDuration.toString(),
         'repeatCycle': eventNotification.event.repeatCycle.toString(),
@@ -116,12 +116,12 @@ class EventNotificationModel {
     UI_Event uiEvent = UI_Event(
       eventName: this.title,
       category: this.category,
-      description: this.description,
-      location: this.setting.label,
+      description: this.description!,
+      location: this.setting!.label!,
       peopleGoing: this.peopleGoing,
       invitees: this.invitees,
-      startTime: event.startTime,
-      endTime: event.endTime,
+      startTime: event.startTime!,
+      endTime: event.endTime!,
       isRecurring: this.event.isRecurring,
       realEvent: this,
     );
@@ -132,8 +132,8 @@ class EventNotificationModel {
 
 class Setting {
   Setting();
-  double latitude, longitude;
-  String label;
+  double? latitude, longitude;
+  String? label;
   Setting.fromJson(Map<String, dynamic> data)
       : latitude =
             data['latitude'] != 'null' ? double.parse(data['latitude']) : 0,
@@ -155,15 +155,15 @@ enum EventCategory {
 class Event {
   Event();
 
-  bool isRecurring;
-  DateTime date, endDate;
-  DateTime startTime, endTime; // one day event
-  int repeatDuration;
-  RepeatCycle repeatCycle;
-  Week occursOn;
-  EndsOn endsOn;
-  DateTime endEventOnDate;
-  int endEventAfterOccurrence;
+  late bool isRecurring;
+  DateTime? date, endDate;
+  DateTime? startTime, endTime; // one day event
+  int? repeatDuration;
+  RepeatCycle? repeatCycle;
+  Week? occursOn;
+  EndsOn? endsOn;
+  DateTime? endEventOnDate;
+  int? endEventAfterOccurrence;
 
   Event.fromJson(Map<String, dynamic> data) {
     startTime = data['startTime'] != null
@@ -242,7 +242,7 @@ enum RepeatCycle { WEEK, MONTH }
 enum Week { SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY }
 enum EndsOn { NEVER, ON, AFTER }
 
-Week getWeekEnum(String weekday) {
+Week? getWeekEnum(String? weekday) {
   switch (weekday) {
     case 'Monday':
       return Week.MONDAY;
@@ -262,7 +262,7 @@ Week getWeekEnum(String weekday) {
   return null;
 }
 
-String getWeekString(Week weekday) {
+String? getWeekString(Week? weekday) {
   switch (weekday) {
     case Week.MONDAY:
       return 'Monday';

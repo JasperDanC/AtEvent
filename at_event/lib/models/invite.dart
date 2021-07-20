@@ -6,14 +6,14 @@ import 'ui_event.dart';
 
 
 class EventInvite {
-  EventInvite({@required this.event, @required this.from});
+  EventInvite({required this.event, required this.from});
   final UI_Event event;
   final String from;
 
 }
 
 class GroupInvite {
-  GroupInvite({@required this.group, @required this.from});
+  GroupInvite({required this.group, required this.from});
   final GroupModel group;
   final String from;
 

@@ -1,7 +1,7 @@
 import 'package:at_common_flutter/services/size_config.dart';
 
-import 'package:at_event/Widgets/custom_toast.dart';
-import 'package:at_event/Widgets/input_field.dart';
+import '../Widgets/custom_toast.dart';
+import '../Widgets/input_field.dart';
 import 'package:at_event/Widgets/location_tile.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_location_flutter/at_location_flutter.dart';
@@ -13,7 +13,7 @@ import 'event_create_screen.dart';
 import 'package:latlong2/latlong.dart';
 
 class SelectLocation extends StatefulWidget {
-  SelectLocation({@required this.createScreen});
+  SelectLocation({required this.createScreen});
 
   final EventCreateScreen createScreen;
 
@@ -24,8 +24,8 @@ class SelectLocation extends StatefulWidget {
 class _SelectLocationState extends State<SelectLocation> {
   String inputText = '';
   bool isLoader = false;
-  LatLng currentLocation;
-  bool nearMe;
+  LatLng? currentLocation;
+  bool? nearMe;
   @override
   void initState() {
     calculateLocation();
@@ -148,11 +148,11 @@ class _SelectLocationState extends State<SelectLocation> {
               return snapshot.connectionState == ConnectionState.waiting
                   ? SizedBox()
                   : snapshot.hasData
-                      ? snapshot.data.isEmpty
+                      ? snapshot.data!.isEmpty
                           ? Text('No such location found')
                           : Expanded(
                               child: ListView.separated(
-                                itemCount: snapshot.data.length,
+                                itemCount: snapshot.data!.length,
                                 separatorBuilder: (context, index) {
                                   return Column(
                                     children: [
@@ -167,17 +167,17 @@ class _SelectLocationState extends State<SelectLocation> {
                                       context,
                                       LatLng(
                                           double.parse(
-                                              snapshot.data[index].lat),
+                                              snapshot.data![index].lat!),
                                           double.parse(
-                                              snapshot.data[index].long)),
+                                              snapshot.data![index].long!)),
                                       displayName:
-                                          snapshot.data[index].displayName,
+                                          snapshot.data![index].displayName,
                                     ),
                                     child: LocationTile(
                                       icon: Icons.location_on,
-                                      title: snapshot.data[index].city,
+                                      title: snapshot.data![index].city,
                                       subTitle:
-                                          snapshot.data[index].displayName,
+                                          snapshot.data![index].displayName,
                                     ),
                                   );
                                 },
@@ -194,7 +194,7 @@ class _SelectLocationState extends State<SelectLocation> {
   }
 
   void onLocationSelect(BuildContext context, LatLng point,
-      {String displayName}) {
+      {String? displayName}) {
     Navigator.push(
         context,
         MaterialPageRoute(

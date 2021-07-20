@@ -16,9 +16,9 @@ import 'package:at_event/service/vento_services.dart';
 import 'home_screen.dart';
 
 class InviteDetailsScreen extends StatefulWidget {
-  InviteDetailsScreen({this.eventInvite, this.groupInvite, this.isEvent});
-  final EventInvite eventInvite;
-  final GroupInvite groupInvite;
+  InviteDetailsScreen({this.eventInvite, this.groupInvite, required this.isEvent});
+  final EventInvite? eventInvite;
+  final GroupInvite? groupInvite;
   final bool isEvent;
 
   @override
@@ -26,7 +26,7 @@ class InviteDetailsScreen extends StatefulWidget {
 }
 
 class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
-  String timeText;
+  late String timeText;
   String activeAtSign;
   @override
   void initState() {
@@ -37,51 +37,51 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.isEvent) {
-      if (!widget.eventInvite.event.isRecurring) {
+      if (!widget.eventInvite!.event.isRecurring) {
         timeText = "From: " +
-            DateFormat('MMMM').format(widget.eventInvite.event.startTime) +
+            DateFormat('MMMM').format(widget.eventInvite!.event.startTime) +
             " " +
-            widget.eventInvite.event.startTime.day.toString() +
+            widget.eventInvite!.event.startTime.day.toString() +
             " " +
-            widget.eventInvite.event.startTime.hour.toString() +
+            widget.eventInvite!.event.startTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.eventInvite.event.startTime) +
+            DateFormat('mm').format(widget.eventInvite!.event.startTime) +
             "\n" +
             "To: " +
-            DateFormat('MMMM').format(widget.eventInvite.event.endTime) +
+            DateFormat('MMMM').format(widget.eventInvite!.event.endTime) +
             " " +
-            widget.eventInvite.event.endTime.day.toString() +
+            widget.eventInvite!.event.endTime.day.toString() +
             " " +
-            widget.eventInvite.event.endTime.hour.toString() +
+            widget.eventInvite!.event.endTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.eventInvite.event.endTime);
+            DateFormat('mm').format(widget.eventInvite!.event.endTime);
       } else {
-        if (widget.eventInvite.event.realEvent.event.repeatCycle ==
+        if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.WEEK) {
           timeText =
-              getWeekString(widget.eventInvite.event.realEvent.event.occursOn) +
+              getWeekString(widget.eventInvite!.event.realEvent.event.occursOn)! +
                   "s\nFrom: " +
-                  widget.eventInvite.event.startTime.hour.toString() +
+                  widget.eventInvite!.event.startTime.hour.toString() +
                   ":" +
-                  DateFormat('mm').format(widget.eventInvite.event.startTime) +
+                  DateFormat('mm').format(widget.eventInvite!.event.startTime) +
                   "\n" +
                   "To: " +
-                  widget.eventInvite.event.endTime.hour.toString() +
+                  widget.eventInvite!.event.endTime.hour.toString() +
                   ":" +
-                  DateFormat('mm').format(widget.eventInvite.event.endTime);
-        } else if (widget.eventInvite.event.realEvent.event.repeatCycle ==
+                  DateFormat('mm').format(widget.eventInvite!.event.endTime);
+        } else if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.MONTH) {
-          timeText = widget.eventInvite.event.startTime.day.toString() +
+          timeText = widget.eventInvite!.event.startTime.day.toString() +
               " of each Month" +
               "\nFrom: " +
-              widget.eventInvite.event.startTime.hour.toString() +
+              widget.eventInvite!.event.startTime.hour.toString() +
               ":" +
-              DateFormat('mm').format(widget.eventInvite.event.startTime) +
+              DateFormat('mm').format(widget.eventInvite!.event.startTime) +
               "\n" +
               "To: " +
-              widget.eventInvite.event.endTime.hour.toString() +
+              widget.eventInvite!.event.endTime.hour.toString() +
               ":" +
-              DateFormat('mm').format(widget.eventInvite.event.endTime);
+              DateFormat('mm').format(widget.eventInvite!.event.endTime);
         }
       }
     }
@@ -111,8 +111,8 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                           child: Text(
                             'Invitation from ' +
                                 (widget.isEvent
-                                    ? widget.eventInvite.from
-                                    : widget.groupInvite.from),
+                                    ? widget.eventInvite!.from
+                                    : widget.groupInvite!.from),
                             style: kEventDetailsTextStyle,
                           ),
                         ),
@@ -136,8 +136,8 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                     ),
                     Text(
                       widget.isEvent
-                          ? widget.eventInvite.event.eventName
-                          : widget.groupInvite.group.title,
+                          ? widget.eventInvite!.event.eventName
+                          : widget.groupInvite!.group.title,
                       style: TextStyle(
                           fontSize: 28.0,
                           fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                                     Expanded(
                                       child: Text(
                                         widget.isEvent
-                                            ? widget.eventInvite.event.location
+                                            ? widget.eventInvite!.event.location
                                             : '',
                                         textAlign: TextAlign.end,
                                         style: kEventDetailsTextStyle,
@@ -184,8 +184,8 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                       child: SingleChildScrollView(
                         child: Text(
                           widget.isEvent
-                              ? widget.eventInvite.event.description
-                              : widget.groupInvite.group.description,
+                              ? widget.eventInvite!.event.description
+                              : widget.groupInvite!.group.description,
                           overflow: TextOverflow.visible,
                           style: kEventDetailsTextStyle,
                         ),
@@ -196,10 +196,10 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
                     ),
                     Text(
                       widget.isEvent
-                          ? widget.eventInvite.event.peopleGoing.length
+                          ? widget.eventInvite!.event.peopleGoing.length
                                   .toString() +
                               " going"
-                          : widget.groupInvite.group.atSignMembers.length
+                          : widget.groupInvite!.group.atSignMembers.length
                                   .toString() +
                               " members",
                       style: kEventDetailsTextStyle,
@@ -255,18 +255,18 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
   }
 
   _sendConfirmation(
-      {EventInvite eventInvite,
-      GroupInvite groupInvite,
-      @required bool isEvent}) async {
+      {EventInvite? eventInvite,
+      GroupInvite? groupInvite,
+      required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
+      eventInvite!.event.realEvent.peopleGoing.add(activeAtSign);
       atKey.key = KeyConstants.confirmStart + eventInvite.event.realEvent.key;
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptEventInvite(eventInvite);
     } else {
-      groupInvite.group.atSignMembers.add(activeAtSign);
+      groupInvite!.group.atSignMembers.add(activeAtSign);
       atKey.key = KeyConstants.confirmStart + groupInvite.group.key;
       atKey.sharedWith = groupInvite.group.atSignCreator;
       Provider.of<UIData>(context, listen: false)
@@ -283,9 +283,9 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
 
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
-          eventInvite.event.realEvent);
+          eventInvite!.event.realEvent);
     } else {
-      storedValue = GroupModel.convertGroupToJson(groupInvite.group);
+      storedValue = GroupModel.convertGroupToJson(groupInvite!.group);
     }
     var operation = OperationEnum.update;
     await VentoService.getInstance().notify(atKey, storedValue, operation);
@@ -294,16 +294,16 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
   }
 
   _deleteInvitation(
-      {EventInvite eventInvite,
-      GroupInvite groupInvite,
-      @required bool isEvent}) async {
+      {EventInvite? eventInvite,
+      GroupInvite? groupInvite,
+      required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      atKey.key = eventInvite.event.realEvent.key;
+      atKey.key = eventInvite!.event.realEvent.key;
       Provider.of<UIData>(context, listen: false)
           .deleteEventInvite(eventInvite);
     } else {
-      atKey.key = groupInvite.group.key;
+      atKey.key = groupInvite!.group.key;
       Provider.of<UIData>(context, listen: false)
           .deleteGroupInvite(groupInvite);
     }
@@ -319,11 +319,11 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
 
     if (isEvent) {
       storedValue = EventNotificationModel.convertEventNotificationToJson(
-          eventInvite.event.realEvent);
+          eventInvite!.event.realEvent);
       atKey.sharedWith =
           eventInvite.event.realEvent.atSignCreator.replaceAll("@", "");
     } else {
-      storedValue = GroupModel.convertGroupToJson(groupInvite.group);
+      storedValue = GroupModel.convertGroupToJson(groupInvite!.group);
       atKey.sharedWith = groupInvite.group.atSignCreator.replaceAll("@", "");
     }
 
@@ -339,9 +339,9 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
   }
 
   getAtSign() async {
-    String currentAtSign = await VentoService.getInstance().getAtSign();
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
     setState(() {
-      activeAtSign = currentAtSign;
+      activeAtSign = currentAtSign!;
     });
   }
 }

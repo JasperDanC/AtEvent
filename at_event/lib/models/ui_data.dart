@@ -7,7 +7,7 @@ import 'invite.dart';
 import 'group_model.dart';
 
 class UIData extends ChangeNotifier {
-  List<File> _images = [];
+  List<File?> _images = [];
   List<String> _profilePicturePaths = [];
   List<UI_Event> _uiEvents = [];
   List<EventInvite> _eventInvites = [];
@@ -18,7 +18,7 @@ class UIData extends ChangeNotifier {
   List<EventInvite> _acceptedEventInvites = [];
   List<GroupModel> _groups = [];
 
-  void addImage(File image) {
+  void addImage(File? image) {
     _images.add(image);
   }
 
@@ -58,7 +58,7 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
-  GroupModel getGroupByTitle(String title){
+  GroupModel? getGroupByTitle(String title){
     for(GroupModel g in _groups){
       if(g.title == title){
         return g;
@@ -67,7 +67,7 @@ class UIData extends ChangeNotifier {
     return null;
   }
 
-  EventNotificationModel getEventByKey(String key){
+  EventNotificationModel? getEventByKey(String key){
     for(UI_Event e in _uiEvents){
       if(e.realEvent.key.toLowerCase().replaceAll(" ", "") == key.toLowerCase().replaceAll(" ", "")){
         return e.realEvent;
@@ -76,7 +76,7 @@ class UIData extends ChangeNotifier {
     return null;
   }
 
-  UI_Event getUIEventByName(String name){
+  UI_Event? getUIEventByName(String? name){
     for(UI_Event e in _uiEvents){
       if(e.eventName == name){
         return e;
@@ -111,7 +111,7 @@ class UIData extends ChangeNotifier {
     return false;
   }
 
-  bool hasGroupKey(String keyName){
+  bool hasGroupKey(String? keyName){
     for(GroupModel g in _groups){
       if(g.key== keyName){
         return true;
@@ -219,7 +219,7 @@ class UIData extends ChangeNotifier {
   GroupInvite getGroupInvite(int index) => _groupInvites[index];
   GroupModel getGroup(int index) => _groups[index];
   String getPath(int index) => _profilePicturePaths[index];
-  File getImage(int index) => _images[index];
+  File? getImage(int index) => _images[index];
 
   List<UI_Event> get events => _uiEvents;
   List<EventInvite> get eventInvites => _eventInvites;
@@ -230,7 +230,7 @@ class UIData extends ChangeNotifier {
   List<GroupInvite> get deletedGroupInvites => _deletedGroupInvites;
   List<GroupModel> get groups => _groups;
   List<String> get profilePicturePaths => _profilePicturePaths;
-  List<File> get images => _images;
+  List<File?> get images => _images;
   int get eventsLength => _uiEvents.length;
   int get eventInvitesLength => _eventInvites.length;
   int get groupInvitesLength => _groupInvites.length;
