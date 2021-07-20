@@ -76,6 +76,15 @@ class UIData extends ChangeNotifier {
     return null;
   }
 
+  UI_Event getUIEventByName(String name){
+    for(UI_Event e in _uiEvents){
+      if(e.eventName == name){
+        return e;
+      }
+    }
+    return null;
+  }
+
   void clearAcceptedEvents(){
     _acceptedEventInvites.clear();
     notifyListeners();

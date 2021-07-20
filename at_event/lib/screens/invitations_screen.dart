@@ -23,14 +23,24 @@ class InvitationsScreen extends StatefulWidget {
 class _InvitationsScreenState extends State<InvitationsScreen> {
   int switchIndex = 0;
   String activeAtSign = '';
+
+  List<EventInvite> eventInvites = [];
+  List<GroupInvite> groupInvites = [];
   @override
   void initState() {
     getAtSign();
+    VentoService.getInstance().scan(context);
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    eventInvites.clear();
+    groupInvites.clear();
+    eventInvites.addAll(Provider.of<UIData>(context).eventInvites);
+    groupInvites.addAll(Provider.of<UIData>(context).groupInvites);
     return Background(
       child: Expanded(
         child: Container(
@@ -49,9 +59,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                       width: 250,
                       child: Text(
                         'You have ' +
-                            (Provider.of<UIData>(context).eventInvitesLength +
-                                    Provider.of<UIData>(context)
-                                        .groupInvitesLength)
+                            (eventInvites.length + groupInvites.length)
                                 .toString() +
                             ' invitations',
                         style: TextStyle(
@@ -92,9 +100,55 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                   child: switchIndex == 0
                       ? ListView.builder(
                           padding: EdgeInsets.zero,
-                          itemCount:
-                              Provider.of<UIData>(context).eventInvitesLength,
+                          itemCount: eventInvites.length,
                           itemBuilder: (context, index) {
+                            String timeText;
+                            if (!eventInvites[index].event.isRecurring) {
+                              timeText = DateFormat('yyyy MMMM dd  hh:mm a')
+                                      .format(
+                                          eventInvites[index].event.startTime)
+                                      .toString() +
+                                  " - " +
+                                  DateFormat('hh:mm a')
+                                      .format(eventInvites[index].event.endTime)
+                                      .toString();
+                            } else {
+                              EventInvite eventInvite = eventInvites[index];
+                              if (eventInvite
+                                      .event.realEvent.event.repeatCycle ==
+                                  RepeatCycle.WEEK) {
+                                timeText = getWeekString(eventInvite
+                                        .event.realEvent.event.occursOn) +
+                                    "s\nFrom: " +
+                                    DateFormat('hh:mm a')
+                                        .format(
+                                            eventInvites[index].event.startTime)
+                                        .toString() +
+                                    "\n" +
+                                    "To: " +
+                                    DateFormat('hh:mm a')
+                                        .format(
+                                            eventInvites[index].event.endTime)
+                                        .toString();
+                              } else if (eventInvite
+                                      .event.realEvent.event.repeatCycle ==
+                                  RepeatCycle.MONTH) {
+                                timeText = eventInvite.event.startTime.day
+                                        .toString() +
+                                    " each month" +
+                                    "\nFrom: " +
+                                    DateFormat('hh:mm a')
+                                        .format(
+                                            eventInvites[index].event.startTime)
+                                        .toString() +
+                                    " " +
+                                    "To: " +
+                                    DateFormat('hh:mm a')
+                                        .format(
+                                            eventInvites[index].event.endTime)
+                                        .toString();
+                              }
+                            }
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -104,16 +158,19 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     MaterialButton(
-                                      onPressed: () {
+                                      onPressed: eventInvites.length > index ? () {
+
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
+
+                                          EventInvite copyOfInvite = EventInvite(event: eventInvites[index].event, from: eventInvites[index].from);
                                           return InviteDetailsScreen(
-                                              invite:
-                                                  Provider.of<UIData>(context)
-                                                      .eventInvites[index]);
+                                            eventInvite: copyOfInvite,
+                                            isEvent: true,
+                                          );
                                         }));
-                                      },
+                                      } : (){},
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
                                       child: Container(
@@ -123,8 +180,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              Provider.of<UIData>(context)
-                                                  .eventInvites[index]
+                                              eventInvites[index]
                                                   .event
                                                   .eventName,
                                               style: kEventDetailsTextStyle
@@ -134,21 +190,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                                           FontWeight.bold),
                                             ),
                                             Text(
-                                              DateFormat('yyyy MMMM dd  hh:mm')
-                                                      .format(Provider.of<
-                                                              UIData>(context)
-                                                          .eventInvites[index]
-                                                          .event
-                                                          .from)
-                                                      .toString() +
-                                                  " - " +
-                                                  DateFormat('hh:mm')
-                                                      .format(Provider.of<
-                                                              UIData>(context)
-                                                          .eventInvites[index]
-                                                          .event
-                                                          .to)
-                                                      .toString(),
+                                              timeText,
                                               style: kEventDetailsTextStyle,
                                             ),
                                             SizedBox(
@@ -156,13 +198,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                             ),
                                             Text(
                                               'From ' +
-                                                  Provider.of<UIData>(context)
-                                                      .eventInvites[index]
-                                                      .from +
+                                                  eventInvites[index].from +
                                                   '\n' +
                                                   'At ' +
-                                                  Provider.of<UIData>(context)
-                                                      .eventInvites[index]
+                                                  eventInvites[index]
                                                       .event
                                                       .location,
                                               style: kEventDetailsTextStyle
@@ -180,11 +219,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                           onPressed: () {
                                             _sendConfirmation(
                                                 eventInvite:
-                                                    Provider.of<UIData>(context,
-                                                            listen: false)
-                                                        .getEventInvite(index),
+                                                    eventInvites[index],
                                                 isEvent: true);
-                                            VentoService.getInstance().scan(context);
+                                            VentoService.getInstance()
+                                                .scan(context);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -199,9 +237,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                           onPressed: () {
                                             _deleteInvitation(
                                                 eventInvite:
-                                                    Provider.of<UIData>(context,
-                                                            listen: false)
-                                                        .getEventInvite(index),
+                                                    eventInvites[index],
                                                 isEvent: true);
                                           },
                                           minWidth: 0,
@@ -225,8 +261,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                           })
                       : ListView.builder(
                           padding: EdgeInsets.zero,
-                          itemCount:
-                              Provider.of<UIData>(context).groupInvitesLength,
+                          itemCount: groupInvites.length,
                           itemBuilder: (context, index) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -238,11 +273,16 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                   children: [
                                     MaterialButton(
                                       onPressed: () {
-                                        // Navigator.push(context,
-                                        //     MaterialPageRoute(builder: (context) {
-                                        //       return InviteDetailsScreen(
-                                        //           invite: Provider.of<UIData>(context).eventInvites[index]);
-                                        //     }));
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+
+                                          GroupInvite copyOfInvite = GroupInvite(group: groupInvites[index].group, from: groupInvites[index].from);
+                                          return InviteDetailsScreen(
+                                            groupInvite: groupInvites[index],
+                                            isEvent: false,
+                                          );
+                                        }));
                                       },
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
@@ -253,10 +293,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              Provider.of<UIData>(context)
-                                                  .getGroupInvite(index)
-                                                  .group
-                                                  .title,
+                                              groupInvites[index].group.title,
                                               style: kEventDetailsTextStyle
                                                   .copyWith(
                                                       fontSize: 22,
@@ -268,9 +305,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                             ),
                                             Text(
                                               'From ' +
-                                                  Provider.of<UIData>(context)
-                                                      .getGroupInvite(index)
-                                                      .from +
+                                                  groupInvites[index].from +
                                                   '\n',
                                               style: kEventDetailsTextStyle
                                                   .copyWith(
@@ -287,11 +322,10 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                           onPressed: () {
                                             _sendConfirmation(
                                                 groupInvite:
-                                                    Provider.of<UIData>(context,
-                                                            listen: false)
-                                                        .getGroupInvite(index),
+                                                    groupInvites[index],
                                                 isEvent: false);
-                                            VentoService.getInstance().scan(context);
+                                            VentoService.getInstance()
+                                                .scan(context);
                                           },
                                           minWidth: 0,
                                           padding: EdgeInsets.zero,
@@ -306,9 +340,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                           onPressed: () {
                                             _deleteInvitation(
                                                 groupInvite:
-                                                    Provider.of<UIData>(context,
-                                                            listen: false)
-                                                        .getGroupInvite(index),
+                                                    groupInvites[index],
                                                 isEvent: false);
                                           },
                                           minWidth: 0,
@@ -346,14 +378,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     AtKey atKey = AtKey();
     if (isEvent) {
       eventInvite.event.realEvent.peopleGoing.add(activeAtSign);
-      atKey.key =
-          KeyConstants.confirmStart + eventInvite.event.realEvent.key;
+      atKey.key = KeyConstants.confirmStart + eventInvite.event.realEvent.key;
       atKey.sharedWith = eventInvite.event.realEvent.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptEventInvite(eventInvite);
     } else {
       groupInvite.group.atSignMembers.add(activeAtSign);
-      atKey.key = KeyConstants.confirmStart  + groupInvite.group.key;
+      atKey.key = KeyConstants.confirmStart + groupInvite.group.key;
       atKey.sharedWith = groupInvite.group.atSignCreator;
       Provider.of<UIData>(context, listen: false)
           .acceptGroupInvite(groupInvite);
@@ -383,13 +414,13 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
       @required bool isEvent}) async {
     AtKey atKey = AtKey();
     if (isEvent) {
-      atKey.key =
-          eventInvite.event.realEvent.key;
-      Provider.of<UIData>(context,listen: false).deleteEventInvite(eventInvite);
-
+      atKey.key = eventInvite.event.realEvent.key;
+      Provider.of<UIData>(context, listen: false)
+          .deleteEventInvite(eventInvite);
     } else {
       atKey.key = groupInvite.group.key;
-      Provider.of<UIData>(context, listen: false).deleteGroupInvite(groupInvite);
+      Provider.of<UIData>(context, listen: false)
+          .deleteGroupInvite(groupInvite);
     }
 
     atKey.namespace = MixedConstants.NAMESPACE;
@@ -413,13 +444,11 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
     //await ClientSdkService.getInstance().delete(atKey);
 
-
     atKey.key = atKey.key;
     print("Deleting: " + atKey.toString());
 
     var operation = OperationEnum.delete;
     await VentoService.getInstance().notify(atKey, storedValue, operation);
-
   }
 
   getAtSign() async {

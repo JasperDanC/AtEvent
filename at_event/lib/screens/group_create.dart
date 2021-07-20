@@ -101,6 +101,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
                   invitees: _invitees,
                   onAdd: () {},
                   addToList: true,
+                  isCreator: true,
                   width: 300,
                   height: 340,
                 ),

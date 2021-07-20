@@ -7,8 +7,8 @@ class UI_Event {
   UI_Event(
       {this.eventName = '',
       this.description = '',
-      @required this.from,
-      @required this.to,
+      @required this.startTime,
+      @required this.endTime,
       this.location,
       this.peopleGoing,
       this.invitees,
@@ -16,8 +16,8 @@ class UI_Event {
       this.realEvent,
       this.isRecurring}) {
     if (this.isRecurring) {
-      this.from = realEvent.event.date;
-      this.to = realEvent.event.endDate;
+      this.startTime = realEvent.event.date;
+      this.endTime = realEvent.event.endDate;
       //code to make the UI event handle recurring events
       this.recurrenceProperties =
           RecurrenceProperties(startDate: realEvent.event.date);
@@ -86,8 +86,8 @@ class UI_Event {
   RecurrenceProperties recurrenceProperties;
   bool isRecurring;
   String eventName;
-  DateTime from;
-  DateTime to;
+  DateTime startTime;
+  DateTime endTime;
   String description;
   List<String> peopleGoing;
   List<String> invitees;

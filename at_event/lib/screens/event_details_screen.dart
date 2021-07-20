@@ -14,8 +14,8 @@ void main() {
   runApp(EventDetailsScreen(
     event: UI_Event(
         eventName: "Lunch with Thomas",
-        from: DateTime(2021, 06, 09, 6),
-        to: DateTime(2021, 06, 09, 9),
+        startTime: DateTime(2021, 06, 09, 6),
+        endTime: DateTime(2021, 06, 09, 9),
         location: '123 Street Avenue N.',
         description: 'Lunch at my place!\n\n' +
             'Bring some board games, pops, and some delicious sides\n\n' +
@@ -52,56 +52,58 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   String activeAtSign = '';
   VentoService clientSdkService;
   String timeText;
+  bool isCreator = false;
 
   @override
   void initState() {
     clientSdkService = VentoService.getInstance();
     if (!widget.event.isRecurring) {
       timeText = "From: " +
-          DateFormat('MMMM').format(widget.event.from) +
+          DateFormat('MMMM').format(widget.event.startTime) +
           " " +
-          widget.event.from.day.toString() +
+          widget.event.startTime.day.toString() +
           " " +
-          widget.event.from.hour.toString() +
+          widget.event.startTime.hour.toString() +
           ":" +
-          DateFormat('mm').format(widget.event.from) +
+          DateFormat('mm').format(widget.event.startTime) +
           "\n" +
           "To: " +
-          DateFormat('MMMM').format(widget.event.to) +
+          DateFormat('MMMM').format(widget.event.endTime) +
           " " +
-          widget.event.to.day.toString() +
+          widget.event.endTime.day.toString() +
           " " +
-          widget.event.to.hour.toString() +
+          widget.event.endTime.hour.toString() +
           ":" +
-          DateFormat('mm').format(widget.event.to);
+          DateFormat('mm').format(widget.event.endTime);
     } else {
       if (widget.event.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
         timeText = getWeekString(widget.event.realEvent.event.occursOn) +
             "s\nFrom: " +
-            widget.event.from.hour.toString() +
+            widget.event.startTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.from) +
+            DateFormat('mm').format(widget.event.startTime) +
             "\n" +
             "To: " +
-            widget.event.to.hour.toString() +
+            widget.event.endTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.to);
+            DateFormat('mm').format(widget.event.endTime);
       } else if (widget.event.realEvent.event.repeatCycle ==
           RepeatCycle.MONTH) {
-        timeText = widget.event.from.day.toString() +
+        timeText = widget.event.startTime.day.toString() +
             " of each Month" +
             "\nFrom: " +
-            widget.event.from.hour.toString() +
+            widget.event.startTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.from) +
+            DateFormat('mm').format(widget.event.startTime) +
             "\n" +
             "To: " +
-            widget.event.to.hour.toString() +
+            widget.event.endTime.hour.toString() +
             ":" +
-            DateFormat('mm').format(widget.event.to);
+            DateFormat('mm').format(widget.event.endTime);
       }
     }
     getAtSign();
+
     super.initState();
   }
 
@@ -131,6 +133,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
         categoryString = 'Student Club Event';
         break;
     }
+    if(VentoService.getInstance().compareAtSigns(activeAtSign, widget.event.realEvent.atSignCreator)) isCreator = true;
     return Background(
       child: Expanded(
         child: Container(
@@ -221,11 +224,12 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                   onAdd: _updateAndInvite,
                   addToList: true,
                   width: 300.0,
+                  isCreator: isCreator,
                   height: 200.0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                  children: isCreator ? [
                     FloatingActionButton(
                       heroTag: 'different_tag',
                       onPressed: () {
@@ -255,7 +259,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                         color: Colors.white,
                       ),
                     ),
-                  ],
+                  ] :  [],
                 ),
               ],
             ),

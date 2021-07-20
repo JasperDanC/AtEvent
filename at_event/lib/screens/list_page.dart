@@ -160,7 +160,7 @@ class _ListPageState extends State<ListPage> {
                   return TodayEventTile(
                     desc: events[index].eventName,
                     address: events[index].location,
-                    date: DateFormat('hh:mm a').format(events[index].from),
+                    date: DateFormat('hh:mm a').format(events[index].startTime),
                     event: events[index],
                     onPressed: () {
                       Navigator.of(context).push(
