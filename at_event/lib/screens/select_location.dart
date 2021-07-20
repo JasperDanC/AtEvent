@@ -8,7 +8,7 @@ import 'package:at_location_flutter/at_location_flutter.dart';
 import 'package:at_location_flutter/location_modal/location_modal.dart';
 import 'package:at_location_flutter/service/my_location.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlng/latlng.dart';
 import 'package:at_event/screens/selected_location.dart';
 import 'event_create_screen.dart';
 
