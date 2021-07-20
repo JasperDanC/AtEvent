@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class GroupModel {
+  GroupModel();
   String? title;
   String? description;
   String? imageURL;
