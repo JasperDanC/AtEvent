@@ -128,9 +128,9 @@ class VentoService {
   }
 
   Future<bool> startMonitor(currentAtSign) async {
-    var privateKey = await (getPrivateKey(currentAtSign) as Future<String>);
+    var privateKey = await (getPrivateKey(currentAtSign) as Future<String?>);
 
-    await _getAtClientForAtsign()!.startMonitor(privateKey, _callback);
+    await _getAtClientForAtsign()!.startMonitor(privateKey!, _callback);
     print('Monitor started');
     return true;
   }

@@ -421,7 +421,7 @@ class _HomeScreenState extends State<HomeScreen> {
       activeAtSign = currentAtSign!;
     });
 
-    initializeContactsService(clientSdkService.atClientInstance!, activeAtSign,
+    initializeContactsService(VentoService.getInstance().atClientInstance!, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 

@@ -265,17 +265,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         domain: MixedConstants.ROOT_DOMAIN,
                         appColor: kPrimaryBlue,
                         onboard: (value, atsign) async {
-                          VentoService.getInstance().atClientServiceMap =
-                              value;
-                          VentoService.getInstance()
-                              .atClientServiceInstance = value[atsign];
+                          VentoService.getInstance().atClientServiceMap = value;
+                          VentoService.getInstance().atClientServiceInstance =
+                              value[atsign];
                           _logger.finer('Successfully onboarded $atsign');
                           await VentoService.getInstance().startMonitor(atsign);
                         },
                         onError: (error) {
                           _logger.severe('Onboarding throws $error error');
                         },
-                        nextScreen: HomeScreen(), appAPIKey: ''
+                        nextScreen: HomeScreen(),
+                        appAPIKey: '',
                       );
                     },
                     child: Text(
