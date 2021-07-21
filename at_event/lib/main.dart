@@ -72,6 +72,7 @@ class _VentoState extends State<Vento> {
       return ChangeNotifierProvider<UIData>(
         create: (context) => UIData(),
         child: MaterialApp(
+          title: '@Vento',
             debugShowCheckedModeBanner: false,
             theme: ThemeData.dark().copyWith(
               primaryColor: kForegroundGrey,
