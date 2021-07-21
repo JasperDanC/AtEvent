@@ -76,6 +76,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String? url;
+    if (!Provider.of<UIData>(context).isUrlEmpty()) {
+      url = Provider.of<UIData>(context).profilePicURL;
+    }
+
     VentoService.getInstance().updateContext(context);
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context).events) {
@@ -229,13 +234,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         _nonAsset = true;
                                       },
                                       child: CustomCircleAvatar(
-                                        nonAsset: _nonAsset,
-                                        image: _image == null
-                                            ? 'assets/images/Profile.jpg'
-                                            : null,
-                                        fileImage:
-                                            _image != null ? _image : null,
-                                      ),
+                                          nonAsset: _nonAsset,
+                                          image: _image == null
+                                              ? 'assets/images/Profile.jpg'
+                                              : null,
+                                          url: url),
                                     ),
                                   ],
                                 ),
@@ -572,6 +575,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await compressImage();
       print("compressed");
       String downloadUrl = await uploadPhoto(_image);
+      Provider.of<UIData>(context, listen: false).setProfilePicURL(downloadUrl);
       print("uploaded");
       savePostInfoToFireStore(url: downloadUrl);
 
@@ -594,7 +598,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
-    await storageReference.child('post_${Uuid().v4()}.jpg').putFile(mImageFile).then((taskSnapshot) {
+    await storageReference
+        .child('post_${Uuid().v4()}.jpg')
+        .putFile(mImageFile)
+        .then((taskSnapshot) {
       print("task done");
 
 // download url when it is uploaded
@@ -608,7 +615,6 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (BuildContext context) => SomethingWentWrongScreen()));
         });
       }
-
     });
     return 'failed';
     // try {

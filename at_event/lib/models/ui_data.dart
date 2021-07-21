@@ -19,9 +19,13 @@ class UIData extends ChangeNotifier {
   List<GroupModel> _groups = [];
   String _profilePicURL = '';
 
-  void setProfilePicURL(String url){
-    _profilePicURL= url;
+  void setProfilePicURL(String url) {
+    _profilePicURL = url;
     notifyListeners();
+  }
+
+  bool isUrlEmpty() {
+    return _profilePicURL.isEmpty;
   }
 
   void addImage(File? image) {
