@@ -570,17 +570,20 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       uploading = true;
     });
-    await compressImage();
 
-    String downloadUrl = await uploadPhoto(_image);
+    if(_image != null){
+      await compressImage();
 
-    savePostInfoToFireStore(url: downloadUrl);
+      String downloadUrl = await uploadPhoto(_image);
 
-    setState(() {
-      _image = null;
-      uploading = false;
-      postId = Uuid().v4();
-    });
+      savePostInfoToFireStore(url: downloadUrl);
+
+      setState(() {
+        _image = null;
+        uploading = false;
+        postId = Uuid().v4();
+      });
+    }
   }
 
   Future<void> compressImage() async {
@@ -598,6 +601,7 @@ class _HomeScreenState extends State<HomeScreen> {
       UploadTask mstorageUploadTask =
           storageReference.child('post_$postId.jpg').putFile(mImageFile);
       var downloadUrl = mstorageUploadTask.snapshot.ref.getDownloadURL();
+      print(downloadUrl);
       return downloadUrl;
     } on FirebaseException catch (e) {
       print(e);

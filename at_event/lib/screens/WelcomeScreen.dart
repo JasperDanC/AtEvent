@@ -275,7 +275,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           _logger.severe('Onboarding throws $error error');
                         },
                         nextScreen: HomeScreen(),
-                        appAPIKey: '',
+                        appAPIKey: '477b-876u-bcez-c42z-6a3d',
                       );
                     },
                     child: Text(
