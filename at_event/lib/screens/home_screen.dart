@@ -235,9 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: CustomCircleAvatar(
                                           nonAsset: _nonAsset,
-                                          image: _image == null
-                                              ? 'assets/images/Profile.jpg'
-                                              : null,
+                                          image: 'assets/images/Profile.jpg',
                                           url: url),
                                     ),
                                   ],
@@ -575,7 +573,6 @@ class _HomeScreenState extends State<HomeScreen> {
       await compressImage();
       print("compressed");
       String downloadUrl = await uploadPhoto(_image);
-      Provider.of<UIData>(context, listen: false).setProfilePicURL(downloadUrl);
       print("uploaded");
       savePostInfoToFireStore(url: downloadUrl);
 
@@ -598,13 +595,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
-    await storageReference.child('post_$postId.jpg').putFile(mImageFile).then((taskSnapshot) {
+    await storageReference
+        .child('post_$postId.jpg')
+        .putFile(mImageFile)
+        .then((taskSnapshot) {
       print("task done");
 
 // download url when it is uploaded
       if (taskSnapshot.state == TaskState.success) {
         storageReference.child('post_$postId.jpg').getDownloadURL().then((url) {
           print("Here is the URL of Image $url");
+          Provider.of<UIData>(context, listen: false).setProfilePicURL(url);
           return url;
         }).catchError((onError) {
           print("Got Error $onError");
