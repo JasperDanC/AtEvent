@@ -1,3 +1,6 @@
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
+import 'package:image/image.dart' as ImD;
 import '../Widgets/custom_toast.dart';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/utils/constants.dart';
@@ -6,9 +9,18 @@ import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_event/Widgets/invite_box.dart';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
+import 'package:at_event/screens/something_went_wrong.dart';
+
+
+final Reference storageReference =
+FirebaseStorage.instance.ref().child("Profile Pictures");
+
+final uploadReference = FirebaseFirestore.instance.collection("Uploads");
 
 class GroupInformation extends StatefulWidget {
   final GroupModel? group;
@@ -23,7 +35,10 @@ class _GroupInformationState extends State<GroupInformation> {
   final _picker = ImagePicker();
   String activeAtSign = '';
   File? _image;
+  bool uploading = false;
+  String postId = Uuid().v4();
   late bool isCreator;
+  bool _nonAsset = false;
 
   @override
   void initState() {
@@ -251,7 +266,9 @@ class _GroupInformationState extends State<GroupInformation> {
         await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
+
       _image = File(image!.path);
+      _controlUploadAndSave();
       print('Image path: ' + _image!.path);
     });
   }
@@ -261,7 +278,9 @@ class _GroupInformationState extends State<GroupInformation> {
         await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
+
       _image = File(image!.path);
+      _controlUploadAndSave();
       print('Image path: ' + _image!.path);
     });
   }
@@ -295,5 +314,61 @@ class _GroupInformationState extends State<GroupInformation> {
             ),
           );
         });
+  }
+  void savePostInfoToFireStore({String? url}) {
+    uploadReference
+        .doc(activeAtSign)
+        .collection("atSignUpload")
+        .doc(postId)
+        .set({
+      "postId": postId,
+      "ownerId": activeAtSign,
+      "timeStamp": DateTime.now().millisecondsSinceEpoch,
+      "url": url,
+    });
+  }
+  // ignore: missing_return
+  Future<String> uploadPhoto(mImageFile) async {
+    try {
+      UploadTask mstorageUploadTask =
+      storageReference.child('post_$postId.jpg').putFile(mImageFile);
+      var downloadUrl = mstorageUploadTask.snapshot.ref.getDownloadURL();
+      print(downloadUrl);
+      return downloadUrl;
+    } on FirebaseException catch (e) {
+      print(e);
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => SomethingWentWrongScreen()));
+      return 'upload failed';
+    }
+  }
+  Future<void> compressImage() async {
+    final tempDirectory = await getTemporaryDirectory();
+    final path = tempDirectory.path;
+    ImD.Image mImageFile = ImD.decodeImage(_image!.readAsBytesSync())!;
+    final compressedImageFile = File('$path/img_$postId')
+      ..writeAsBytesSync(ImD.encodeJpg(mImageFile, quality: 90));
+    _image = compressedImageFile;
+  }
+  Future<void> _controlUploadAndSave() async {
+    setState(() {
+      uploading = true;
+      print("uploading...");
+    });
+
+    if (_image != null) {
+      await compressImage();
+      print("compressed");
+      String downloadUrl = await uploadPhoto(_image);
+      print("download url: "+downloadUrl);
+      savePostInfoToFireStore(url: downloadUrl);
+      print("saved to firestore");
+      setState(() {
+        _image = null;
+        uploading = false;
+        postId = Uuid().v4();
+      });
+      print("finished upload");
+    }
   }
 }
