@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:at_event/models/event_datatypes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'ui_event.dart';
 import 'invite.dart';
@@ -8,7 +8,7 @@ import 'group_model.dart';
 
 class UIData extends ChangeNotifier {
   List<File?> _images = [];
-  List<String> _profilePicturePaths = [];
+  List<User> _users = [];
   List<UI_Event> _uiEvents = [];
   List<EventInvite> _eventInvites = [];
   List<GroupInvite> _groupInvites = [];
@@ -30,97 +30,100 @@ class UIData extends ChangeNotifier {
     return _images.isEmpty;
   }
 
-  void addPath(String path) {
-    _profilePicturePaths.add(path);
-    print(_profilePicturePaths);
+  void addUser(User user) {
+    _users.add(user);
+    print(_users);
     notifyListeners();
   }
 
-  bool isPathAdded(String path) {
-    return _profilePicturePaths.contains(path);
+  bool isUserAdded(User user) {
+    return _users.contains(user);
   }
 
-  bool isPathEmpty() {
-    return _profilePicturePaths.isEmpty;
+  bool isUserEmpty() {
+    return _users.isEmpty;
   }
 
-  void addEvent(UI_Event event){
-    if(!isAddedEvent(event)){
+  void addEvent(UI_Event event) {
+    if (!isAddedEvent(event)) {
       _uiEvents.add(event);
     }
     notifyListeners();
   }
-  void addGroup(GroupModel group){
-    if(!isAddedGroup(group)){
+
+  void addGroup(GroupModel group) {
+    if (!isAddedGroup(group)) {
       _groups.add(group);
     }
 
     notifyListeners();
   }
 
-  GroupModel? getGroupByTitle(String title){
-    for(GroupModel g in _groups){
-      if(g.title == title){
+  GroupModel? getGroupByTitle(String title) {
+    for (GroupModel g in _groups) {
+      if (g.title == title) {
         return g;
       }
     }
     return null;
   }
 
-  EventNotificationModel? getEventByKey(String key){
-    for(UI_Event e in _uiEvents){
-      if(e.realEvent.key.toLowerCase().replaceAll(" ", "") == key.toLowerCase().replaceAll(" ", "")){
+  EventNotificationModel? getEventByKey(String key) {
+    for (UI_Event e in _uiEvents) {
+      if (e.realEvent.key.toLowerCase().replaceAll(" ", "") ==
+          key.toLowerCase().replaceAll(" ", "")) {
         return e.realEvent;
       }
     }
     return null;
   }
 
-  UI_Event? getUIEventByName(String? name){
-    for(UI_Event e in _uiEvents){
-      if(e.eventName == name){
+  UI_Event? getUIEventByName(String? name) {
+    for (UI_Event e in _uiEvents) {
+      if (e.eventName == name) {
         return e;
       }
     }
     return null;
   }
 
-  void clearAcceptedEvents(){
+  void clearAcceptedEvents() {
     _acceptedEventInvites.clear();
     notifyListeners();
   }
 
-  void clearAcceptedGroups(){
+  void clearAcceptedGroups() {
     _acceptedGroupInvites.clear();
     notifyListeners();
   }
 
-  void acceptGroupInvite(GroupInvite invite){
+  void acceptGroupInvite(GroupInvite invite) {
     deleteGroupInvite(invite);
     _groups.add(invite.group);
     _acceptedGroupInvites.add(invite);
     notifyListeners();
   }
 
-  bool hasGroup(GroupModel groupModel){
-    for(GroupModel g in _groups){
-      if(g.title == groupModel.title && g.atSignCreator == groupModel.atSignCreator){
+  bool hasGroup(GroupModel groupModel) {
+    for (GroupModel g in _groups) {
+      if (g.title == groupModel.title &&
+          g.atSignCreator == groupModel.atSignCreator) {
         return true;
       }
     }
     return false;
   }
 
-  bool hasGroupKey(String? keyName){
-    for(GroupModel g in _groups){
-      if(g.key== keyName){
+  bool hasGroupKey(String? keyName) {
+    for (GroupModel g in _groups) {
+      if (g.key == keyName) {
         return true;
       }
     }
     return false;
   }
 
-  void deleteGroupInvite(GroupInvite invite){
+  void deleteGroupInvite(GroupInvite invite) {
     print(_groupInvites.length);
     _groupInvites.remove(invite);
     print(_groupInvites.length);
@@ -128,14 +131,14 @@ class UIData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void acceptEventInvite(EventInvite invite){
+  void acceptEventInvite(EventInvite invite) {
     deleteEventInvite(invite);
     _uiEvents.add(invite.event);
     _acceptedEventInvites.add(invite);
     notifyListeners();
   }
 
-  void deleteEventInvite(EventInvite invite){
+  void deleteEventInvite(EventInvite invite) {
     _eventInvites.remove(invite);
     _deletedEventInvites.add(invite);
     notifyListeners();
@@ -218,7 +221,7 @@ class UIData extends ChangeNotifier {
   EventInvite getEventInvite(int index) => _eventInvites[index];
   GroupInvite getGroupInvite(int index) => _groupInvites[index];
   GroupModel getGroup(int index) => _groups[index];
-  String getPath(int index) => _profilePicturePaths[index];
+  User getUser(int index) => _users[index];
   File? getImage(int index) => _images[index];
 
   List<UI_Event> get events => _uiEvents;
@@ -229,12 +232,12 @@ class UIData extends ChangeNotifier {
   List<EventInvite> get deletedEventInvites => _deletedEventInvites;
   List<GroupInvite> get deletedGroupInvites => _deletedGroupInvites;
   List<GroupModel> get groups => _groups;
-  List<String> get profilePicturePaths => _profilePicturePaths;
+  List<User> get users => _users;
   List<File?> get images => _images;
   int get eventsLength => _uiEvents.length;
   int get eventInvitesLength => _eventInvites.length;
   int get groupInvitesLength => _groupInvites.length;
   int get groupsLength => _groups.length;
-  int get pathsLength => _profilePicturePaths.length;
+  int get usersLength => _users.length;
   int get imagesLength => _images.length;
 }
