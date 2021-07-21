@@ -594,7 +594,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
-    await storageReference.putFile(mImageFile).then((taskSnapshot) {
+    await storageReference.child('post_${Uuid().v4()}.jpg').putFile(mImageFile).then((taskSnapshot) {
       print("task done");
 
 // download url when it is uploaded
@@ -604,6 +604,8 @@ class _HomeScreenState extends State<HomeScreen> {
           return url;
         }).catchError((onError) {
           print("Got Error $onError");
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => SomethingWentWrongScreen()));
         });
       }
 

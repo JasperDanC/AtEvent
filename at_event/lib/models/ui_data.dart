@@ -17,6 +17,12 @@ class UIData extends ChangeNotifier {
   List<GroupInvite> _acceptedGroupInvites = [];
   List<EventInvite> _acceptedEventInvites = [];
   List<GroupModel> _groups = [];
+  String _profilePicURL = '';
+
+  void setProfilePicURL(String url){
+    _profilePicURL= url;
+    notifyListeners();
+  }
 
   void addImage(File? image) {
     _images.add(image);
@@ -234,6 +240,7 @@ class UIData extends ChangeNotifier {
   List<GroupModel> get groups => _groups;
   List<User> get users => _users;
   List<File?> get images => _images;
+  String get profilePicURL => _profilePicURL;
   int get eventsLength => _uiEvents.length;
   int get eventInvitesLength => _eventInvites.length;
   int get groupInvitesLength => _groupInvites.length;

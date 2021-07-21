@@ -2,6 +2,7 @@ import 'package:at_event/screens/WelcomeScreen.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'home_screen.dart';
 
 class SomethingWentWrongScreen extends StatelessWidget {
   @override
@@ -25,7 +26,7 @@ class SomethingWentWrongScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50)),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => WelcomeScreen()));
+                    builder: (BuildContext context) => HomeScreen()));
               },
               child: Text(
                 "Try Again".toUpperCase(),
