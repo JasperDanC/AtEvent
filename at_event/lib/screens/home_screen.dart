@@ -57,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
   List<UI_Event> events = [];
   List<Widget> groupCards = [];
 
-
   @override
   void initState() {
     getAtSignAndInitContacts();
@@ -221,7 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onTap: () {
                                         _showPicker(context);
                                         _nonAsset = true;
-                                         _controlUploadAndSave();
                                       },
                                       child: CustomCircleAvatar(
                                         nonAsset: _nonAsset,
@@ -421,7 +419,8 @@ class _HomeScreenState extends State<HomeScreen> {
       activeAtSign = currentAtSign!;
     });
 
-    initializeContactsService(VentoService.getInstance().atClientInstance!, activeAtSign,
+    initializeContactsService(
+        VentoService.getInstance().atClientInstance!, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 
@@ -488,12 +487,14 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  /// Image handling functions for the profile picture
   _imgFromCamera() async {
     PickedFile? image =
         await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
       _image = File(image!.path);
+      _controlUploadAndSave();
       Provider.of<UIData>(context, listen: false).addPath(_image!.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
     });
@@ -505,6 +506,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _image = File(image!.path);
+      _controlUploadAndSave();
       Provider.of<UIData>(context, listen: false).addPath(_image!.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
     });
@@ -518,52 +520,42 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showPicker(context) {
     showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return SafeArea(
-            child: Container(
-              child: Wrap(
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.photo_library),
-                    title: Text('Photo Library'),
-                    onTap: () {
-                      _imgFromGallery();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.photo_camera),
-                    title: Text('Camera'),
-                    onTap: () {
-                      _imgFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      MaterialButton(
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete),
-                            Text(
-                              'Remove Image',
-                              style: kButtonTextStyle.copyWith(fontSize: 18.0),
-                            )
-                          ],
-                        ),
-                        color: kColorStyle1,
-                        padding: EdgeInsets.all(5.0),
-                        onPressed: () => removeImage(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.photo_library),
+                  title: Text('Photo Library'),
+                  onTap: () {
+                    _imgFromGallery();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.photo_camera),
+                  title: Text('Camera'),
+                  onTap: () {
+                    _imgFromCamera();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text('Remove Image'),
+                  onTap: () {
+                    removeImage();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _controlUploadAndSave() async {
@@ -571,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
       uploading = true;
     });
 
-    if(_image != null){
+    if (_image != null) {
       await compressImage();
 
       String downloadUrl = await uploadPhoto(_image);
