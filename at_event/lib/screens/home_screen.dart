@@ -570,9 +570,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (_image != null) {
       await compressImage();
-
+      print("compressed");
       String downloadUrl = await uploadPhoto(_image);
-
+      print("uploaded");
       savePostInfoToFireStore(url: downloadUrl);
 
       setState(() {
@@ -594,18 +594,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
-    try {
-      UploadTask mstorageUploadTask =
-          storageReference.child('post_$postId.jpg').putFile(mImageFile);
-      var downloadUrl = mstorageUploadTask.snapshot.ref.getDownloadURL();
-      print(downloadUrl);
-      return downloadUrl;
-    } on FirebaseException catch (e) {
-      print(e);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => SomethingWentWrongScreen()));
-      return 'upload failed';
-    }
+    await storageReference.putFile(mImageFile).then((taskSnapshot) {
+      print("task done");
+
+// download url when it is uploaded
+      if (taskSnapshot.state == TaskState.success) {
+        storageReference.getDownloadURL().then((url) {
+          print("Here is the URL of Image $url");
+          return url;
+        }).catchError((onError) {
+          print("Got Error $onError");
+        });
+      }
+
+    });
+    return 'failed';
+    // try {
+    //   print("putting image in storage ref");
+    //   UploadTask mstorageUploadTask =
+    //       storageReference.child('post_$postId.jpg').putFile(mImageFile);
+    //   var imageRef = storageReference.child('post_$postId.jpg');
+    //   print("getting url");
+    //   var downloadUrl =  imageRef.getDownloadURL();
+    //   print(downloadUrl);
+    //   return downloadUrl;
+    // } on FirebaseException catch (e) {
+    //   print(e);
+    //   Navigator.of(context).push(MaterialPageRoute(
+    //       builder: (BuildContext context) => SomethingWentWrongScreen()));
+    //   return 'upload failed';
+    // }
   }
 
   void savePostInfoToFireStore({String? url}) {
