@@ -15,9 +15,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
+import 'package:at_event/service/image_anonymous_authentication.dart';
 
 final Reference storageReference =
-    FirebaseStorage.instance.ref().child("Profile Pictures");
+    FirebaseStorage.instance.ref().child("GroupPictures");
 
 final uploadReference = FirebaseFirestore.instance.collection("Uploads");
 
@@ -38,6 +39,7 @@ class _GroupInformationState extends State<GroupInformation> {
   String postId = Uuid().v4();
   late bool isCreator;
   bool _nonAsset = false;
+  final AnonymousAuthService _auth = AnonymousAuthService();
 
   @override
   void initState() {
@@ -74,9 +76,9 @@ class _GroupInformationState extends State<GroupInformation> {
                 height: SizeConfig().screenHeight * 0.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: (_image == null
+                      image: (widget.group!.imageURL == '' || widget.group!.imageURL == null
                           ? AssetImage('assets/images/group_landscape.jpg')
-                          : FileImage(_image!)) as ImageProvider<Object>,
+                          : NetworkImage(widget.group!.imageURL!)) as ImageProvider<Object>,
                       fit: BoxFit.cover),
                 ),
               ),
@@ -326,20 +328,26 @@ class _GroupInformationState extends State<GroupInformation> {
     });
   }
 
-  // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
-    try {
-      UploadTask mstorageUploadTask =
-          storageReference.child('post_$postId.jpg').putFile(mImageFile);
-      var downloadUrl = mstorageUploadTask.snapshot.ref.getDownloadURL();
-      print(downloadUrl);
-      return downloadUrl;
-    } on FirebaseException catch (e) {
-      print(e);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => SomethingWentWrongScreen()));
-      return 'upload failed';
-    }
+    await storageReference.child('post_$postId.jpg').putFile(mImageFile).then((taskSnapshot) {
+      print("task done");
+
+// download url when it is uploaded
+      if (taskSnapshot.state == TaskState.success) {
+        storageReference.child('post_$postId.jpg').getDownloadURL().then((url) {
+          print("Here is the URL of Image $url");
+          widget.group!.imageURL = url;
+          _updateAndInvite();
+          return url;
+        }).catchError((onError) {
+          print("Got Error $onError");
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => SomethingWentWrongScreen()));
+        });
+      }
+
+    });
+    return 'failed';
   }
 
   Future<void> compressImage() async {
