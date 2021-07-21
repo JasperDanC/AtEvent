@@ -1,8 +1,12 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
+import 'package:at_event/models/user_image_model.dart';
+import 'package:at_event/screens/something_went_wrong.dart';
+import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../service/vento_services.dart';
 import '../utils/constants.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
@@ -18,6 +22,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final int _numPages = 5;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
+  final AnonymousAuthService _auth = AnonymousAuthService();
 
   List<Widget> _buildPageIndicator() {
     List<Widget> list = [];
@@ -56,6 +61,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserImageModel?>(context, listen: false);
+    print(user);
     return Background(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 40.0),
@@ -277,6 +284,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         nextScreen: HomeScreen(),
                         appAPIKey: MixedConstants.APP_API_KEY,
                       );
+                      dynamic result = await _auth.signInAnon();
+                      if (result == null) {
+                        print('Error signing in to the image handling service');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                SomethingWentWrongScreen(),
+                          ),
+                        );
+                      } else {
+                        print('Signed in to the image handling service');
+                        print(result.uid);
+                      }
                     },
                     child: Text(
                       AppStrings.scan_qr,

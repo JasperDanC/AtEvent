@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/screens/event_details_screen.dart';
 import 'package:at_event/screens/invitations_screen.dart';
+import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_onboarding_flutter/services/size_config.dart';
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String postId = Uuid().v4();
   final _picker = ImagePicker();
   bool _nonAsset = false;
+  final AnonymousAuthService _auth = AnonymousAuthService();
 
   List<EventTypeModel> eventsType = getEventTypes();
   List<UI_Event> events = [];
@@ -62,10 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
     getAtSignAndInitContacts();
     VentoService.getInstance().scan(context);
     scaffoldKey = GlobalKey<ScaffoldState>();
-    if (Provider.of<UIData>(context, listen: false).isPathEmpty() == false) {
+    if (Provider.of<UIData>(context, listen: false).isImageEmpty() == false) {
       _nonAsset = true;
       setState(() {
-        _image = File(Provider.of<UIData>(context, listen: false).getPath(0));
+        _image = Provider.of<UIData>(context, listen: false).getImage(0);
       });
     }
 
@@ -161,6 +163,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     VentoService.getInstance().deleteAll(context);
                   },
                 ),
+                ListTile(
+                    title: Text('Sign out of image service'),
+                    onTap: () async {
+                      await _auth.signOut();
+                    })
               ],
             ),
           ),
@@ -489,25 +496,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Image handling functions for the profile picture
   _imgFromCamera() async {
-    PickedFile? image =
-        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
       _image = File(image!.path);
       _controlUploadAndSave();
-      Provider.of<UIData>(context, listen: false).addPath(_image!.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
     });
   }
 
   _imgFromGallery() async {
-    PickedFile? image =
-        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
       _image = File(image!.path);
       _controlUploadAndSave();
-      Provider.of<UIData>(context, listen: false).addPath(_image!.path);
       Provider.of<UIData>(context, listen: false).addImage(_image);
     });
   }
