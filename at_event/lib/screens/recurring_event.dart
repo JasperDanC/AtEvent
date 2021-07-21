@@ -10,11 +10,9 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_event/widgets/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:at_event/models/group_model.dart';
 
 class RecurringEvent extends StatefulWidget {
   RecurringEvent({this.eventDate});
@@ -118,7 +116,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                                 break;
 
                               case 'Month':
-                                eventData!.event.repeatCycle = RepeatCycle.MONTH;
+                                eventData!.event.repeatCycle =
+                                    RepeatCycle.MONTH;
                                 repeatsWeekly = false;
                                 break;
                             }
@@ -207,7 +206,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                       initialValue: eventData!.event.date != null
                           ? timeOfDayToString(eventData!.event.date!)
                           : '',
-                      value: (value) => timeOfDayToString(eventData!.event.date!),
+                      value: (value) =>
+                          timeOfDayToString(eventData!.event.date!),
                       onTap: () async {
                         print("opened picker");
                         final timePicked = await showTimePicker(
@@ -342,10 +342,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                     height: 50.toHeight,
                     hintText: 'Amount of Times Event Occurs',
                     keyStyle: TextInputType.number,
-                    initialValue:
-                        eventData!.event.endEventAfterOccurrence != null
-                            ? eventData!.event.endEventAfterOccurrence.toString()
-                            : '',
+                    initialValue: eventData!.event.endEventAfterOccurrence !=
+                            null
+                        ? eventData!.event.endEventAfterOccurrence.toString()
+                        : '',
                     value: (val) {
                       if (val.trim().isNotEmpty) {
                         var occurrence = int.parse(val);
@@ -390,10 +390,11 @@ class _RecurringEventState extends State<RecurringEvent> {
 
     if (widget.eventDate!.event.endsOn == null) {
       widget.eventDate!.event.endsOn = EndsOn.NEVER;
-    } else if (widget.eventDate!.event.endsOn == EndsOn.ON){
+    } else if (widget.eventDate!.event.endsOn == EndsOn.ON) {
       filled = filled && widget.eventDate!.event.endEventOnDate != null;
     } else if (widget.eventDate!.event.endsOn == EndsOn.AFTER) {
-      filled = filled && widget.eventDate!.event.endEventAfterOccurrence != null;
+      filled =
+          filled && widget.eventDate!.event.endEventAfterOccurrence != null;
     }
     if (filled) {
       if (widget.eventDate!.event.endsOn == null) {

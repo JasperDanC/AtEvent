@@ -42,7 +42,7 @@ class _ContactListTileState extends State<ContactListTile> {
       child: ListTile(
         onTap: widget.onlyRemoveMethod!
             ? () {
-                widget?.onTileTap!();
+                widget.onTileTap!();
               }
             : () {
                 setState(() {

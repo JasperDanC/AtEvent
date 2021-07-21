@@ -1,11 +1,9 @@
-import 'package:at_event/screens/invitations_screen.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/models/invite.dart';
 import 'background.dart';
-import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/group_model.dart';
@@ -13,10 +11,9 @@ import 'package:at_event/models/ui_data.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 
-import 'home_screen.dart';
-
 class InviteDetailsScreen extends StatefulWidget {
-  InviteDetailsScreen({this.eventInvite, this.groupInvite, required this.isEvent});
+  InviteDetailsScreen(
+      {this.eventInvite, this.groupInvite, required this.isEvent});
   final EventInvite? eventInvite;
   final GroupInvite? groupInvite;
   final bool isEvent;
@@ -58,17 +55,17 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
       } else {
         if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.WEEK) {
-          timeText =
-              getWeekString(widget.eventInvite!.event.realEvent.event.occursOn)! +
-                  "s\nFrom: " +
-                  widget.eventInvite!.event.startTime!.hour.toString() +
-                  ":" +
-                  DateFormat('mm').format(widget.eventInvite!.event.startTime!) +
-                  "\n" +
-                  "To: " +
-                  widget.eventInvite!.event.endTime!.hour.toString() +
-                  ":" +
-                  DateFormat('mm').format(widget.eventInvite!.event.endTime!);
+          timeText = getWeekString(
+                  widget.eventInvite!.event.realEvent.event.occursOn)! +
+              "s\nFrom: " +
+              widget.eventInvite!.event.startTime!.hour.toString() +
+              ":" +
+              DateFormat('mm').format(widget.eventInvite!.event.startTime!) +
+              "\n" +
+              "To: " +
+              widget.eventInvite!.event.endTime!.hour.toString() +
+              ":" +
+              DateFormat('mm').format(widget.eventInvite!.event.endTime!);
         } else if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.MONTH) {
           timeText = widget.eventInvite!.event.startTime!.day.toString() +

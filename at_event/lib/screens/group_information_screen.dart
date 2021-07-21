@@ -16,9 +16,8 @@ import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
 
-
 final Reference storageReference =
-FirebaseStorage.instance.ref().child("Profile Pictures");
+    FirebaseStorage.instance.ref().child("Profile Pictures");
 
 final uploadReference = FirebaseFirestore.instance.collection("Uploads");
 
@@ -262,11 +261,10 @@ class _GroupInformationState extends State<GroupInformation> {
   }
 
   _imgFromCamera() async {
-    PickedFile? image =
-        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-
       _image = File(image!.path);
       _controlUploadAndSave();
       print('Image path: ' + _image!.path);
@@ -274,11 +272,10 @@ class _GroupInformationState extends State<GroupInformation> {
   }
 
   _imgFromGallery() async {
-    PickedFile? image =
-        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    XFile? image =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-
       _image = File(image!.path);
       _controlUploadAndSave();
       print('Image path: ' + _image!.path);
@@ -315,6 +312,7 @@ class _GroupInformationState extends State<GroupInformation> {
           );
         });
   }
+
   void savePostInfoToFireStore({String? url}) {
     uploadReference
         .doc(activeAtSign)
@@ -327,11 +325,12 @@ class _GroupInformationState extends State<GroupInformation> {
       "url": url,
     });
   }
+
   // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
     try {
       UploadTask mstorageUploadTask =
-      storageReference.child('post_$postId.jpg').putFile(mImageFile);
+          storageReference.child('post_$postId.jpg').putFile(mImageFile);
       var downloadUrl = mstorageUploadTask.snapshot.ref.getDownloadURL();
       print(downloadUrl);
       return downloadUrl;
@@ -342,6 +341,7 @@ class _GroupInformationState extends State<GroupInformation> {
       return 'upload failed';
     }
   }
+
   Future<void> compressImage() async {
     final tempDirectory = await getTemporaryDirectory();
     final path = tempDirectory.path;
@@ -350,6 +350,7 @@ class _GroupInformationState extends State<GroupInformation> {
       ..writeAsBytesSync(ImD.encodeJpg(mImageFile, quality: 90));
     _image = compressedImageFile;
   }
+
   Future<void> _controlUploadAndSave() async {
     setState(() {
       uploading = true;
@@ -360,7 +361,7 @@ class _GroupInformationState extends State<GroupInformation> {
       await compressImage();
       print("compressed");
       String downloadUrl = await uploadPhoto(_image);
-      print("download url: "+downloadUrl);
+      print("download url: " + downloadUrl);
       savePostInfoToFireStore(url: downloadUrl);
       print("saved to firestore");
       setState(() {

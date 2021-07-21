@@ -124,6 +124,8 @@ class _TodayEventTileState extends State<TodayEventTile> {
       case EventCategory.None:
         widget.imgAssetPath = 'assets/images/none.png';
         break;
+      default:
+        widget.imgAssetPath = 'assets/images/none.png';
     }
   }
 }

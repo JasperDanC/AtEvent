@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:at_contact/at_contact.dart';
 import 'ui_event.dart';
-import 'group_model.dart';
 
 class EventNotificationModel {
   EventNotificationModel();

@@ -4,12 +4,10 @@ import 'package:at_event/screens/recurring_event.dart';
 import 'package:at_event/screens/select_location.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_event/Widgets/bottom_sheet.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'calendar_screen.dart';
@@ -66,7 +64,8 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
     ));
     int nextValue = 1;
     for (GroupModel g in groups) {
-      if(VentoService.getInstance().compareAtSigns(g.atSignCreator, activeAtSign)){
+      if (VentoService.getInstance()
+          .compareAtSigns(g.atSignCreator, activeAtSign)) {
         groupDropDownItems.add(DropdownMenuItem(
           child: Text(g.title!),
           value: nextValue,
@@ -228,7 +227,6 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 SizedBox(
                   height: 25,
                 ),
-
                 Expanded(
                     child: DropdownButtonFormField(
                   items: groupDropDownItems,
@@ -435,18 +433,20 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..category = _eventCategory
         ..peopleGoing = [activeAtSign]
         ..invitees = []
-        ..groupKey = _groupDropDownValue == 0 ? '' : groupValueMap[_groupDropDownValue!]!.key
+        ..groupKey = _groupDropDownValue == 0
+            ? ''
+            : groupValueMap[_groupDropDownValue!]!.key
         ..title = _eventTitle!
         ..description = _eventDesc
         ..setting = location
         ..key = VentoService.getInstance()
             .generateKeyName(activeAtSign, KeyType.EVENT);
 
-
       Provider.of<UIData>(context, listen: false)
           .addEvent(newEventNotification.toUIEvent());
 
-      await VentoService.getInstance().createAndShareEvent(newEventNotification, activeAtSign);
+      await VentoService.getInstance()
+          .createAndShareEvent(newEventNotification, activeAtSign);
 
       //back to the calendar
       Navigator.pop(context);
@@ -500,11 +500,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         ..category = _eventCategory
         ..peopleGoing = [activeAtSign]
         ..invitees = []
-        ..groupKey =  _groupDropDownValue == 0 ? '' : groupValueMap[_groupDropDownValue!]!.key
+        ..groupKey = _groupDropDownValue == 0
+            ? ''
+            : groupValueMap[_groupDropDownValue!]!.key
         ..title = _eventTitle!
         ..description = _eventDesc
         ..setting = location
-        ..key = VentoService.getInstance().generateKeyName(activeAtSign, KeyType.EVENT);
+        ..key = VentoService.getInstance()
+            .generateKeyName(activeAtSign, KeyType.EVENT);
 
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return RecurringEvent(eventDate: newEventNotification);

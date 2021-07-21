@@ -6,7 +6,6 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/calendar_screen.dart';
 import 'package:at_event/screens/event_create_screen.dart';
 import 'package:at_event/screens/event_details_screen.dart';
-import 'package:at_event/screens/group_details.dart';
 import 'package:at_event/screens/group_information_screen.dart';
 import 'package:at_event/screens/home_screen.dart';
 import 'package:at_event/utils/constants.dart';
@@ -35,7 +34,6 @@ class _ListPageState extends State<ListPage> {
     getAtSign();
     VentoService.getInstance().scan(context);
 
-
     super.initState();
   }
 
@@ -44,13 +42,12 @@ class _ListPageState extends State<ListPage> {
     SizeConfig().init(context);
     events.clear();
     for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
-      if(e.realEvent.groupKey!=null &&e.realEvent.groupKey== widget.group.key){
-        print("Event, " + e.eventName + ", for group, "+  widget.group.title!);
-          events.add(e);
-        }
+      if (e.realEvent.groupKey != null &&
+          e.realEvent.groupKey == widget.group.key) {
+        print("Event, " + e.eventName + ", for group, " + widget.group.title!);
+        events.add(e);
       }
-
-
+    }
 
     return Scaffold(
       backgroundColor: kColorStyle1,
@@ -160,7 +157,8 @@ class _ListPageState extends State<ListPage> {
                   return TodayEventTile(
                     desc: events[index].eventName,
                     address: events[index].location,
-                    date: DateFormat('hh:mm a').format(events[index].startTime!),
+                    date:
+                        DateFormat('hh:mm a').format(events[index].startTime!),
                     event: events[index],
                     onPressed: () {
                       Navigator.of(context).push(

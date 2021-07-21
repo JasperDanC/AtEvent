@@ -1,5 +1,4 @@
 import 'package:at_event/Widgets/invite_box.dart';
-import 'package:at_event/main.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,6 @@ class GroupCreateScreen extends StatefulWidget {
 }
 
 class _GroupCreateScreenState extends State<GroupCreateScreen> {
-
   late VentoService clientSdkService;
   String? _groupTitle;
   String? _groupDesc;
@@ -132,7 +130,8 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
     if (filled) {
       GroupModel group = GroupModel()
         ..atSignCreator = activeAtSign
-        ..key = VentoService.getInstance().generateKeyName(activeAtSign, KeyType.GROUP)
+        ..key = VentoService.getInstance()
+            .generateKeyName(activeAtSign, KeyType.GROUP)
         ..title = _groupTitle!
         ..description = _groupDesc!
         ..imageURL = ''
@@ -156,7 +155,8 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
 
       //put that shiza on the secondary
       await clientSdkService.put(atKey, storedValue);
-      await VentoService.getInstance().shareWithMany(group.key, storedValue, activeAtSign, group.invitees);
+      await VentoService.getInstance()
+          .shareWithMany(group.key, storedValue, activeAtSign, group.invitees);
 
       Provider.of<UIData>(context, listen: false).addGroup(group);
       //back to the calendar
