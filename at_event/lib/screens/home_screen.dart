@@ -598,15 +598,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // ignore: missing_return
   Future<String> uploadPhoto(mImageFile) async {
-    await storageReference
-        .child('post_${Uuid().v4()}.jpg')
-        .putFile(mImageFile)
-        .then((taskSnapshot) {
+    await storageReference.child('post_$postId.jpg').putFile(mImageFile).then((taskSnapshot) {
       print("task done");
 
 // download url when it is uploaded
       if (taskSnapshot.state == TaskState.success) {
-        storageReference.getDownloadURL().then((url) {
+        storageReference.child('post_$postId.jpg').getDownloadURL().then((url) {
           print("Here is the URL of Image $url");
           return url;
         }).catchError((onError) {
@@ -617,21 +614,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     return 'failed';
-    // try {
-    //   print("putting image in storage ref");
-    //   UploadTask mstorageUploadTask =
-    //       storageReference.child('post_$postId.jpg').putFile(mImageFile);
-    //   var imageRef = storageReference.child('post_$postId.jpg');
-    //   print("getting url");
-    //   var downloadUrl =  imageRef.getDownloadURL();
-    //   print(downloadUrl);
-    //   return downloadUrl;
-    // } on FirebaseException catch (e) {
-    //   print(e);
-    //   Navigator.of(context).push(MaterialPageRoute(
-    //       builder: (BuildContext context) => SomethingWentWrongScreen()));
-    //   return 'upload failed';
-    // }
   }
 
   void savePostInfoToFireStore({String? url}) {
