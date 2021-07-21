@@ -208,6 +208,9 @@ class MixedConstants {
   static String regex = '.$NAMESPACE@';
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
+  static const String MAP_KEY = 'xp4B6kQBGFBAnrEpXEEd';
+  static const String HERE_API_KEY = 'dews3SyOoBzfMirwbjE7IL8OaiapjWWqZGAD1eGr0qU';
+  static const String APP_API_KEY = '477b-876u-bcez-c42z-6a3d';
 }
 
 class AppStrings {
@@ -218,9 +221,7 @@ class AppStrings {
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
 
-/*
-API KEY/s
- */
+
 
 /*const String tinyPNG_base64 =
     'YXBpOnY3QzM0M2wxeFlWQ1p3aGtCUkdIOEJZNDRWUDh5Zno0';*/ // Not needed anymore

@@ -254,8 +254,8 @@ class _SelectLocationState extends State<SelectLocation> {
       VentoService.getInstance().atClientServiceInstance!.atClient!,
       activeAtSign,
       NavService.navKey,
-      apiKey: 'dews3SyOoBzfMirwbjE7IL8OaiapjWWqZGAD1eGr0qU',
-      mapKey: 'xp4B6kQBGFBAnrEpXEEd',
+      apiKey: MixedConstants.HERE_API_KEY,
+      mapKey: MixedConstants.MAP_KEY,
     );
   }
 
