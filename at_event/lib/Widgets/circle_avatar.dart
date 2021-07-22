@@ -28,7 +28,7 @@ class CustomCircleAvatar extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: kColorStyle2,
           radius: 30,
-          child: url != null
+          child: url != null && url!.isNotEmpty
               ? ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                   child: Image.network(

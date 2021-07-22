@@ -184,12 +184,12 @@ class KeyConstants {
   static Map<KeyType, String> keyStringMap =
       Map.fromEntries(keyTypeMap.entries.map((e) => MapEntry(e.value, e.key)));
 
+  //each start of key must be 6 characters
   static const String eventStart = 'event_';
   static const String groupStart = 'group_';
   static const String confirmStart = 'confm_';
-  static const String profilePicStart = 'profil_';
+  static const String profilePicStart = 'prfil_';
 }
-
 enum KeyType {
   EVENT,
   GROUP,

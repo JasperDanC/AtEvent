@@ -327,18 +327,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-                SizedBox(
-                  height: 8.0,
-                ),
+
                 Text(
                   "Today's Events",
                   style: kSubHeadingTextStyle,
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+
                 Container(
-                  height: SizeConfig().screenHeight * 0.36,
+                  height: SizeConfig().screenHeight * 0.38,
                   child: events.length > 0
                       ? ListView.builder(
                           padding: EdgeInsets.only(top: 8),
@@ -346,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemCount: events.length,
                           itemBuilder: (context, index) {
                             return TodayEventTile(
-                              desc: events[index].eventName,
+                              title: events[index].eventName,
                               address: events[index].location,
                               imgAssetPath:
                                   'assets/images/none.png', // If for some reason any image fails to load or something, it will default to the unknown category icon.
@@ -379,9 +375,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+
+
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -401,11 +396,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                         backgroundBlendMode: BlendMode.modulate),
                     child: Center(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: groupCards,
-                        ),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 3.0,),
+                          Container(
+                            height:15,
+                            width: double.infinity,
+                            color: Colors.transparent,
+                            child: Text(
+                              '  Groups',
+                              textAlign: TextAlign.start,
+                              style: kNormalTextStyle,
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: groupCards,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -606,6 +617,7 @@ class _HomeScreenState extends State<HomeScreen> {
         storageReference.child('post_$postId.jpg').getDownloadURL().then((url) {
           print("Here is the URL of Image $url");
           Provider.of<UIData>(context, listen: false).setProfilePicURL(url);
+          VentoService.getInstance().postProfilePic(url);
           return url;
         }).catchError((onError) {
           print("Got Error $onError");

@@ -8,7 +8,7 @@ import 'package:at_event/utils/constants.dart';
 /// description and
 //ignore: must_be_immutable
 class TodayEventTile extends StatefulWidget {
-  final String desc;
+  final String title;
   final String date;
   final String address;
   String imgAssetPath;
@@ -18,7 +18,7 @@ class TodayEventTile extends StatefulWidget {
     required this.address,
     required this.date,
     required this.imgAssetPath,
-    required this.desc,
+    required this.title,
     this.onPressed,
     required this.event,
   });
@@ -48,14 +48,13 @@ class _TodayEventTileState extends State<TodayEventTile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // TODO: Replace this text widget to contain the creator of the AtKey
-                    // Text(
-                    //   widget.desc,
-                    //   style: TextStyle(
-                    //       color: Colors.white,
-                    //       fontSize: 22,
-                    //       fontWeight: FontWeight.bold),
-                    // ),
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(
                       height: 6,
                     ),

@@ -58,7 +58,7 @@ class _GroupInformationState extends State<GroupInformation> {
       invitees: widget.group!.atSignMembers,
       isCreator: isCreator,
       width: 300,
-      height: 300,
+      height: SizeConfig().screenHeight*0.5,
     );
     inviteBox.onAdd = () async {
       CustomToast().show('Invite Sent!', context);
@@ -126,9 +126,11 @@ class _GroupInformationState extends State<GroupInformation> {
                       ),
                     ),
                     SizedBox(height: 10.0),
-                    Text(
-                      widget.group!.title!,
-                      style: kTitleTextStyle.copyWith(fontSize: 35.0),
+                    Expanded(
+                      child: Text(
+                        widget.group!.title!,
+                        style: kTitleTextStyle.copyWith(fontSize: 35.0),
+                      ),
                     ),
                     SizedBox(
                       height: 30.0,
@@ -192,10 +194,16 @@ class _GroupInformationState extends State<GroupInformation> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(40.0),
-                  child: Text(
-                    widget.group!.description!,
-                    style: kNormalTextStyle.copyWith(
-                        fontSize: 18.0, color: Colors.white),
+                  child: Container(
+                    height: SizeConfig().screenHeight * 0.2,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Text(
+                        widget.group!.description!,
+                        style: kNormalTextStyle.copyWith(
+                            fontSize: 18.0, color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(

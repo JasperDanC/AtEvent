@@ -155,7 +155,7 @@ class _ListPageState extends State<ListPage> {
                 itemCount: events.length,
                 itemBuilder: (context, index) {
                   return TodayEventTile(
-                    desc: events[index].eventName,
+                    title: events[index].eventName,
                     address: events[index].location,
                     date:
                         DateFormat('hh:mm a').format(events[index].startTime!),

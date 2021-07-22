@@ -107,8 +107,11 @@ class VentoService {
     return result;
   }
 
-  String generateKeyName(String activeAtSign, conf.KeyType type) {
-    return '${conf.KeyConstants.keyStringMap[type]}.${activeAtSign.replaceAll("@", "")}.${DateTime.now().millisecondsSinceEpoch}';
+  String generateKeyName(String activeAtSign, conf.KeyType type, {bool isRandom = true}) {
+    if(isRandom){
+      return '${conf.KeyConstants.keyStringMap[type]}.${activeAtSign.replaceAll("@", "")}.${DateTime.now().millisecondsSinceEpoch}';
+    }
+    return '${conf.KeyConstants.keyStringMap[type]}.${activeAtSign.replaceAll("@", "")}';
   }
 
   String getCreatorOfKey(AtKey key) {
@@ -180,6 +183,17 @@ class VentoService {
         }
         break;
     }
+  }
+
+   postProfilePic(String url) async {
+    String? activeAtSign = await getAtSign();
+    String keyName = generateKeyName(activeAtSign!, conf.KeyType.PROFILE_PIC, isRandom: false);
+    AtKey atKey = AtKey()
+    ..key = keyName
+    ..sharedWith = activeAtSign
+    ..sharedBy = activeAtSign;
+
+    await put(atKey, url);
   }
 
   void _handleConfirm(AtKey notifKey) async {
@@ -355,7 +369,8 @@ class VentoService {
           // only used for the notification callback
           break;
         case conf.KeyType.PROFILE_PIC:
-          // Profile Pictures not yet implement on secondary server
+          String? url = await lookup(atKey);
+          Provider.of<UIData>(_currentKnownContext,listen: false).setProfilePicURL(url!);
           break;
         case null:
           print("Got key with null type");
