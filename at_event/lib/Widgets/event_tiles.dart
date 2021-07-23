@@ -92,8 +92,8 @@ class _TodayEventTileState extends State<TodayEventTile> {
                   bottomRight: Radius.circular(8)),
               child: Image(
                 image: AssetImage(widget.imgAssetPath),
-                height: 100,
-                width: 120,
+                height: widget.event.category == EventCategory.None ? 0 : 100,
+                width: widget.event.category == EventCategory.None ? 0 : 120,
                 fit: BoxFit.cover,
               ),
             ),
@@ -128,6 +128,7 @@ class _TodayEventTileState extends State<TodayEventTile> {
         break;
       default:
         widget.imgAssetPath = 'assets/images/none.png';
+        break;
     }
   }
 }

@@ -37,6 +37,9 @@ class EventNotificationModel {
       case 'EventCategory.Tutorial':
         category = EventCategory.Tutorial;
         break;
+      case 'EventCategory.StudySession':
+        category = EventCategory.StudySession;
+        break;
       case 'EventCategory.StudentClubEvent':
         category = EventCategory.StudentClubEvent;
     }
