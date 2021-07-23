@@ -320,6 +320,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               allEvents.add(
                                   Provider.of<UIData>(context).getEvent(i));
                             }
+                            if (Provider.of<UIData>(context)
+                                .getEvent(i)
+                                .isRecurring) {
+                              if (Provider.of<UIData>(context)
+                                      .getEvent(i)
+                                      .realEvent
+                                      .event
+                                      .repeatCycle ==
+                                  RepeatCycle.MONTH) {}
+                            }
                           }
                           return allEvents;
                         },
