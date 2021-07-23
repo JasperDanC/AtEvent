@@ -1,5 +1,6 @@
 import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/models/group_model.dart';
+import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/screens/group_details.dart';
 
@@ -22,19 +23,32 @@ class _GroupCardState extends State<GroupCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => GroupDetails(
-                      group: widget.group,
-                    ),
-                  ),
-                );
-              },
-              child: CustomCircleAvatar(image: 'assets/images/group_icon.jpg'),
-            ),
+          Column(
+            children: [
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => GroupDetails(
+                          group: widget.group,
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomCircleAvatar(image: 'assets/images/group_icon.jpg', url: widget.group.imageURL),
+                ),
+              ),
+              Container(
+                width: 85,
+                height: 12,
+                child: Text(
+                  widget.group.title!,
+                  style: kNormalTextStyle.copyWith(fontSize: 11),
+                  textAlign: TextAlign.center,
+                ),
+              )
+            ],
           ),
         ],
       ),

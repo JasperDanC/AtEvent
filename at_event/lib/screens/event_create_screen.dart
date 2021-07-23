@@ -67,7 +67,10 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
       if (VentoService.getInstance()
           .compareAtSigns(g.atSignCreator, activeAtSign)) {
         groupDropDownItems.add(DropdownMenuItem(
-          child: Text(g.title!),
+          child: Container(
+            child: Text(g.title!),
+            width: SizeConfig().screenWidth * 0.75,
+          ),
           value: nextValue,
         ));
         groupValueMap[nextValue] = g;
