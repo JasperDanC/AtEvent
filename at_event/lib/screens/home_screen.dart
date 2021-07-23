@@ -302,33 +302,39 @@ class _HomeScreenState extends State<HomeScreen> {
                           for (int i = 0;
                               i < Provider.of<UIData>(context).eventsLength;
                               i++) {
-                            if (Provider.of<UIData>(context)
-                                        .getEvent(i)
-                                        .startTime!
-                                        .day ==
-                                    day.day &&
-                                Provider.of<UIData>(context)
-                                        .getEvent(i)
-                                        .startTime!
-                                        .month ==
-                                    day.month &&
-                                Provider.of<UIData>(context)
-                                        .getEvent(i)
-                                        .startTime!
-                                        .year ==
-                                    day.year) {
-                              allEvents.add(
-                                  Provider.of<UIData>(context).getEvent(i));
-                            }
-                            if (Provider.of<UIData>(context)
-                                .getEvent(i)
-                                .isRecurring) {
-                              if (Provider.of<UIData>(context)
-                                      .getEvent(i)
-                                      .realEvent
-                                      .event
-                                      .repeatCycle ==
-                                  RepeatCycle.MONTH) {}
+                            UI_Event uiEvent = Provider.of<UIData>(context)
+                                .getEvent(i);
+
+                            if (uiEvent.isRecurring) {
+                              if(day.isAfter(uiEvent.startTime!) || day.difference(uiEvent.startTime!).inDays <1){
+                                if (uiEvent
+                                    .realEvent
+                                    .event
+                                    .repeatCycle ==
+                                    RepeatCycle.MONTH) {
+                                  print(uiEvent.startTime!.day);
+                                  print(day.day);
+                                  if(uiEvent.startTime!.day == day.day){
+                                    allEvents.add(uiEvent);
+                                  }
+                                } else {
+                                  if(uiEvent.realEvent.event.occursOn!.index == day.weekday) {
+                                    allEvents.add(uiEvent);
+                                  }
+                                }
+                              }
+                            } else {
+                              if (uiEvent.startTime!
+                                  .day ==
+                                  day.day &&
+                                  uiEvent.startTime!
+                                      .month ==
+                                      day.month &&
+                                  uiEvent.startTime!
+                                      .year ==
+                                      day.year) {
+                                allEvents.add(uiEvent);
+                              }
                             }
                           }
                           return allEvents;
