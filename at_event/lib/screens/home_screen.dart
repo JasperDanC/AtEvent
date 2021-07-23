@@ -398,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(
                       child: Column(
                         children: [
-                          SizedBox(height: 3.0,),
+                          SizedBox(height: 2.0,),
                           Container(
                             height:15,
                             width: double.infinity,

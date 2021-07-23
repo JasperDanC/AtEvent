@@ -157,16 +157,16 @@ class VentoService {
           case conf.KeyType.EVENT:
             String? value = await lookup(notifKey);
             print("Notification Value: " + value.toString());
-            Provider.of<UIData>(_currentKnownContext, listen: false)
-                .clearAcceptedGroups();
+            // Provider.of<UIData>(_currentKnownContext, listen: false)
+            //     .clearAcceptedGroups();
             await put(notifKey, value);
             scan(_currentKnownContext);
             return;
           case conf.KeyType.GROUP:
             String? value = await lookup(notifKey);
             print("Notification Value: " + value.toString());
-            Provider.of<UIData>(_currentKnownContext, listen: false)
-                .clearAcceptedEvents();
+            // Provider.of<UIData>(_currentKnownContext, listen: false)
+            //     .clearAcceptedEvents();
             await VentoService.getInstance().put(notifKey, value);
             scan(_currentKnownContext);
             return;
@@ -261,22 +261,24 @@ class VentoService {
 
           //get the event
           String? value = await lookup(eventKey) ;
-          Map<String, dynamic> jsonValue = json.decode(value!);
-          EventNotificationModel eventModel =
-              EventNotificationModel.fromJson(jsonValue);
+          if(value!= null){
+            Map<String, dynamic> jsonValue = json.decode(value);
+            EventNotificationModel eventModel =
+            EventNotificationModel.fromJson(jsonValue);
 
-          //add the person
-          eventModel.invitees.add(notifKey.sharedBy!);
-          eventModel.peopleGoing.add(notifKey.sharedBy!);
+            //add the person
+            eventModel.invitees.add(notifKey.sharedBy!);
+            eventModel.peopleGoing.add(notifKey.sharedBy!);
 
-          //retranslate to string
-          String storedValue =
-              EventNotificationModel.convertEventNotificationToJson(eventModel);
+            //retranslate to string
+            String storedValue =
+            EventNotificationModel.convertEventNotificationToJson(eventModel);
 
-          //store for myself and all invitees
-          await put(eventKey, storedValue);
-          await shareWithMany(
-              key, storedValue, notifKey.sharedWith, eventModel.invitees);
+            //store for myself and all invitees
+            await put(eventKey, storedValue);
+            await shareWithMany(
+                key, storedValue, notifKey.sharedWith, eventModel.invitees);
+          }
         }
         break;
     }

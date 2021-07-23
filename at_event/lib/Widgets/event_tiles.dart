@@ -48,12 +48,15 @@ class _TodayEventTileState extends State<TodayEventTile> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold),
+                    Container(
+                      height: 22,
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     SizedBox(
                       height: 6,
