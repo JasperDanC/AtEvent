@@ -64,9 +64,9 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     textController = controller != null ? controller : TextEditingController();
     textController = TextEditingController.fromValue(TextEditingValue(
-        text: initialValue != null ? initialValue : '',
+        text:  initialValue ,
         selection: TextSelection.collapsed(
-            offset: initialValue != null ? initialValue.length : -1)));
+            offset:  initialValue.length)));
     return Container(
       width: width,
       height: height,

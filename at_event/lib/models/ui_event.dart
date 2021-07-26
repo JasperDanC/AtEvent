@@ -29,7 +29,7 @@ class UI_Event {
       if (realEvent.event.repeatCycle == RepeatCycle.WEEK) {
         recurrenceProperties.recurrenceType = RecurrenceType.weekly;
         WeekDays? weekDays;
-        switch (realEvent.event.occursOn) {
+        switch (realEvent.event.occursOn!) {
           case Week.SUNDAY:
             weekDays = WeekDays.sunday;
             break;
@@ -52,13 +52,13 @@ class UI_Event {
             weekDays = WeekDays.saturday;
             break;
         }
-        recurrenceProperties.weekDays = [weekDays!];
+        recurrenceProperties.weekDays = [weekDays];
       }
 
       this.recurrenceProperties.interval = realEvent.event.repeatDuration!;
 
       RecurrenceRange? range;
-      switch (realEvent.event.endsOn) {
+      switch (realEvent.event.endsOn!) {
         case EndsOn.NEVER:
           range = RecurrenceRange.noEndDate;
           break;
@@ -73,7 +73,7 @@ class UI_Event {
           break;
       }
 
-      this.recurrenceProperties.recurrenceRange = range!;
+      this.recurrenceProperties.recurrenceRange = range;
 
       this.recurrenceRule = SfCalendar.generateRRule(
           recurrenceProperties, realEvent.event.date!, realEvent.event.date!);

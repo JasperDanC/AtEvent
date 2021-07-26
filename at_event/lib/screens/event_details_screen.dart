@@ -3,7 +3,6 @@ import 'package:at_event/screens/background.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/models/ui_event.dart';
-import 'package:at_event/screens/event_edit_screen.dart';
 import 'package:intl/intl.dart';
 import 'calendar_screen.dart';
 import 'package:at_event/service/vento_services.dart';
@@ -47,7 +46,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           DateFormat('mm').format(widget.event!.endTime!);
     } else {
       if (widget.event!.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
-        timeText = getWeekString(widget.event!.realEvent.event.occursOn)! +
+        timeText = getWeekString(widget.event!.realEvent.event.occursOn!)! +
             "s\nFrom: " +
             widget.event!.startTime!.hour.toString() +
             ":" +
@@ -216,23 +215,23 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          FloatingActionButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      EventEditScreen(event: widget.event),
-                                ),
-                              );
-                            },
-                            backgroundColor: kPrimaryBlue,
-                            child: Icon(
-                              Icons.edit,
-                              size: 38,
-                              color: Colors.white,
-                            ),
-                          ),
+                          // FloatingActionButton(
+                          //   onPressed: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             EventEditScreen(event: widget.event),
+                          //       ),
+                          //     );
+                          //   },
+                          //   backgroundColor: kPrimaryBlue,
+                          //   child: Icon(
+                          //     Icons.edit,
+                          //     size: 38,
+                          //     color: Colors.white,
+                          //   ),
+                          // ),
                         ]
                       : [],
                 ),

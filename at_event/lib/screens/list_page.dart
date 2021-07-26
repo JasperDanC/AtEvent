@@ -1,6 +1,4 @@
 import 'package:at_contacts_flutter/screens/contacts_screen.dart';
-import 'package:at_event/data/data_homescreen.dart';
-import 'package:at_event/models/event_type_model_homescreen.dart';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/screens/calendar_screen.dart';
@@ -26,7 +24,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  List<EventTypeModel> eventsType = getEventTypes();
+
   List<UI_Event> events = [];
   String activeAtSign = '';
   @override

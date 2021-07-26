@@ -36,7 +36,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
   @override
   void initState() {
     getAtSign();
-    switch (widget.event!.category) {
+    switch (widget.event!.category!) {
       case EventCategory.Class:
         _dropDownValue = 2;
         break;
@@ -59,7 +59,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
         _dropDownValue = 1;
         break;
     }
-    final ScrollController _scrollController = ScrollController();
+
     clientSdkService = VentoService.getInstance();
     super.initState();
   }
@@ -369,7 +369,6 @@ class _EventEditScreenState extends State<EventEditScreen> {
 
     for (String invitee in newEventNotification.invitees) {
       atKey.sharedWith = invitee;
-      var operation = OperationEnum.update;
       await clientSdkService.put(atKey, storedValue);
     }
 

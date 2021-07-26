@@ -141,7 +141,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                             elevation: 0,
                             dropdownColor: kBackgroundGrey,
                             value: eventData!.event.occursOn != null
-                                ? getWeekString(eventData!.event.occursOn)
+                                ? getWeekString(eventData!.event.occursOn!)
                                 : null,
                             hint: Text('Occurs on'),
                             items: occursOnOptions.map(
@@ -376,7 +376,7 @@ class _RecurringEventState extends State<RecurringEvent> {
 
   _update() async {
     //goes through and makes sure every field was set to something
-    bool filled = widget.eventDate!.event != null ||
+    bool filled =
         widget.eventDate!.event.startTime != null ||
         widget.eventDate!.event.endTime != null;
 

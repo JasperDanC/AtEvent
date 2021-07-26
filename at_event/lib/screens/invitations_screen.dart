@@ -118,7 +118,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       .event.realEvent.event.repeatCycle ==
                                   RepeatCycle.WEEK) {
                                 timeText = getWeekString(eventInvite
-                                        .event.realEvent.event.occursOn)! +
+                                        .event.realEvent.event.occursOn!)! +
                                     "s\nFrom: " +
                                     DateFormat('hh:mm a')
                                         .format(
@@ -276,8 +276,6 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-
-                                          GroupInvite copyOfInvite = GroupInvite(group: groupInvites[index].group, from: groupInvites[index].from);
                                           return InviteDetailsScreen(
                                             groupInvite: groupInvites[index],
                                             isEvent: false,
