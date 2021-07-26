@@ -17,7 +17,7 @@ class Background extends StatefulWidget {
 
 class _BackgroundState extends State<Background> {
   VentoService clientSdkService = VentoService.getInstance();
-  final AnonymousAuthService _auth = AnonymousAuthService();
+  late AnonymousAuthService _auth;
 
   String activeAtSign = '';
 
@@ -26,6 +26,7 @@ class _BackgroundState extends State<Background> {
   void initState() {
     if (widget.loggedIn) {
       getAtSignAndInitContacts();
+      _auth = AnonymousAuthService();
     }
     scaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();

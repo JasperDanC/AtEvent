@@ -211,8 +211,8 @@ class MixedConstants {
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
   static const String MAP_KEY = 'aVcPBmx2dbFdPHsuIRQe';
   static const String HERE_API_KEY =
-      'ZzXXHMEtcbSZGWaoYHPqjJRnkXyTdaip-HFCEA1AnMg';
-  static const String APP_API_KEY = '477b-876u-bcez-c42z-6a3d';
+      '-Il6yU4u4KnNZ8pchwhFm-yyAPjvTPXdDFce46yzzMk';
+  static const String APP_API_KEY = '400b-806u-bzez-z42z-6a3p';
 }
 
 class AppStrings {

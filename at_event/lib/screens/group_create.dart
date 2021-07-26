@@ -147,6 +147,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
       atKey.sharedBy = activeAtSign;
       Metadata metadata = Metadata();
       metadata.ccd = true;
+      metadata.ttr = 40;
       atKey.metadata = metadata;
       print(atKey.toString());
 
@@ -154,7 +155,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
       String storedValue = GroupModel.convertGroupToJson(group);
 
       //put that shiza on the secondary
-      await clientSdkService.put(atKey, storedValue);
+      await VentoService.getInstance().put(atKey, storedValue);
       await VentoService.getInstance()
           .shareWithMany(group.key, storedValue, activeAtSign, group.invitees);
 
