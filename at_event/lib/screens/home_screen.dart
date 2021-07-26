@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/ui_event.dart';
@@ -169,9 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
                 ListTile(
-                    title: Text('Sign out of image service'),
+                    title: Text('Sign out and Exit!'),
                     onTap: () async {
                       await _auth.signOut();
+                      SystemNavigator.pop();
                     })
               ],
             ),
@@ -302,37 +304,31 @@ class _HomeScreenState extends State<HomeScreen> {
                           for (int i = 0;
                               i < Provider.of<UIData>(context).eventsLength;
                               i++) {
-                            UI_Event uiEvent = Provider.of<UIData>(context)
-                                .getEvent(i);
+                            UI_Event uiEvent =
+                                Provider.of<UIData>(context).getEvent(i);
 
                             if (uiEvent.isRecurring) {
-                              if(day.isAfter(uiEvent.startTime!) || day.difference(uiEvent.startTime!).inDays <1){
-                                if (uiEvent
-                                    .realEvent
-                                    .event
-                                    .repeatCycle ==
+                              if (day.isAfter(uiEvent.startTime!) ||
+                                  day.difference(uiEvent.startTime!).inDays <
+                                      1) {
+                                if (uiEvent.realEvent.event.repeatCycle ==
                                     RepeatCycle.MONTH) {
                                   print(uiEvent.startTime!.day);
                                   print(day.day);
-                                  if(uiEvent.startTime!.day == day.day){
+                                  if (uiEvent.startTime!.day == day.day) {
                                     allEvents.add(uiEvent);
                                   }
                                 } else {
-                                  if(uiEvent.realEvent.event.occursOn!.index == day.weekday) {
+                                  if (uiEvent.realEvent.event.occursOn!.index ==
+                                      day.weekday) {
                                     allEvents.add(uiEvent);
                                   }
                                 }
                               }
                             } else {
-                              if (uiEvent.startTime!
-                                  .day ==
-                                  day.day &&
-                                  uiEvent.startTime!
-                                      .month ==
-                                      day.month &&
-                                  uiEvent.startTime!
-                                      .year ==
-                                      day.year) {
+                              if (uiEvent.startTime!.day == day.day &&
+                                  uiEvent.startTime!.month == day.month &&
+                                  uiEvent.startTime!.year == day.year) {
                                 allEvents.add(uiEvent);
                               }
                             }
@@ -343,12 +339,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-
                 Text(
                   "Today's Events",
                   style: kSubHeadingTextStyle,
                 ),
-
                 Container(
                   height: SizeConfig().screenHeight * 0.38,
                   child: events.length > 0
@@ -391,8 +385,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                 ),
-
-
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -414,9 +406,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(
                       child: Column(
                         children: [
-                          SizedBox(height: 2.0,),
+                          SizedBox(
+                            height: 2.0,
+                          ),
                           Container(
-                            height:15,
+                            height: 15,
                             width: double.infinity,
                             color: Colors.transparent,
                             child: Text(

@@ -190,6 +190,7 @@ class KeyConstants {
   static const String confirmStart = 'confm_';
   static const String profilePicStart = 'prfil_';
 }
+
 enum KeyType {
   EVENT,
   GROUP,
@@ -208,8 +209,9 @@ class MixedConstants {
   static String regex = '.$NAMESPACE@';
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
-  static const String MAP_KEY = 'xp4B6kQBGFBAnrEpXEEd';
-  static const String HERE_API_KEY = 'dews3SyOoBzfMirwbjE7IL8OaiapjWWqZGAD1eGr0qU';
+  static const String MAP_KEY = 'aVcPBmx2dbFdPHsuIRQe';
+  static const String HERE_API_KEY =
+      'ZzXXHMEtcbSZGWaoYHPqjJRnkXyTdaip-HFCEA1AnMg';
   static const String APP_API_KEY = '477b-876u-bcez-c42z-6a3d';
 }
 
@@ -220,8 +222,6 @@ class AppStrings {
   static const String reset_keychain = "Reset Keychain";
   static const String atsign_error = 'ATSIGN_NOT_FOUND';
 }
-
-
 
 /*const String tinyPNG_base64 =
     'YXBpOnY3QzM0M2wxeFlWQ1p3aGtCUkdIOEJZNDRWUDh5Zno0';*/ // Not needed anymore

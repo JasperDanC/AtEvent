@@ -104,12 +104,16 @@ class _SelectLocationState extends State<SelectLocation> {
                 ),
               ),
               SizedBox(width: 10.toWidth),
-              InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Text('Cancel',
-                      style: kNormalTextStyle.copyWith(
-                        color: kColorStyle3,
-                      ))),
+              Column(
+                children: [
+                  InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Text('Cancel',
+                          style: kNormalTextStyle.copyWith(
+                            color: kColorStyle3,
+                          ))),
+                ],
+              ),
             ],
           ),
           SizedBox(height: 5.toHeight),
@@ -166,8 +170,7 @@ class _SelectLocationState extends State<SelectLocation> {
           SizedBox(height: 18.toHeight),
           InkWell(
               onTap: () async {
-                var point = await getMyLocation();
-                if (point == null) {
+                if (currentLocation == null) {
                   CustomToast().show('Unable to access location', context);
                   return;
                 }
