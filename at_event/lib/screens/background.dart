@@ -1,6 +1,8 @@
+import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:at_event/utils/constants.dart';
+import 'package:flutter/services.dart';
 import '../service/vento_services.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 
@@ -15,6 +17,7 @@ class Background extends StatefulWidget {
 
 class _BackgroundState extends State<Background> {
   VentoService clientSdkService = VentoService.getInstance();
+  final AnonymousAuthService _auth = AnonymousAuthService();
 
   String activeAtSign = '';
 
@@ -119,6 +122,12 @@ class _BackgroundState extends State<Background> {
                         VentoService.getInstance().deleteAll(context);
                       },
                     ),
+                    ListTile(
+                        title: Text('Sign out and Exit!'),
+                        onTap: () async {
+                          await _auth.signOut();
+                          SystemNavigator.pop();
+                        })
                   ],
                 ),
               )
@@ -132,7 +141,8 @@ class _BackgroundState extends State<Background> {
     String? currentAtSign = await VentoService.getInstance().getAtSign();
 
     activeAtSign = currentAtSign!;
-    initializeContactsService(VentoService.getInstance().atClientInstance!, activeAtSign,
+    initializeContactsService(
+        VentoService.getInstance().atClientInstance!, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
   }
 }
