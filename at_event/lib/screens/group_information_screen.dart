@@ -15,7 +15,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
-import 'package:at_event/service/image_anonymous_authentication.dart';
 
 final Reference storageReference =
     FirebaseStorage.instance.ref().child("GroupPictures");
@@ -38,8 +37,7 @@ class _GroupInformationState extends State<GroupInformation> {
   bool uploading = false;
   String postId = Uuid().v4();
   late bool isCreator;
-  bool _nonAsset = false;
-  final AnonymousAuthService _auth = AnonymousAuthService();
+
 
   @override
   void initState() {

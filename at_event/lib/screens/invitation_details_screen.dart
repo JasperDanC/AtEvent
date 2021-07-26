@@ -56,7 +56,7 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
         if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
             RepeatCycle.WEEK) {
           timeText = getWeekString(
-                  widget.eventInvite!.event.realEvent.event.occursOn)! +
+                  widget.eventInvite!.event.realEvent.event.occursOn!)! +
               "s\nFrom: " +
               widget.eventInvite!.event.startTime!.hour.toString() +
               ":" +

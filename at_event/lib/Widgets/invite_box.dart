@@ -4,6 +4,7 @@ import 'package:at_event/utils/constants.dart';
 /// UI Widget designed to display all of the atsigns invited to our event/group
 /// has a function [onAdd] designed to create functionality to integrate multiple invitation boxes.
 
+//ignore: must_be_immutable
 class InviteBox extends StatefulWidget {
   InviteBox(
       {required this.invitees,

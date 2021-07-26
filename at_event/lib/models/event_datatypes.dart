@@ -69,9 +69,7 @@ class EventNotificationModel {
   static String convertEventNotificationToJson(
       EventNotificationModel eventNotification) {
     var notification = json.encode({
-      'title': eventNotification.title != null
-          ? eventNotification.title.toString()
-          : '',
+      'title': eventNotification.title.toString(),
       'isCancelled': eventNotification.isCancelled.toString(),
       'isSharing': eventNotification.isSharing.toString(),
       'description': eventNotification.description,
@@ -212,6 +210,8 @@ class Event {
         case RepeatCycle.MONTH:
           date = data['date'] != 'null' ? DateTime.parse(data['date']) : null;
           break;
+        case null:
+          date = null;
       }
       endsOn = (data['endsOn'] == EndsOn.NEVER.toString()
           ? EndsOn.NEVER
@@ -233,6 +233,8 @@ class Event {
           break;
         case EndsOn.NEVER:
           // endEventOn = null;
+          break;
+        case null:
           break;
       }
     }
@@ -263,7 +265,7 @@ Week? getWeekEnum(String? weekday) {
   return null;
 }
 
-String? getWeekString(Week? weekday) {
+String? getWeekString(Week weekday) {
   switch (weekday) {
     case Week.MONDAY:
       return 'Monday';
@@ -280,7 +282,7 @@ String? getWeekString(Week? weekday) {
     case Week.SUNDAY:
       return 'Sunday';
   }
-  return null;
+
 }
 
 String timeOfDayToString(DateTime time) {

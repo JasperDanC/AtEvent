@@ -132,7 +132,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         });
                       } else {
                         if (ctd.appointments != null ||
-                            ctd.appointments!.length != null) {
+                            ctd.appointments!.length != 0) {
                           UI_Event? foundEvent;
                           if(ctd.appointments![0] is Appointment) {
                             foundEvent = Provider.of<UIData>(

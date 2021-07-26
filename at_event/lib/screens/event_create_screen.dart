@@ -33,18 +33,14 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
   int? _categoryDropDownValue = 1;
   int? _groupDropDownValue = 0;
 
-  final ScrollController _scrollController = ScrollController();
   VentoService? clientSdkService;
   String? _eventTitle;
   String? _eventDesc;
   EventCategory? _eventCategory;
-  List<String>? _invitees;
   String? _eventDay;
   String? _eventStartTime;
   String? _eventEndTime;
   String activeAtSign = '';
-
-  TextEditingController? _inviteTextController;
 
   @override
   void initState() {

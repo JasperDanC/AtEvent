@@ -20,8 +20,6 @@ import '../utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
-import 'package:at_event/models/event_type_model_homescreen.dart';
-import 'package:at_event/data/data_homescreen.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:at_event/Widgets/circle_avatar.dart';
 import 'package:at_event/models/event_datatypes.dart';
@@ -56,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _nonAsset = false;
   final AnonymousAuthService _auth = AnonymousAuthService();
 
-  List<EventTypeModel> eventsType = getEventTypes();
+
   List<UI_Event> events = [];
   List<Widget> groupCards = [];
 

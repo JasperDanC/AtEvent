@@ -26,13 +26,12 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
   List<String> _invitees = [];
   String activeAtSign = '';
 
-  TextEditingController? _inviteTextController;
+
 
   @override
   void initState() {
     getAtSign();
     clientSdkService = VentoService.getInstance();
-    _inviteTextController = TextEditingController();
     super.initState();
   }
 
