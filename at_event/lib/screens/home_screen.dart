@@ -94,8 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
       0,
       Container(
         margin: EdgeInsets.all(8),
-        height: 85,
-        width: 25,
+        height: 85.toHeight,
+        width: 25.toWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -224,11 +224,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     SizedBox(
-                                      height: 20,
-                                      child: Text(
-                                          "Let's see what is happening today!",
+                                      height: 24.toHeight,
+                                      child: Text("Have a look at your events!",
                                           style: kNormalTextStyle.copyWith(
-                                              fontSize: 16)),
+                                              fontSize: 18)),
                                     ),
                                     GestureDetector(
                                       onTap: () {
@@ -406,11 +405,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(
                       child: Column(
                         children: [
-                          SizedBox(
-                            height: 2.0,
-                          ),
                           Container(
-                            height: 15,
+                            height: 15.toHeight,
                             width: double.infinity,
                             color: Colors.transparent,
                             child: Text(
@@ -419,11 +415,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: kNormalTextStyle,
                             ),
                           ),
-                          SingleChildScrollView(
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: groupCards,
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.zero,
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: groupCards,
+                              ),
                             ),
                           ),
                         ],

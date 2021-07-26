@@ -13,6 +13,7 @@ import '../utils/constants.dart';
 import 'package:at_onboarding_flutter/at_onboarding_flutter.dart';
 import 'package:at_utils/at_logger.dart';
 import 'home_screen.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -64,6 +65,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserImageModel?>(context, listen: false);
     print(user);
+    SizeConfig().init(context);
     return Background(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 40.0),
@@ -71,7 +73,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
-                height: 575,
+                height: SizeConfig().screenHeight * 0.72,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     color: kColorStyle1),
@@ -109,9 +111,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               style: kTitleTextStyle.copyWith(fontSize: 26),
                             ),
                             SizedBox(height: 15.0),
-                            Text(
-                              'Never miss a class update ever again!\nWith @Vento, we got you covered.\n\nAll your important class info at the palm of your hand.',
-                              style: kNormalTextStyle.copyWith(fontSize: 16),
+                            Expanded(
+                              child: Text(
+                                'Never miss a class update ever again!\nWith @Vento, we got you covered.',
+                                style: kNormalTextStyle.copyWith(fontSize: 16),
+                              ),
                             ),
                           ],
                         ),
@@ -305,7 +309,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     )),
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
