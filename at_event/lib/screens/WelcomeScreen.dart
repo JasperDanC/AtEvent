@@ -1,5 +1,6 @@
 import 'package:at_client_mobile/at_client_mobile.dart';
 import 'package:at_event/models/user_image_model.dart';
+import 'package:at_event/screens/get_free_atsign_screen.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
 import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:at_event/utils/constants.dart';
@@ -306,26 +307,43 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(
                 height: 10,
               ),
-              TextButton(
-                onPressed: () async {
-                  KeyChainManager _keyChainManager =
-                      KeyChainManager.getInstance();
-                  var _atSignsList =
-                      await _keyChainManager.getAtSignListFromKeychain();
-                  _atSignsList?.forEach((element) {
-                    _keyChainManager.deleteAtSignFromKeychain(element);
-                  });
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                    'Keychain cleaned',
-                    textAlign: TextAlign.center,
-                  )));
-                },
-                child: Text(
-                  AppStrings.reset_keychain,
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () async {
+                      KeyChainManager _keyChainManager =
+                          KeyChainManager.getInstance();
+                      var _atSignsList =
+                          await _keyChainManager.getAtSignListFromKeychain();
+                      _atSignsList?.forEach((element) {
+                        _keyChainManager.deleteAtSignFromKeychain(element);
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                        'Keychain cleaned',
+                        textAlign: TextAlign.center,
+                      )));
+                    },
+                    child: Text(
+                      AppStrings.reset_keychain,
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => GetFreeAtSign(),
+                        ),
+                      );
+                    },
+                    child: Text('Get a free @sign!',
+                        style: kNormalTextStyle.copyWith(
+                            fontSize: 18, fontWeight: FontWeight.w500)),
+                  ),
+                ],
+              )
             ],
           ),
         ),
