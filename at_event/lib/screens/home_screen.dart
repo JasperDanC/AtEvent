@@ -309,8 +309,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       1) {
                                 if (uiEvent.realEvent.event!.repeatCycle ==
                                     RepeatCycle.MONTH) {
-                                  print(uiEvent.startTime!.day);
-                                  print(day.day);
                                   if (uiEvent.startTime!.day == day.day) {
                                     allEvents.add(uiEvent);
                                   }
