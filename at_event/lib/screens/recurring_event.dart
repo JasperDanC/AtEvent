@@ -378,8 +378,8 @@ class _RecurringEventState extends State<RecurringEvent> {
     //goes through and makes sure every field was set to something
     bool filled =
         widget.eventDate!.event.startTime != null ||
-        widget.eventDate!.event.endTime != null;
-
+        widget.eventDate!.event.endDate != null;
+    print("start and end: " + filled.toString());
     if (widget.eventDate!.event.repeatCycle == RepeatCycle.WEEK) {
       filled = filled && widget.eventDate!.event.occursOn != null;
     } else if (widget.eventDate!.event.repeatCycle == RepeatCycle.MONTH) {
@@ -387,7 +387,7 @@ class _RecurringEventState extends State<RecurringEvent> {
     } else {
       filled = false;
     }
-
+    print("occursOn or Date: " + filled.toString());
     if (widget.eventDate!.event.endsOn == null) {
       widget.eventDate!.event.endsOn = EndsOn.NEVER;
     } else if (widget.eventDate!.event.endsOn == EndsOn.ON) {
@@ -396,6 +396,7 @@ class _RecurringEventState extends State<RecurringEvent> {
       filled =
           filled && widget.eventDate!.event.endEventAfterOccurrence != null;
     }
+    print("endsOn: " + filled.toString());
     if (filled) {
       if (widget.eventDate!.event.endsOn == null) {
         widget.eventDate!.event.endsOn = EndsOn.NEVER;

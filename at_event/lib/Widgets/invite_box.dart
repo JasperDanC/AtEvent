@@ -1,5 +1,9 @@
+import 'package:at_contact/at_contact.dart';
+import 'package:at_contacts_flutter/services/contact_service.dart';
+import 'package:at_contacts_flutter/utils/init_contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
+import 'package:at_event/service/vento_services.dart';
 
 /// UI Widget designed to display all of the atsigns invited to our event/group
 /// has a function [onAdd] designed to create functionality to integrate multiple invitation boxes.
@@ -29,6 +33,30 @@ class _InviteBoxState extends State<InviteBox> {
 
   final ScrollController _scrollController = ScrollController();
   String? _inviteeAtSign;
+  String activeAtSign = '';
+  List<String> contactNames = [];
+
+  getAtSignAndInitContacts() async {
+    String? currentAtSign = await VentoService.getInstance().getAtSign();
+
+    activeAtSign = currentAtSign!;
+    initializeContactsService(
+        VentoService.getInstance().atClientInstance!, activeAtSign,
+        rootDomain: MixedConstants.ROOT_DOMAIN);
+    List<AtContact?> contacts = await ContactService().fetchContacts();
+    for(AtContact? c in contacts ) {
+      if(c!=null){
+        contactNames.add(c.atSign!);
+      }
+
+    }
+  }
+
+  @override
+  void initState() {
+    getAtSignAndInitContacts();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +106,7 @@ class _InviteBoxState extends State<InviteBox> {
                   onChanged: (value) {
                     _inviteeAtSign = value;
                   },
+                  autofillHints: contactNames,
                   controller: widget.controller,
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
