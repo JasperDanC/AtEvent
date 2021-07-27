@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:at_event/models/group_model.dart';
 import 'package:at_event/screens/event_details_screen.dart';
@@ -29,6 +30,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image/image.dart' as ImD;
 import 'package:at_event/screens/something_went_wrong.dart';
+import 'package:at_commons/at_commons.dart';
 
 final Reference storageReference =
     FirebaseStorage.instance.ref().child("Profile Pictures");
@@ -531,9 +533,20 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  removeImage() {
+  removeImage()  async {
+    Metadata metadata = Metadata()..ccd = true;
+    AtKey deletekey = AtKey()
+      ..key = VentoService.getInstance()
+          .generateKeyName(activeAtSign, KeyType.PROFILE_PIC, isRandom: false)
+      ..sharedBy = activeAtSign
+      ..sharedWith = activeAtSign
+      ..metadata = metadata;
+
+
+    await VentoService.getInstance().delete(deletekey);
     setState(() {
       _image = null;
+      Provider.of<UIData>(context,listen: false).setProfilePicURL('');
     });
   }
 
