@@ -56,7 +56,7 @@ class _VentoState extends State<Vento> {
 
   Widget build(BuildContext context) {
     if (_error) {
-      return SomethingWentWrongScreen();
+      return MaterialApp(home: SomethingWentWrongScreen());
     }
     if (!_initialized) {
       return Background(
