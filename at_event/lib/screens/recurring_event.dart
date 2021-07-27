@@ -91,7 +91,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                           icon: Icon(Icons.keyboard_arrow_down),
                           underline: SizedBox(),
                           elevation: 0,
-                          dropdownColor: kBackgroundGrey,
+                          dropdownColor: Colors.white,
                           value: (eventData!.event.repeatCycle != null)
                               ? eventData!.event.repeatCycle == RepeatCycle.WEEK
                                   ? 'Week'
@@ -212,10 +212,17 @@ class _RecurringEventState extends State<RecurringEvent> {
                         print("opened picker");
                         final timePicked = await showTimePicker(
                             context: context,
-                            initialTime: widget.eventDate!.event.date != null
-                                ? TimeOfDay.fromDateTime(eventData!.event.date!)
-                                : TimeOfDay.now(),
+                            initialTime:
+                                widget.eventDate!.event.startTime != null
+                                    ? TimeOfDay.fromDateTime(
+                                        eventData!.event.startTime!)
+                                    : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
+
+                        if (eventData!.event!.date == null) {
+                          eventData!.event!.date = DateTime.now();
+                          eventData!.event!.endDate = DateTime.now();
+                        }
 
                         if (timePicked != null) {
                           print("time picked not null");
@@ -272,7 +279,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   ],
                 ),
                 SizedBox(height: 25.toHeight),
-                Text('Ends On', style: kNormalTextStyle),
+                Text('End Event on: ', style: kNormalTextStyle),
                 SizedBox(height: 25.toHeight),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -376,8 +383,7 @@ class _RecurringEventState extends State<RecurringEvent> {
 
   _update() async {
     //goes through and makes sure every field was set to something
-    bool filled =
-        widget.eventDate!.event.startTime != null ||
+    bool filled = widget.eventDate!.event.startTime != null ||
         widget.eventDate!.event.endTime != null;
 
     if (widget.eventDate!.event.repeatCycle == RepeatCycle.WEEK) {
