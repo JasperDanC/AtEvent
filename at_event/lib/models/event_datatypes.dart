@@ -12,7 +12,7 @@ class EventNotificationModel {
   late List<String> peopleGoing;
   late List<String> invitees;
   EventCategory? category;
-  late Event event;
+  late Event? event;
   late final String key;
   bool? isSharing;
   bool?
@@ -90,22 +90,22 @@ class EventNotificationModel {
         'label': eventNotification.setting!.label
       }),
       'event': json.encode({
-        'isRecurring': eventNotification.event.isRecurring.toString(),
-        'date': eventNotification.event.date.toString(),
-        'endDate': eventNotification.event.endDate.toString(),
-        'startTime': eventNotification.event.startTime != null
-            ? eventNotification.event.startTime!.toUtc().toString()
+        'isRecurring': eventNotification.event!.isRecurring.toString(),
+        'date': eventNotification.event!.date.toString(),
+        'endDate': eventNotification.event!.endDate.toString(),
+        'startTime': eventNotification.event!.startTime != null
+            ? eventNotification.event!.startTime!.toUtc().toString()
             : null,
-        'endTime': eventNotification.event.endTime != null
-            ? eventNotification.event.endTime!.toUtc().toString()
+        'endTime': eventNotification.event!.endTime != null
+            ? eventNotification.event!.endTime!.toUtc().toString()
             : null,
-        'repeatDuration': eventNotification.event.repeatDuration.toString(),
-        'repeatCycle': eventNotification.event.repeatCycle.toString(),
-        'occursOn': eventNotification.event.occursOn.toString(),
-        'endsOn': eventNotification.event.endsOn.toString(),
-        'endEventOnDate': eventNotification.event.endEventOnDate.toString(),
+        'repeatDuration': eventNotification.event!.repeatDuration.toString(),
+        'repeatCycle': eventNotification.event!.repeatCycle.toString(),
+        'occursOn': eventNotification.event!.occursOn.toString(),
+        'endsOn': eventNotification.event!.endsOn.toString(),
+        'endEventOnDate': eventNotification.event!.endEventOnDate.toString(),
         'endEventAfterOccurance':
-            eventNotification.event.endEventAfterOccurrence.toString()
+            eventNotification.event!.endEventAfterOccurrence.toString()
       }),
     });
     return notification;
@@ -119,9 +119,9 @@ class EventNotificationModel {
       location: this.setting!.label!,
       peopleGoing: this.peopleGoing,
       invitees: this.invitees,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      isRecurring: this.event.isRecurring,
+      startTime: event!.startTime,
+      endTime: event!.endTime,
+      isRecurring: this.event!.isRecurring,
       realEvent: this,
     );
 
@@ -282,7 +282,6 @@ String? getWeekString(Week weekday) {
     case Week.SUNDAY:
       return 'Sunday';
   }
-
 }
 
 String timeOfDayToString(DateTime time) {

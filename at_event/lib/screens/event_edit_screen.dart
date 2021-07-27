@@ -9,8 +9,6 @@ import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 
-
-
 class EventEditScreen extends StatefulWidget {
   EventEditScreen({this.event});
   final UI_Event? event;
@@ -332,7 +330,7 @@ class _EventEditScreenState extends State<EventEditScreen> {
     EventNotificationModel oldEventModel = widget.event!.realEvent;
     Event newEvent;
     if (_eventDay == null || _eventStartTime == null || _eventEndTime == null) {
-      newEvent = oldEventModel.event;
+      newEvent = oldEventModel.event!;
     } else {
       newEvent = Event()
         ..date = DateTime.parse(_eventDay!)
@@ -341,7 +339,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
     }
 
     Setting location = Setting()
-      ..label = _eventLocation != null ? _eventLocation : widget.event!.location;
+      ..label =
+          _eventLocation != null ? _eventLocation : widget.event!.location;
 
     EventNotificationModel newEventNotification = EventNotificationModel()
       ..event = newEvent
@@ -350,7 +349,8 @@ class _EventEditScreenState extends State<EventEditScreen> {
       ..peopleGoing = oldEventModel.peopleGoing
       ..groupKey = ''
       ..title = _eventTitle != null ? _eventTitle! : widget.event!.eventName
-      ..description = _eventDesc != null ? _eventDesc : widget.event!.description
+      ..description =
+          _eventDesc != null ? _eventDesc : widget.event!.description
       ..setting = location
       ..key = oldEventModel.key;
 

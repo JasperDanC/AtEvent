@@ -52,13 +52,10 @@ class _ConcurrentEventRequestState extends State<ConcurrentEventRequest> {
                     height: 2,
                   ),
                   SizedBox(height: 15.toHeight),
-                  Text(widget.concurrentEvent.title,
-                          style: kNormalTextStyle),
-
-                   Text(
-                          '${timeOfDayToString(widget.concurrentEvent.event.startTime!)} on ${dateToString(widget.concurrentEvent.event.date!)}',
-                          style: kNormalTextStyle),
-
+                  Text(widget.concurrentEvent.title, style: kNormalTextStyle),
+                  Text(
+                      '${timeOfDayToString(widget.concurrentEvent.event!.startTime!)} on ${dateToString(widget.concurrentEvent.event!.date!)}',
+                      style: kNormalTextStyle),
                   SizedBox(height: 20.toHeight),
                   !isLoader
                       ? CustomButton(

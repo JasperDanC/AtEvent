@@ -11,10 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:at_event/models/uicalendar_event_data_source.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'home_screen.dart';
-
-void main() {
-  runApp(CalendarScreen());
-}
+import 'package:at_common_flutter/services/size_config.dart';
 
 // ignore: must_be_immutable
 class CalendarScreen extends StatefulWidget {
@@ -57,6 +54,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Background(
       child: Expanded(
         child: Container(
@@ -64,19 +62,19 @@ class _CalendarScreenState extends State<CalendarScreen> {
               color: kPrimaryBlue, borderRadius: kBasicBorderRadius),
           child: Padding(
             padding: const EdgeInsets.symmetric(
-              horizontal: 35,
+              horizontal: 30,
               vertical: 55,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
                       "Your Calendar",
                       style: TextStyle(
-                        fontSize: 35,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -134,14 +132,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         if (ctd.appointments != null ||
                             ctd.appointments!.length != 0) {
                           UI_Event? foundEvent;
-                          if(ctd.appointments![0] is Appointment) {
-                            foundEvent = Provider.of<UIData>(
-                                context, listen: false).getUIEventByName(
-                                ctd.appointments![0].subject);
+                          if (ctd.appointments![0] is Appointment) {
+                            foundEvent = Provider.of<UIData>(context,
+                                    listen: false)
+                                .getUIEventByName(ctd.appointments![0].subject);
                           } else {
-                            foundEvent = Provider.of<UIData>(
-                                context, listen: false).getUIEventByName(
-                                ctd.appointments![0].eventName);
+                            foundEvent =
+                                Provider.of<UIData>(context, listen: false)
+                                    .getUIEventByName(
+                                        ctd.appointments![0].eventName);
                           }
 
                           if (foundEvent != null) {
@@ -233,7 +232,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ),
                               CircleAvatar(
                                 backgroundColor: kEventBlue,
-                                radius: numAppointments != 0 ? 15 : 0,
+                                radius: numAppointments != 0 ? 15.toHeight : 0,
                                 child: Text(
                                   numAppointments != 0
                                       ? numAppointments.toString()
