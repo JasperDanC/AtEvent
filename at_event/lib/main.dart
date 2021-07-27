@@ -14,7 +14,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
 import 'models/user_image_model.dart';
 
 void main() async {
@@ -57,7 +56,11 @@ class _VentoState extends State<Vento> {
 
   Widget build(BuildContext context) {
     if (_error) {
-      return SomethingWentWrongScreen();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => SomethingWentWrongScreen(),
+        ),
+      );
     }
 
     if (!_initialized) {
@@ -83,7 +86,7 @@ class _VentoState extends State<Vento> {
           ),
         ],
         child: MaterialApp(
-          title: '@Vento',
+            title: '@Vento',
             debugShowCheckedModeBanner: false,
             theme: ThemeData.dark().copyWith(
               primaryColor: kForegroundGrey,
