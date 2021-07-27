@@ -164,7 +164,7 @@ class _RecurringEventState extends State<RecurringEvent> {
 
                               setState(() {});
                             }))
-                    : CustomInputField(
+                    : InputField(
                         width: 350.toWidth,
                         height: 50.toHeight,
                         isReadOnly: true,
@@ -241,7 +241,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                         }
                       },
                     ),
-                    CustomInputField(
+                    InputField(
                       width: 155.toWidth,
                       height: 50.toHeight,
                       isReadOnly: true,

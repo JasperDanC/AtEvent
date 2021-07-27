@@ -139,6 +139,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 TextField(
                   cursorColor: Colors.white,
                   controller: widget.locationController,
+                  textInputAction: TextInputAction.next,
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Location',
