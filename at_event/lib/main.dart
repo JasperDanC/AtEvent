@@ -56,13 +56,8 @@ class _VentoState extends State<Vento> {
 
   Widget build(BuildContext context) {
     if (_error) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (BuildContext context) => SomethingWentWrongScreen(),
-        ),
-      );
+      return SomethingWentWrongScreen();
     }
-
     if (!_initialized) {
       return Background(
         child: Center(
