@@ -36,20 +36,20 @@ class _RecurringEventState extends State<RecurringEvent> {
     getAtSign();
     clientSdkService = VentoService.getInstance();
     eventData = widget.eventDate;
-    eventData!.event.isRecurring = true;
+    eventData!.event!.isRecurring = true;
 
     super.initState();
     repeatOccurrance = repeatOccurrenceOptions;
     occursOnOptions = occursOnWeekOptions;
-    if (eventData!.event.repeatCycle != null) {
-      if (eventData!.event.repeatCycle == RepeatCycle.MONTH) {
+    if (eventData!.event!.repeatCycle != null) {
+      if (eventData!.event!.repeatCycle == RepeatCycle.MONTH) {
         repeatsWeekly = false;
-      } else if (eventData!.event.repeatCycle == RepeatCycle.WEEK) {
+      } else if (eventData!.event!.repeatCycle == RepeatCycle.WEEK) {
         repeatsWeekly = true;
       }
     } else {
       repeatsWeekly = false;
-      eventData!.event.repeatCycle = RepeatCycle.MONTH;
+      eventData!.event!.repeatCycle = RepeatCycle.MONTH;
     }
   }
 
@@ -92,10 +92,11 @@ class _RecurringEventState extends State<RecurringEvent> {
                           underline: SizedBox(),
                           elevation: 0,
                           dropdownColor: Colors.white,
-                          value: (eventData!.event.repeatCycle != null)
-                              ? eventData!.event.repeatCycle == RepeatCycle.WEEK
+                          value: (eventData!.event!.repeatCycle != null)
+                              ? eventData!.event!.repeatCycle ==
+                                      RepeatCycle.WEEK
                                   ? 'Week'
-                                  : eventData!.event.repeatCycle ==
+                                  : eventData!.event!.repeatCycle ==
                                           RepeatCycle.MONTH
                                       ? 'Month'
                                       : null
@@ -110,13 +111,14 @@ class _RecurringEventState extends State<RecurringEvent> {
                           onChanged: (String? selectedOption) {
                             switch (selectedOption) {
                               case 'Week':
-                                eventData!.event.repeatCycle = RepeatCycle.WEEK;
-                                eventData!.event.date = DateTime.now();
+                                eventData!.event!.repeatCycle =
+                                    RepeatCycle.WEEK;
+                                eventData!.event!.date = DateTime.now();
                                 repeatsWeekly = true;
                                 break;
 
                               case 'Month':
-                                eventData!.event.repeatCycle =
+                                eventData!.event!.repeatCycle =
                                     RepeatCycle.MONTH;
                                 repeatsWeekly = false;
                                 break;
@@ -140,8 +142,8 @@ class _RecurringEventState extends State<RecurringEvent> {
                             underline: SizedBox(),
                             elevation: 0,
                             dropdownColor: kBackgroundGrey,
-                            value: eventData!.event.occursOn != null
-                                ? getWeekString(eventData!.event.occursOn!)
+                            value: eventData!.event!.occursOn != null
+                                ? getWeekString(eventData!.event!.occursOn!)
                                 : null,
                             hint: Text('Occurs on'),
                             items: occursOnOptions.map(
@@ -155,10 +157,10 @@ class _RecurringEventState extends State<RecurringEvent> {
                             onChanged: (String? selectedOption) {
                               var weekday = getWeekEnum(selectedOption);
                               if (weekday != null) {
-                                eventData!.event.occursOn = weekday;
+                                eventData!.event!.occursOn = weekday;
                               }
 
-                              print(eventData!.event.occursOn);
+                              print(eventData!.event!.occursOn);
 
                               setState(() {});
                             }))
@@ -168,14 +170,14 @@ class _RecurringEventState extends State<RecurringEvent> {
                         isReadOnly: true,
                         hintText: 'Occurs on',
                         icon: Icons.access_time,
-                        initialValue: eventData!.event.date != null
-                            ? dateToString(eventData!.event.date!)
+                        initialValue: eventData!.event!.date != null
+                            ? dateToString(eventData!.event!.date!)
                             : '',
                         onTap: () async {
                           final datePicked = await showDatePicker(
                             context: context,
-                            initialDate: (eventData!.event.date != null)
-                                ? eventData!.event.date!
+                            initialDate: (eventData!.event!.date != null)
+                                ? eventData!.event!.date!
                                 : DateTime.now(),
                             firstDate: DateTime(2001, 1),
                             lastDate: DateTime(2101),
@@ -183,7 +185,7 @@ class _RecurringEventState extends State<RecurringEvent> {
 
                           if (datePicked != null) {
                             setState(() {
-                              eventData!.event.date = datePicked;
+                              eventData!.event!.date = datePicked;
                             });
                           }
                         },
@@ -203,19 +205,19 @@ class _RecurringEventState extends State<RecurringEvent> {
                       hintText: 'Start',
                       controller: startTimeController,
                       icon: Icons.access_time,
-                      initialValue: eventData!.event.date != null
-                          ? timeOfDayToString(eventData!.event.date!)
+                      initialValue: eventData!.event!.date != null
+                          ? timeOfDayToString(eventData!.event!.date!)
                           : '',
                       value: (value) =>
-                          timeOfDayToString(eventData!.event.date!),
+                          timeOfDayToString(eventData!.event!.date!),
                       onTap: () async {
                         print("opened picker");
                         final timePicked = await showTimePicker(
                             context: context,
                             initialTime:
-                                widget.eventDate!.event.startTime != null
+                                widget.eventDate!.event!.startTime != null
                                     ? TimeOfDay.fromDateTime(
-                                        eventData!.event.startTime!)
+                                        eventData!.event!.startTime!)
                                     : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
 
@@ -228,13 +230,13 @@ class _RecurringEventState extends State<RecurringEvent> {
                           print("time picked not null");
 
                           setState(() {
-                            widget.eventDate!.event.date = DateTime(
-                                eventData!.event.date!.year,
-                                eventData!.event.date!.month,
-                                eventData!.event.date!.day,
+                            widget.eventDate!.event!.date = DateTime(
+                                eventData!.event!.date!.year,
+                                eventData!.event!.date!.month,
+                                eventData!.event!.date!.day,
                                 timePicked.hour,
                                 timePicked.minute);
-                            print(timeOfDayToString(eventData!.event.date!));
+                            print(timeOfDayToString(eventData!.event!.date!));
                           });
                         }
                       },
@@ -245,31 +247,31 @@ class _RecurringEventState extends State<RecurringEvent> {
                       isReadOnly: true,
                       hintText: 'Stop',
                       icon: Icons.access_time,
-                      initialValue: eventData!.event.endDate != null
-                          ? timeOfDayToString(eventData!.event.endDate!)
+                      initialValue: eventData!.event!.endDate != null
+                          ? timeOfDayToString(eventData!.event!.endDate!)
                           : '',
                       value: (value) =>
-                          timeOfDayToString(eventData!.event.endDate!),
+                          timeOfDayToString(eventData!.event!.endDate!),
                       onTap: () async {
                         final timePicked = await showTimePicker(
                             context: context,
-                            initialTime: eventData!.event.endDate != null
+                            initialTime: eventData!.event!.endDate != null
                                 ? TimeOfDay.fromDateTime(
-                                    eventData!.event.endDate!)
+                                    eventData!.event!.endDate!)
                                 : TimeOfDay.now(),
                             initialEntryMode: TimePickerEntryMode.input);
 
-                        if (eventData!.event.date == null) {
+                        if (eventData!.event!.date == null) {
                           CustomToast()
                               .show('Select start time first', context);
                           return;
                         }
                         if (timePicked != null) {
                           setState(() {
-                            eventData!.event.endDate = DateTime(
-                                eventData!.event.date!.year,
-                                eventData!.event.date!.month,
-                                eventData!.event.date!.day,
+                            eventData!.event!.endDate = DateTime(
+                                eventData!.event!.date!.year,
+                                eventData!.event!.date!.month,
+                                eventData!.event!.date!.day,
                                 timePicked.hour,
                                 timePicked.minute);
                           });
@@ -287,11 +289,11 @@ class _RecurringEventState extends State<RecurringEvent> {
                     Text('After A Specific Day ',
                         style: kNormalTextStyle.copyWith(fontSize: 12)),
                     Radio(
-                      groupValue: eventData!.event.endsOn,
+                      groupValue: eventData!.event!.endsOn,
                       toggleable: true,
                       value: EndsOn.ON,
                       onChanged: (dynamic value) {
-                        eventData!.event.endsOn = value;
+                        eventData!.event!.endsOn = value;
                         setState(() {});
                       },
                     ),
@@ -304,20 +306,20 @@ class _RecurringEventState extends State<RecurringEvent> {
                   isReadOnly: true,
                   hintText: 'Select Date',
                   icon: Icons.date_range,
-                  initialValue: (eventData!.event.endEventOnDate != null)
-                      ? dateToString(eventData!.event.endEventOnDate!)
+                  initialValue: (eventData!.event!.endEventOnDate != null)
+                      ? dateToString(eventData!.event!.endEventOnDate!)
                       : '',
                   onTap: () async {
                     final datePicked = await showDatePicker(
                       context: context,
                       initialDate:
-                          eventData!.event.endEventOnDate ?? DateTime.now(),
+                          eventData!.event!.endEventOnDate ?? DateTime.now(),
                       firstDate: DateTime(2001, 1),
                       lastDate: DateTime(2101),
                     );
 
                     if (datePicked != null) {
-                      eventData!.event.endEventOnDate = datePicked;
+                      eventData!.event!.endEventOnDate = datePicked;
                       setState(() {});
                     }
                   },
@@ -330,11 +332,11 @@ class _RecurringEventState extends State<RecurringEvent> {
                     Text('After a Number of Times',
                         style: kNormalTextStyle.copyWith(fontSize: 12)),
                     Radio(
-                      groupValue: eventData!.event.endsOn,
+                      groupValue: eventData!.event!.endsOn,
                       toggleable: true,
                       value: EndsOn.AFTER,
                       onChanged: (dynamic value) {
-                        eventData!.event.endsOn = value;
+                        eventData!.event!.endsOn = value;
 
                         setState(() {});
                       },
@@ -349,14 +351,14 @@ class _RecurringEventState extends State<RecurringEvent> {
                     height: 50.toHeight,
                     hintText: 'Amount of Times Event Occurs',
                     keyStyle: TextInputType.number,
-                    initialValue: eventData!.event.endEventAfterOccurrence !=
+                    initialValue: eventData!.event!.endEventAfterOccurrence !=
                             null
-                        ? eventData!.event.endEventAfterOccurrence.toString()
+                        ? eventData!.event!.endEventAfterOccurrence.toString()
                         : '',
                     value: (val) {
                       if (val.trim().isNotEmpty) {
                         var occurrence = int.parse(val);
-                        eventData!.event.endEventAfterOccurrence = occurrence;
+                        eventData!.event!.endEventAfterOccurrence = occurrence;
                       }
                     }),
                 SizedBox(height: 20),
@@ -383,30 +385,30 @@ class _RecurringEventState extends State<RecurringEvent> {
 
   _update() async {
     //goes through and makes sure every field was set to something
-    bool filled = widget.eventDate!.event.startTime != null ||
-        widget.eventDate!.event.endTime != null;
+    bool filled = widget.eventDate!.event!.startTime != null ||
+        widget.eventDate!.event!.endTime != null;
 
-    if (widget.eventDate!.event.repeatCycle == RepeatCycle.WEEK) {
-      filled = filled && widget.eventDate!.event.occursOn != null;
-    } else if (widget.eventDate!.event.repeatCycle == RepeatCycle.MONTH) {
-      filled = filled && widget.eventDate!.event.date != null;
+    if (widget.eventDate!.event!.repeatCycle == RepeatCycle.WEEK) {
+      filled = filled && widget.eventDate!.event!.occursOn != null;
+    } else if (widget.eventDate!.event!.repeatCycle == RepeatCycle.MONTH) {
+      filled = filled && widget.eventDate!.event!.date != null;
     } else {
       filled = false;
     }
 
-    if (widget.eventDate!.event.endsOn == null) {
-      widget.eventDate!.event.endsOn = EndsOn.NEVER;
-    } else if (widget.eventDate!.event.endsOn == EndsOn.ON) {
-      filled = filled && widget.eventDate!.event.endEventOnDate != null;
-    } else if (widget.eventDate!.event.endsOn == EndsOn.AFTER) {
+    if (widget.eventDate!.event!.endsOn == null) {
+      widget.eventDate!.event!.endsOn = EndsOn.NEVER;
+    } else if (widget.eventDate!.event!.endsOn == EndsOn.ON) {
+      filled = filled && widget.eventDate!.event!.endEventOnDate != null;
+    } else if (widget.eventDate!.event!.endsOn == EndsOn.AFTER) {
       filled =
-          filled && widget.eventDate!.event.endEventAfterOccurrence != null;
+          filled && widget.eventDate!.event!.endEventAfterOccurrence != null;
     }
     if (filled) {
-      if (widget.eventDate!.event.endsOn == null) {
-        widget.eventDate!.event.endsOn = EndsOn.NEVER;
+      if (widget.eventDate!.event!.endsOn == null) {
+        widget.eventDate!.event!.endsOn = EndsOn.NEVER;
       }
-      widget.eventDate!.event.repeatDuration = 1;
+      widget.eventDate!.event!.repeatDuration = 1;
 
       Provider.of<UIData>(context, listen: false)
           .addEvent(widget.eventDate!.toUIEvent());

@@ -33,8 +33,6 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     eventInvites.clear();
@@ -110,19 +108,21 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       .toString() +
                                   " - " +
                                   DateFormat('hh:mm a')
-                                      .format(eventInvites[index].event.endTime!)
+                                      .format(
+                                          eventInvites[index].event.endTime!)
                                       .toString();
                             } else {
                               EventInvite eventInvite = eventInvites[index];
                               if (eventInvite
-                                      .event.realEvent.event.repeatCycle ==
+                                      .event.realEvent.event!.repeatCycle ==
                                   RepeatCycle.WEEK) {
                                 timeText = getWeekString(eventInvite
-                                        .event.realEvent.event.occursOn!)! +
+                                        .event.realEvent.event!.occursOn!)! +
                                     "s\nFrom: " +
                                     DateFormat('hh:mm a')
-                                        .format(
-                                            eventInvites[index].event.startTime!)
+                                        .format(eventInvites[index]
+                                            .event
+                                            .startTime!)
                                         .toString() +
                                     "\n" +
                                     "To: " +
@@ -131,15 +131,16 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                             eventInvites[index].event.endTime!)
                                         .toString();
                               } else if (eventInvite
-                                      .event.realEvent.event.repeatCycle ==
+                                      .event.realEvent.event!.repeatCycle ==
                                   RepeatCycle.MONTH) {
                                 timeText = eventInvite.event.startTime!.day
                                         .toString() +
                                     " each month" +
                                     "\nFrom: " +
                                     DateFormat('hh:mm a')
-                                        .format(
-                                            eventInvites[index].event.startTime!)
+                                        .format(eventInvites[index]
+                                            .event
+                                            .startTime!)
                                         .toString() +
                                     " " +
                                     "To: " +
@@ -158,19 +159,26 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     MaterialButton(
-                                      onPressed: eventInvites.length > index ? () {
-
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-
-                                          EventInvite copyOfInvite = EventInvite(event: eventInvites[index].event, from: eventInvites[index].from);
-                                          return InviteDetailsScreen(
-                                            eventInvite: copyOfInvite,
-                                            isEvent: true,
-                                          );
-                                        }));
-                                      } : (){},
+                                      onPressed: eventInvites.length > index
+                                          ? () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                EventInvite copyOfInvite =
+                                                    EventInvite(
+                                                        event:
+                                                            eventInvites[index]
+                                                                .event,
+                                                        from:
+                                                            eventInvites[index]
+                                                                .from);
+                                                return InviteDetailsScreen(
+                                                  eventInvite: copyOfInvite,
+                                                  isEvent: true,
+                                                );
+                                              }));
+                                            }
+                                          : () {},
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
                                       child: Container(

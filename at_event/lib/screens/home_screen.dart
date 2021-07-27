@@ -54,7 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _nonAsset = false;
   final AnonymousAuthService _auth = AnonymousAuthService();
 
-
   List<UI_Event> events = [];
   List<Widget> groupCards = [];
 
@@ -308,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               if (day.isAfter(uiEvent.startTime!) ||
                                   day.difference(uiEvent.startTime!).inDays <
                                       1) {
-                                if (uiEvent.realEvent.event.repeatCycle ==
+                                if (uiEvent.realEvent.event!.repeatCycle ==
                                     RepeatCycle.MONTH) {
                                   print(uiEvent.startTime!.day);
                                   print(day.day);
@@ -316,7 +315,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     allEvents.add(uiEvent);
                                   }
                                 } else {
-                                  if (uiEvent.realEvent.event.occursOn!.index ==
+                                  if (uiEvent
+                                          .realEvent.event!.occursOn!.index ==
                                       day.weekday) {
                                     allEvents.add(uiEvent);
                                   }
@@ -461,9 +461,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!uiEvent.isRecurring) {
       return calculateDifference(uiEvent.startTime!) == 0;
     } else {
-      if (uiEvent.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
+      if (uiEvent.realEvent.event!.repeatCycle == RepeatCycle.WEEK) {
         int? currentWeekday;
-        switch (uiEvent.realEvent.event.occursOn) {
+        switch (uiEvent.realEvent.event!.occursOn) {
           case Week.SUNDAY:
             currentWeekday = 7;
             break;
@@ -490,24 +490,24 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         return DateTime.now().isAfter(uiEvent.startTime!) &&
             DateTime.now().weekday == currentWeekday &&
-            ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
-                (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
+            ((uiEvent.realEvent.event!.endsOn == EndsOn.NEVER) ||
+                (uiEvent.realEvent.event!.endsOn == EndsOn.AFTER &&
                     (DateTime.now().difference(uiEvent.startTime!).inDays / 7) *
-                            uiEvent.realEvent.event.repeatDuration! <
-                        uiEvent.realEvent.event.endEventAfterOccurrence!) ||
-                (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
+                            uiEvent.realEvent.event!.repeatDuration! <
+                        uiEvent.realEvent.event!.endEventAfterOccurrence!) ||
+                (uiEvent.realEvent.event!.endsOn == EndsOn.ON &&
                     DateTime.now()
-                        .isBefore(uiEvent.realEvent.event.endEventOnDate!)));
+                        .isBefore(uiEvent.realEvent.event!.endEventOnDate!)));
       } else {
         return DateTime.now().day == uiEvent.endTime!.day &&
-            ((uiEvent.realEvent.event.endsOn == EndsOn.NEVER) ||
-                (uiEvent.realEvent.event.endsOn == EndsOn.AFTER &&
+            ((uiEvent.realEvent.event!.endsOn == EndsOn.NEVER) ||
+                (uiEvent.realEvent.event!.endsOn == EndsOn.AFTER &&
                     DateTime.now().difference(uiEvent.startTime!).inDays /
                             30.436875 <
-                        uiEvent.realEvent.event.endEventAfterOccurrence!) ||
-                (uiEvent.realEvent.event.endsOn == EndsOn.ON &&
+                        uiEvent.realEvent.event!.endEventAfterOccurrence!) ||
+                (uiEvent.realEvent.event!.endsOn == EndsOn.ON &&
                     DateTime.now()
-                        .isBefore(uiEvent.realEvent.event.endEventOnDate!)));
+                        .isBefore(uiEvent.realEvent.event!.endEventOnDate!)));
       }
     }
   }

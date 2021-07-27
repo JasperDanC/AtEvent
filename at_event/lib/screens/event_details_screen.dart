@@ -45,8 +45,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           ":" +
           DateFormat('mm').format(widget.event!.endTime!);
     } else {
-      if (widget.event!.realEvent.event.repeatCycle == RepeatCycle.WEEK) {
-        timeText = getWeekString(widget.event!.realEvent.event.occursOn!)! +
+      if (widget.event!.realEvent.event!.repeatCycle == RepeatCycle.WEEK) {
+        timeText = getWeekString(widget.event!.realEvent.event!.occursOn!)! +
             "s\nFrom: " +
             widget.event!.startTime!.hour.toString() +
             ":" +
@@ -56,7 +56,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             widget.event!.endTime!.hour.toString() +
             ":" +
             DateFormat('mm').format(widget.event!.endTime!);
-      } else if (widget.event!.realEvent.event.repeatCycle ==
+      } else if (widget.event!.realEvent.event!.repeatCycle ==
           RepeatCycle.MONTH) {
         timeText = widget.event!.startTime!.day.toString() +
             " of each Month" +

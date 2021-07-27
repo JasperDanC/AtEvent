@@ -53,10 +53,10 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
             ":" +
             DateFormat('mm').format(widget.eventInvite!.event.endTime!);
       } else {
-        if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
+        if (widget.eventInvite!.event.realEvent.event!.repeatCycle ==
             RepeatCycle.WEEK) {
           timeText = getWeekString(
-                  widget.eventInvite!.event.realEvent.event.occursOn!)! +
+                  widget.eventInvite!.event.realEvent.event!.occursOn!)! +
               "s\nFrom: " +
               widget.eventInvite!.event.startTime!.hour.toString() +
               ":" +
@@ -66,7 +66,7 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
               widget.eventInvite!.event.endTime!.hour.toString() +
               ":" +
               DateFormat('mm').format(widget.eventInvite!.event.endTime!);
-        } else if (widget.eventInvite!.event.realEvent.event.repeatCycle ==
+        } else if (widget.eventInvite!.event.realEvent.event!.repeatCycle ==
             RepeatCycle.MONTH) {
           timeText = widget.eventInvite!.event.startTime!.day.toString() +
               " of each Month" +
