@@ -103,35 +103,39 @@ class _SelectedLocationState extends State<SelectedLocation> {
                 ),
               ),
             ),
-            Center(
-              child: Container(
-                padding: EdgeInsets.only(bottom: 20.toHeight),
-                child: CustomButton(
-                    buttonText: 'Save',
-                    onPressed: () {
-                      if ((widget.displayName != null) &&
-                          widget.displayName!.isNotEmpty) {
-                        Setting setting = Setting()
-                          ..label = widget.displayName
-                          ..latitude = widget.point!.latitude
-                          ..longitude = widget.point!.longitude;
-                        setState(() {
-                          widget.createScreen.setting = setting;
-                          widget.createScreen.locationController.text =
-                              setting.label!;
-                        });
+            Positioned(
+              bottom: 80.toHeight,
+              right: 100.toWidth,
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.only(top: 250.toHeight),
+                  child: CustomButton(
+                      buttonText: 'Save',
+                      onPressed: () {
+                        if ((widget.displayName != null) &&
+                            widget.displayName!.isNotEmpty) {
+                          Setting setting = Setting()
+                            ..label = widget.displayName
+                            ..latitude = widget.point!.latitude
+                            ..longitude = widget.point!.longitude;
+                          setState(() {
+                            widget.createScreen.setting = setting;
+                            widget.createScreen.locationController.text =
+                                setting.label!;
+                          });
 
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      } else {
-                        CustomToast()
-                            .show('Cannot leave label empty!', context);
-                      }
-                    },
-                    width: 165.toHeight,
-                    height: 48.toHeight,
-                    buttonColor: kColorStyle2,
-                    fontColor: Colors.white),
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        } else {
+                          CustomToast()
+                              .show('Cannot leave label empty!', context);
+                        }
+                      },
+                      width: 165.toHeight,
+                      height: 48.toHeight,
+                      buttonColor: kColorStyle2,
+                      fontColor: Colors.white),
+                ),
               ),
             ),
           ],

@@ -341,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: kSubHeadingTextStyle,
                 ),
                 Container(
-                  height: SizeConfig().screenHeight * 0.38,
+                  height: SizeConfig().screenHeight * 0.315,
                   child: events.length > 0
                       ? ListView.builder(
                           padding: EdgeInsets.only(top: 8),
@@ -404,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         children: [
                           Container(
-                            height: 15.toHeight,
+                            height: 18.toHeight,
                             width: double.infinity,
                             color: Colors.transparent,
                             child: Text(
@@ -413,13 +413,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: kNormalTextStyle,
                             ),
                           ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              padding: EdgeInsets.zero,
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: groupCards,
-                              ),
+                          SingleChildScrollView(
+                            padding: EdgeInsets.zero,
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: groupCards,
                             ),
                           ),
                         ],

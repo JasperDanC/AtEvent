@@ -1,6 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_common_flutter/widgets/custom_button.dart';
-import 'package:at_common_flutter/widgets/custom_input_field.dart';
 import '../Widgets/custom_toast.dart';
 import 'package:at_event/Widgets/custom_heading.dart';
 import 'package:at_event/models/event_datatypes.dart';
@@ -133,7 +132,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                 SizedBox(height: 6.toHeight),
                 repeatsWeekly
                     ? Container(
-                        color: kBackgroundGrey,
+                        color: Colors.white,
                         width: 350.toWidth,
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: DropdownButton(
@@ -141,7 +140,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                             icon: Icon(Icons.keyboard_arrow_down),
                             underline: SizedBox(),
                             elevation: 0,
-                            dropdownColor: kBackgroundGrey,
+                            dropdownColor: Colors.white,
                             value: eventData!.event!.occursOn != null
                                 ? getWeekString(eventData!.event!.occursOn!)
                                 : null,
@@ -295,7 +294,7 @@ class _RecurringEventState extends State<RecurringEvent> {
                   ],
                 ),
                 SizedBox(height: 6.toHeight),
-                CustomInputField(
+                InputField(
                   width: 350.toWidth,
                   height: 50.toHeight,
                   isReadOnly: true,

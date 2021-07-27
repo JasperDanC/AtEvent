@@ -12,6 +12,7 @@ import 'package:at_commons/at_commons.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:at_event/models/group_model.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 void main() => runApp(InvitationsScreen());
 
@@ -35,6 +36,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     eventInvites.clear();
     groupInvites.clear();
     eventInvites.addAll(Provider.of<UIData>(context).eventInvites);
@@ -46,15 +48,16 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
               borderRadius: kBasicBorderRadius, color: kPrimaryBlue),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: 22.0,
-              vertical: 46,
+              horizontal: 22.0.toWidth,
+              vertical: 46.toHeight,
             ),
             child: Column(
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Container(
-                      width: 250,
+                      width: SizeConfig().screenWidth * 0.5,
                       child: Text(
                         'You have ' +
                             (eventInvites.length + groupInvites.length)
@@ -182,7 +185,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
                                       child: Container(
-                                        width: 300,
+                                        width: SizeConfig().screenWidth * 0.6,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -293,7 +296,7 @@ class _InvitationsScreenState extends State<InvitationsScreen> {
                                       padding: EdgeInsets.zero,
                                       minWidth: 0,
                                       child: Container(
-                                        width: 300,
+                                        width: SizeConfig().screenWidth * 0.6,
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
