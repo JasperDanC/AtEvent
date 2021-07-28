@@ -37,6 +37,7 @@ dependencies:
   image: ^3.0.2
   latlong2: ^0.8.0
   webview_flutter: ^2.0.10
+  flutter_typeahead: ^3.2.0
 
 
 
