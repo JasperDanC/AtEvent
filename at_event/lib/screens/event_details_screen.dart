@@ -1,5 +1,6 @@
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/screens/background.dart';
+import 'package:at_event/screens/location_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/models/ui_event.dart';
@@ -215,6 +216,21 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                               color: Colors.white,
                             ),
                           ),
+                          FloatingActionButton(
+                              child: Icon(Icons.map,
+                                  size: 38, color: Colors.white),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        MapScreen(
+                                            lat: widget.event!.realEvent
+                                                .setting!.latitude,
+                                            lon: widget.event!.realEvent
+                                                .setting!.longitude),
+                                  ),
+                                );
+                              }),
                           // FloatingActionButton(
                           //   onPressed: () {
                           //     Navigator.push(

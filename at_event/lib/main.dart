@@ -13,7 +13,6 @@ import 'package:at_event/models/ui_data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'models/user_image_model.dart';
 
 void main() async {
@@ -60,7 +59,8 @@ class _VentoState extends State<Vento> {
     }
     if (!_initialized) {
       return Background(
-        child: Center(
+        child: Align(
+          alignment: Alignment.center,
           child: SpinKitFoldingCube(
             color: kPrimaryBlue,
             size: 50.0,
