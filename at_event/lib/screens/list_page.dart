@@ -42,7 +42,6 @@ class _ListPageState extends State<ListPage> {
     for (UI_Event e in Provider.of<UIData>(context, listen: false).events) {
       if (e.realEvent.groupKey != null &&
           e.realEvent.groupKey == widget.group.key) {
-        print("Event, " + e.eventName + ", for group, " + widget.group.title!);
         events.add(e);
       }
     }
@@ -179,7 +178,8 @@ class _ListPageState extends State<ListPage> {
                   Center(
                     child: Container(
                       child: Text(
-                        'Seems that you have no events for this group. \n Try and make one!',
+                        VentoService.getInstance().compareAtSigns(activeAtSign, widget.group.atSignCreator) ? 'Seems that you have no events for this group. \n Try and make one!' :
+                        'Seems that you have no events for this group. \n Ask the group creator, ${widget.group.atSignCreator}, to make one!',
                         style: kSubHeadingTextStyle,
                         textAlign: TextAlign.center,
                       ),
