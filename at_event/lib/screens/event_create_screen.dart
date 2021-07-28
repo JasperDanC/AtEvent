@@ -96,6 +96,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                 TextField(
                   cursorColor: Colors.white,
                   style: kEventDetailsTextStyle,
+                  maxLength: 40,
                   decoration: InputDecoration(
                     hintText: 'Event Title',
                     hintStyle: kEventDetailsTextStyle.copyWith(
@@ -140,6 +141,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   cursorColor: Colors.white,
                   controller: widget.locationController,
                   textInputAction: TextInputAction.next,
+                  maxLength: 40,
                   style: kEventDetailsTextStyle,
                   decoration: InputDecoration(
                     hintText: 'Location',
