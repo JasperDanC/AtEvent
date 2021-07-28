@@ -9,6 +9,7 @@ import 'package:at_event/service/vento_services.dart';
 import 'calendar_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/group_model.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 import 'package:at_event/widgets/custom_toast.dart';
 
@@ -26,8 +27,6 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
   List<String> _invitees = [];
   String activeAtSign = '';
 
-
-
   @override
   void initState() {
     getAtSign();
@@ -37,6 +36,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Background(
       child: Expanded(
         child: Container(
@@ -99,8 +99,8 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
                   onAdd: () {},
                   addToList: true,
                   isCreator: true,
-                  width: 300,
-                  height: 340,
+                  width: 300.toWidth,
+                  height: 340.toHeight,
                 ),
                 FloatingActionButton(
                   backgroundColor: kPrimaryBlue,
