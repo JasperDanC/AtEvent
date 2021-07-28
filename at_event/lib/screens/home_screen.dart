@@ -5,7 +5,6 @@ import 'package:at_event/screens/invitations_screen.dart';
 import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -533,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  removeImage()  async {
+  removeImage() async {
     Metadata metadata = Metadata()..ccd = true;
     AtKey deletekey = AtKey()
       ..key = VentoService.getInstance()
@@ -542,11 +541,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ..sharedWith = activeAtSign
       ..metadata = metadata;
 
-
     await VentoService.getInstance().delete(deletekey);
     setState(() {
       _image = null;
-      Provider.of<UIData>(context,listen: false).setProfilePicURL('');
+      Provider.of<UIData>(context, listen: false).setProfilePicURL('');
     });
   }
 
