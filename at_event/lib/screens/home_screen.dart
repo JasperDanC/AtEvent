@@ -5,7 +5,6 @@ import 'package:at_event/screens/invitations_screen.dart';
 import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/calendar_screen.dart';
-import 'package:at_onboarding_flutter/services/size_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +28,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image/image.dart' as ImD;
 import 'package:at_event/screens/something_went_wrong.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 final Reference storageReference =
     FirebaseStorage.instance.ref().child("Profile Pictures");
@@ -74,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     String? url;
     if (!Provider.of<UIData>(context).isUrlEmpty()) {
       url = Provider.of<UIData>(context).profilePicURL;
@@ -108,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Icon(
                   Icons.add,
                   color: Colors.white,
-                  size: 40,
+                  size: 50,
                 ),
               ),
             ),
@@ -125,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     setState(() {});
-    SizeConfig().init(context);
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
