@@ -42,6 +42,7 @@ class InputField extends StatelessWidget {
 
   final TextEditingController? controller;
 
+  final int? maxLength;
 
 
   TextEditingController? textController;
@@ -52,7 +53,7 @@ class InputField extends StatelessWidget {
       this.width = 300,
       this.iconColor,
       this.icon,
-      this.onTap,
+      this.onTap, this.maxLength,
       this.onIconTap,
       this.value,
       this.initialValue = '',
@@ -81,6 +82,7 @@ class InputField extends StatelessWidget {
             child: TextField(
               readOnly: isReadOnly,
               keyboardType: keyStyle,
+              maxLength: maxLength,
               style: TextStyle(fontSize: 15.toFont, color: Colors.black),
               decoration: InputDecoration(
                 hintText: hintText,

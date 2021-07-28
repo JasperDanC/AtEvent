@@ -93,6 +93,7 @@ class _SelectedLocationState extends State<SelectedLocation> {
                     Text('Label', style: kNormalTextStyle),
                     SizedBox(height: 5.toHeight),
                     InputField(
+                      maxLength: 40,
                       width: 321.toWidth,
                       hintText: 'Save this address as',
                       value: (String val) {

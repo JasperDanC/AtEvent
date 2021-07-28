@@ -44,9 +44,12 @@ class _InviteBoxState extends State<InviteBox> {
         VentoService.getInstance().atClientInstance!, activeAtSign,
         rootDomain: MixedConstants.ROOT_DOMAIN);
     List<AtContact?> contacts = await ContactService().fetchContacts();
+    print(contacts.length);
     for(AtContact? c in contacts ) {
       if(c!=null){
         contactNames.add(c.atSign!);
+      } else {
+        print('null contact');
       }
 
     }
@@ -60,6 +63,7 @@ class _InviteBoxState extends State<InviteBox> {
 
   @override
   Widget build(BuildContext context) {
+    print(contactNames);
     return Container(
       height: widget.height,
       width: widget.width,
@@ -106,6 +110,7 @@ class _InviteBoxState extends State<InviteBox> {
                   onChanged: (value) {
                     _inviteeAtSign = value;
                   },
+                  keyboardType: TextInputType.text,
                   autofillHints: contactNames,
                   controller: widget.controller,
                   cursorColor: Colors.white,

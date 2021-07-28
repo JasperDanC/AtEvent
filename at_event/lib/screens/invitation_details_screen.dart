@@ -87,8 +87,8 @@ class _InviteDetailsScreenState extends State<InviteDetailsScreen> {
       child: Expanded(
         child: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: 100,
-              horizontal: 30,
+              vertical: 20,
+              horizontal: 10,
             ),
             child: Container(
               decoration: BoxDecoration(
