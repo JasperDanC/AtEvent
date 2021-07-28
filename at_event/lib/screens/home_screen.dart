@@ -161,12 +161,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ));
                   },
                 ),
-                ListTile(
-                  title: Text("Delete All Info on Secondary"),
-                  onTap: () {
-                    VentoService.getInstance().deleteAll(context);
-                  },
-                ),
+                // ListTile(
+                //   title: Text("Delete All Info on Secondary"),
+                //   onTap: () {
+                //     VentoService.getInstance().deleteAll(context);
+                //   },
+                // ),
                 ListTile(
                     title: Text('Sign out and Exit!'),
                     onTap: () async {
