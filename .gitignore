@@ -1,3 +1,6 @@
 
 .idea/AtEvent.iml
 *.iml
+at_event/lib/utils/apiKeys.dart
+at_event/android/app/upload-keystore.jks
+*.jks
