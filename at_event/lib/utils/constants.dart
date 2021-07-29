@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'apiKeys.dart'; // if you are missing this file contact Jasper Caswell
+// if you are waiting for a response or want to run this code without being
+// approved the api keys remove the import and there is instructions on how to
+// run the app without the api Keys in the mixed constants class where this file
+// is used.
 /*
 Colours
  */
@@ -209,10 +213,22 @@ class MixedConstants {
   static String regex = '.$NAMESPACE@';
   static const String TERMS_CONDITIONS = 'https://atsign.com/terms-conditions/';
   static const String PRIVACY_POLICY = 'https://atsign.com/privacy-policy/';
-  static const String MAP_KEY = 'aVcPBmx2dbFdPHsuIRQe';
-  static const String HERE_API_KEY =
-      '-Il6yU4u4KnNZ8pchwhFm-yyAPjvTPXdDFce46yzzMk';
-  static const String APP_API_KEY = '400b-806u-bzez-z42z-6a3p';
+  /*
+    If you are missing apiKeys.dart and have not obtained it from Jasper Caswell
+    You can still run the app with a couple missing features. Set MAP_KEY and
+    HERE_API_KEY to empty strings. The location picker will not work but
+    demoing all other features will.
+
+    Set APP_API_KEY to '400b-806u-bzez-z42z-6a3p' this is not the true @platform
+    api key of @vento but it allows users to generate free at signs within the
+    onboarding screen even still.
+
+    If you are someone who should have access to API keys contact Jasper Caswell
+    It is better to just get the real keys than to try to work around them.
+   */
+  static const String MAP_KEY = apiKeys.MAP_KEY;
+  static const String HERE_API_KEY = apiKeys.HERE_API_KEY;
+  static const String APP_API_KEY = apiKeys.APP_API_KEY;
 }
 
 class AppStrings {
