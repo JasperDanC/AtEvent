@@ -30,6 +30,7 @@ import 'package:image/image.dart' as ImD;
 import 'package:at_event/screens/something_went_wrong.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_commons/at_commons.dart';
+import 'package:badges/badges.dart';
 
 final Reference storageReference =
     FirebaseStorage.instance.ref().child("Profile Pictures");
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     }
-
+    String notifBadge = (Provider.of<UIData>(context).groupInvitesLength + Provider.of<UIData>(context).eventInvitesLength).toString();
     setState(() {});
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -136,7 +137,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView(
               children: [
                 ListTile(
-                  title: Text("Your Invitations"),
+                  title: Badge(
+                    badgeContent: Text(notifBadge, style: kEventDetailsTextStyle,),
+                    showBadge: int.parse(notifBadge) > 0 ,
+                    child: Container(child: Text("Your Invitations"),width: double.infinity,),),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => InvitationsScreen()));
@@ -209,10 +213,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onPressed: () {
                                         scaffoldKey!.currentState!.openDrawer();
                                       },
-                                      child: Icon(
-                                        Icons.menu,
-                                        color: Colors.white,
-                                        size: 40.0,
+                                      child: Badge(
+                                        badgeContent: Text(notifBadge, style: kEventDetailsTextStyle,),
+                                        showBadge: int.parse(notifBadge) > 0 ,
+                                        child: Icon(
+                                          Icons.menu,
+                                          color: Colors.white,
+                                          size: 40.0,
+                                        ),
                                       ),
                                     ),
                                   ],

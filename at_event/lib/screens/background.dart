@@ -1,10 +1,14 @@
 import 'package:at_event/service/image_anonymous_authentication.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/pinned.dart';
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/services.dart';
 import '../service/vento_services.dart';
 import 'package:at_contacts_flutter/at_contacts_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:at_event/models/ui_data.dart';
+import 'package:badges/badges.dart';
 
 class Background extends StatefulWidget {
   Background({this.child, this.turnAppbar = true, this.loggedIn = true});
@@ -35,6 +39,11 @@ class _BackgroundState extends State<Background> {
   @override
   Widget build(BuildContext context) {
     VentoService.getInstance().updateContext(context);
+    String notifBadge = '';
+    if(widget.loggedIn){
+      notifBadge = (Provider.of<UIData>(context).groupInvitesLength + Provider.of<UIData>(context).eventInvitesLength).toString();
+    }
+
     return MaterialApp(
       home: Scaffold(
         key: scaffoldKey,
@@ -49,6 +58,22 @@ class _BackgroundState extends State<Background> {
                 )),
                 centerTitle: true,
                 backgroundColor: kPrimaryBlue,
+                leading: MaterialButton(
+                  padding: EdgeInsets.zero,
+                  shape: CircleBorder(),
+                  onPressed: () {
+                    scaffoldKey!.currentState!.openDrawer();
+                  },
+                  child: Badge(
+                    badgeContent: Text(notifBadge, style: kEventDetailsTextStyle,),
+                    showBadge: int.parse(notifBadge) > 0 ,
+                    child: Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                      size: 40.0,
+                    ),
+                  ),
+                ),
                 title: Text(
                   "@Vento",
                   style: TextStyle(
@@ -96,7 +121,12 @@ class _BackgroundState extends State<Background> {
                 child: ListView(
                   children: [
                     ListTile(
-                      title: Text("Your Invitations"),
+                      title: Badge(
+                        badgeContent: Text(notifBadge, style: kEventDetailsTextStyle,),
+                        showBadge: int.parse(notifBadge) > 0 ,
+                          child: Container(
+                            width: double.infinity,
+                            child: Text("Your Invitations", textAlign: TextAlign.start,),),),
                       onTap: () {
                         Navigator.pushNamed(context, '/InvitationsScreen');
                       },

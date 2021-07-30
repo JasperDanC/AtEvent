@@ -352,6 +352,7 @@ class VentoService {
     Provider.of<UIData>(context, listen: false).clear();
     print("Found ${response.length} keys");
     for (AtKey atKey in response) {
+
       print("Key:" + atKey.toString());
       //makes sure we do not save any keys that don't come from anyone
       //these keys only generate when something has gone wrong
@@ -451,7 +452,7 @@ class VentoService {
           Provider.of<UIData>(_currentKnownContext, listen: false)
               .isDeletedGroupInvite(newInvite);
 
-      if (!isDeletedInvite) {
+      if (!isDeletedInvite && !compareAtSigns(groupKey.sharedWith!, groupKey.sharedBy!)) {
         print("adding invite " + newInvite.group.title!);
         Provider.of<UIData>(_currentKnownContext, listen: false)
             .addGroupInvite(newInvite);
@@ -716,8 +717,8 @@ class VentoService {
     var result;
     try {
       result = await _getAtClientForAtsign().put(atKey, value);
-    } catch (Exception) {
-      result = await _getAtClientForAtsign().put(atKey, value);
+    } catch (AtLookUpException) {
+      result = false;
     }
     return result;
   }

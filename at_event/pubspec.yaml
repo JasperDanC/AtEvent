@@ -14,7 +14,7 @@ dependencies:
   path_provider: ^2.0.1
   at_onboarding_flutter: ^2.1.2
   at_client_mobile: ^2.0.3
-  at_server_status: ^1.0.0
+  at_server_status: ^1.0.1
   cupertino_icons: ^1.0.3
   provider: ^5.0.0
   syncfusion_flutter_calendar: ^19.1.67
@@ -38,6 +38,7 @@ dependencies:
   latlong2: ^0.8.0
   webview_flutter: ^2.0.10
   flutter_typeahead: ^3.2.0
+  badges: ^2.0.1
 
 
 

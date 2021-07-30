@@ -338,11 +338,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (BuildContext context) => GetFreeAtSign(),
+                          builder: (BuildContext context) => OpenAtSignWeb(),
                         ),
                       );
                     },
-                    child: Text('Get a free @sign!',
+                    child: Text('Learn about @signs!',
                         style: kNormalTextStyle.copyWith(
                             fontSize: 18, fontWeight: FontWeight.w500)),
                   ),

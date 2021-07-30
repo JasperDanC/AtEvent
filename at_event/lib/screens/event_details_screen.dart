@@ -249,7 +249,23 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           //   ),
                           // ),
                         ]
-                      : [],
+                      : [
+                          FloatingActionButton(
+                              child: Icon(Icons.map,
+                                  size: 38, color: Colors.white),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        MapScreen(
+                                            lat: widget.event!.realEvent
+                                                .setting!.latitude,
+                                            lon: widget.event!.realEvent
+                                                .setting!.longitude),
+                                  ),
+                                );
+                              }),
+                        ],
                 ),
               ],
             ),
