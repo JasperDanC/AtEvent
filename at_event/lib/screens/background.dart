@@ -58,7 +58,8 @@ class _BackgroundState extends State<Background> {
                 )),
                 centerTitle: true,
                 backgroundColor: kPrimaryBlue,
-                leading: MaterialButton(
+                leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.of(context).pop(),),
+                actions: <Widget>[MaterialButton(
                   padding: EdgeInsets.zero,
                   shape: CircleBorder(),
                   onPressed: () {
@@ -73,7 +74,7 @@ class _BackgroundState extends State<Background> {
                       size: 40.0,
                     ),
                   ),
-                ),
+                ),],
                 title: Text(
                   "@Vento",
                   style: TextStyle(

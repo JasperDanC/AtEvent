@@ -1,4 +1,5 @@
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image/image.dart' as ImD;
 import '../Widgets/custom_toast.dart';
@@ -37,10 +38,13 @@ class _GroupInformationState extends State<GroupInformation> {
   bool uploading = false;
   String postId = Uuid().v4();
   late bool isCreator;
+  late PermissionStatus _photoStatus;
+  late PermissionStatus _cameraStatus;
 
 
   @override
   void initState() {
+    _listenForPermissionStatus();
     getAtSign();
 
     super.initState();
@@ -74,7 +78,8 @@ class _GroupInformationState extends State<GroupInformation> {
                 height: SizeConfig().screenHeight * 0.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: (widget.group!.imageURL == '' || widget.group!.imageURL == null
+                      image: 
+                      (widget.group!.imageURL == '' || widget.group!.imageURL == null
                           ? AssetImage('assets/images/group_landscape.jpg')
                           : NetworkImage(widget.group!.imageURL!)) as ImageProvider<Object>,
                       fit: BoxFit.cover),
@@ -95,10 +100,16 @@ class _GroupInformationState extends State<GroupInformation> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: isCreator
                           ? [
-                              Icon(
-                                Icons.group,
-                                color: Colors.white,
-                                size: 40.0,
+                              Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.white,), onPressed: () => Navigator.of(context).pop(),),
+                                  Icon(
+                                    Icons.group,
+                                    color: Colors.white,
+                                    size: 40.0,
+                                  ),
+                                ],
                               ),
                               IconButton(
                                 icon: Icon(
@@ -106,9 +117,26 @@ class _GroupInformationState extends State<GroupInformation> {
                                   size: 40.0,
                                   color: Colors.white,
                                 ),
-                                onPressed: () => _showPicker(context),
+                                onPressed: () {
+                                  if (_photoStatus.isGranted && _cameraStatus.isGranted) {
+                                    _showPicker(context);
+                                  }
+                                  else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) => CupertinoAlertDialog(
+                                      title: Text('Camera/Photo Permission'),
+                                      content: Text('This app needs camera access to take pictures or open gallery for group photos'),
+                                      actions: <Widget>[
+                                        CupertinoDialogAction(
+                                          child: Text('Deny'),
+                                          onPressed: () => Navigator.of(context).pop(),),
+                                        CupertinoDialogAction(
+                                          child: Text('Settings'),
+                                          onPressed: () => openAppSettings(),),],),);
+                                  }},
                               )
-                            ]
+                                ]
                           : [
                               Icon(
                                 Icons.group,
@@ -385,5 +413,13 @@ class _GroupInformationState extends State<GroupInformation> {
       });
       print("finished upload");
     }
+  }  
+  void _listenForPermissionStatus() async {
+    final cameraStatus = await Permission.camera.status;
+    final photoStatus = await Permission.photos.status;
+    setState(() {
+      _cameraStatus = cameraStatus;
+      _photoStatus = photoStatus;
+    });
   }
 }

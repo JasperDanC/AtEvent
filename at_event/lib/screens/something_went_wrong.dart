@@ -1,7 +1,8 @@
 import 'package:at_event/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:at_common_flutter/services/size_config.dart';
-import 'home_screen.dart';
+import 'package:flutter/services.dart';
+
 
 class SomethingWentWrongScreen extends StatelessWidget {
   @override
@@ -24,8 +25,7 @@ class SomethingWentWrongScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50)),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => HomeScreen()));
+                SystemNavigator.pop();
               },
               child: Text(
                 "Try Again".toUpperCase(),

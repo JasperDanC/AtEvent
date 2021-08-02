@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:at_event/models/ui_event.dart';
 import 'package:at_event/Widgets/event_tiles.dart';
@@ -31,6 +32,7 @@ import 'package:at_event/screens/something_went_wrong.dart';
 import 'package:at_common_flutter/services/size_config.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:badges/badges.dart';
+
 
 final Reference storageReference =
     FirebaseStorage.instance.ref().child("Profile Pictures");
@@ -55,12 +57,15 @@ class _HomeScreenState extends State<HomeScreen> {
   final _picker = ImagePicker();
   bool _nonAsset = false;
   final AnonymousAuthService _auth = AnonymousAuthService();
+  late PermissionStatus _photoStatus;
+  late PermissionStatus _cameraStatus;
 
   List<UI_Event> events = [];
   List<Widget> groupCards = [];
 
   @override
   void initState() {
+    _listenForPermissionStatus();
     getAtSignAndInitContacts();
     VentoService.getInstance().scan(context);
     scaffoldKey = GlobalKey<ScaffoldState>();
@@ -235,16 +240,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: kNormalTextStyle.copyWith(
                                               fontSize: 18)),
                                     ),
+                                    _cameraStatus.isGranted && _photoStatus.isGranted ?
                                     GestureDetector(
                                       onTap: () {
-                                        _showPicker(context);
-                                        _nonAsset = true;
+                                          _showPicker(context);
+                                          _nonAsset = true;
                                       },
                                       child: CustomCircleAvatar(
                                           nonAsset: _nonAsset,
                                           image: 'assets/images/Profile.jpg',
                                           url: url),
-                                    ),
+                                    )
+                                        : CustomCircleAvatar(nonAsset: _nonAsset, image: 'assets/images/Profile.jpg', url: url)
                                   ],
                                 ),
                               ],
@@ -347,8 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "Today's Events",
                   style: kSubHeadingTextStyle,
                 ),
-                Container(
-                  height: SizeConfig().screenHeight * 0.315,
+                Expanded(
                   child: events.length > 0
                       ? ListView.builder(
                           padding: EdgeInsets.only(top: 8),
@@ -389,46 +395,45 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                 ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(10.0),
-                        gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            stops: [0.4, 0.9],
-                            colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.blueGrey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: Offset(0, 2))
-                        ],
-                        backgroundBlendMode: BlendMode.modulate),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 18.toHeight,
-                            width: double.infinity,
-                            color: Colors.transparent,
-                            child: Text(
-                              '  Groups',
-                              textAlign: TextAlign.start,
-                              style: kNormalTextStyle,
-                            ),
+                Container(
+                  height: SizeConfig().screenHeight * 0.125 + 50,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10.0),
+                      gradient: LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [0.4, 0.9],
+                          colors: [kGroupBoxGrad1, kGroupBoxGrad2]),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.blueGrey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 2))
+                      ],
+                      backgroundBlendMode: BlendMode.modulate),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 20.toHeight,
+                          width: double.infinity,
+                          color: Colors.transparent,
+                          child: Text(
+                            '  Groups',
+                            textAlign: TextAlign.start,
+                            style: kSubHeadingTextStyle,
                           ),
-                          SingleChildScrollView(
-                            padding: EdgeInsets.zero,
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: groupCards,
-                            ),
+                        ),
+                        SingleChildScrollView(
+                          padding: EdgeInsets.zero,
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: groupCards,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -594,6 +599,15 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  void _listenForPermissionStatus() async {
+    final cameraStatus = await Permission.camera.status;
+    final photoStatus = await Permission.photos.status;
+    setState(() {
+      _cameraStatus = cameraStatus;
+      _photoStatus = photoStatus;
+    });
   }
 
   Future<void> _controlUploadAndSave() async {
