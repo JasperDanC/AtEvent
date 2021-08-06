@@ -396,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                 ),
                 Container(
-                  height: SizeConfig().screenHeight * 0.125 + 50,
+                  height: SizeConfig().screenHeight * 0.125 + 50.toHeight,
                   decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(10.0),
@@ -417,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         Container(
-                          height: 20.toHeight,
+                          height: 24.toHeight,
                           width: double.infinity,
                           color: Colors.transparent,
                           child: Text(
