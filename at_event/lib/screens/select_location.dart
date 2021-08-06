@@ -1,5 +1,5 @@
 import 'package:at_common_flutter/services/size_config.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import '../Widgets/custom_toast.dart';
 import '../Widgets/input_field.dart';
 import 'package:at_event/Widgets/location_tile.dart';
@@ -126,7 +126,9 @@ class _SelectLocationState extends State<SelectLocation> {
                   if (nearMe == null) return;
 
                   if (!nearMe!) {
-                    currentLocation = await getMyLocation();
+                    if(await Permission.location.request().isGranted){
+                      currentLocation = await getMyLocation();
+                    }
                   }
 
                   if (currentLocation == null) {

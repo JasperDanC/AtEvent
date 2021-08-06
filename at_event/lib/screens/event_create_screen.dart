@@ -65,7 +65,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         groupDropDownItems.add(DropdownMenuItem(
           child: Container(
             child: Text(g.title!),
-            width: SizeConfig().screenWidth * 0.70,
+            width: SizeConfig().screenWidth * 0.5,
           ),
           value: nextValue,
         ));
@@ -231,6 +231,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   height: 25,
                 ),
                 Expanded(
+                  flex: 2,
                     child: DropdownButtonFormField(
                   items: groupDropDownItems,
                   value: _groupDropDownValue,
