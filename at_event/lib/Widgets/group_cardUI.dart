@@ -24,6 +24,7 @@ class _GroupCardState extends State<GroupCard> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
                 child: GestureDetector(
@@ -40,12 +41,12 @@ class _GroupCardState extends State<GroupCard> {
                 ),
               ),
               Container(
-                width: 85,
+                width: double.infinity,
                 height: 12,
                 child: Text(
                   widget.group.title!,
                   style: kNormalTextStyle.copyWith(fontSize: 11),
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.end,
                 ),
               )
             ],

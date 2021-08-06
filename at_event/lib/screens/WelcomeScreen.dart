@@ -7,6 +7,7 @@ import 'package:at_event/utils/constants.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../service/vento_services.dart';
 import '../utils/constants.dart';
@@ -271,6 +272,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         onSurface: kColorStyle3,
                         shadowColor: Colors.purple),
                     onPressed: () async {
+                      await _requestIOSPermissions();
+                      dynamic result = await _auth.signInAnon();
+                      if (result == null) {
+                        print('Error signing in to the image handling service');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                SomethingWentWrongScreen(),
+                          ),
+                        );
+                      } else {
+                        print('Signed in to the image handling service');
+                        print(result.uid);
+                      }
                       Onboarding(
                         context: context,
                         atClientPreference: atClientPreference,
@@ -289,19 +304,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         nextScreen: HomeScreen(),
                         appAPIKey: MixedConstants.APP_API_KEY,
                       );
-                      dynamic result = await _auth.signInAnon();
-                      if (result == null) {
-                        print('Error signing in to the image handling service');
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                SomethingWentWrongScreen(),
-                          ),
-                        );
-                      } else {
-                        print('Signed in to the image handling service');
-                        print(result.uid);
-                      }
                     },
                     child: Text(
                       AppStrings.scan_qr,
@@ -354,4 +356,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         loggedIn: false,
         turnAppbar: false);
   }
+   _requestIOSPermissions() async {
+     Map<Permission, PermissionStatus> statuses = await [
+       Permission.photos,Permission.camera,Permission.location
+     ].request();
+  }
+
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'apiKeys.dart'; // if you are missing this file contact Jasper Caswell
+import 'package:at_event/utils/apiKeys.dart'; // if you are missing this file contact Jasper Caswell
 // if you are waiting for a response or want to run this code without being
 // approved the api keys remove the import and there is instructions on how to
 // run the app without the api Keys in the mixed constants class where this file
@@ -226,9 +226,9 @@ class MixedConstants {
     If you are someone who should have access to API keys contact Jasper Caswell
     It is better to just get the real keys than to try to work around them.
    */
-  static const String MAP_KEY = apiKeys.MAP_KEY;
-  static const String HERE_API_KEY = apiKeys.HERE_API_KEY;
-  static const String APP_API_KEY = apiKeys.APP_API_KEY;
+  static const String MAP_KEY = ApiKeys.MAP_KEY;
+  static const String HERE_API_KEY = ApiKeys.HERE_API_KEY;
+  static const String APP_API_KEY = ApiKeys.APP_API_KEY;
 }
 
 class AppStrings {

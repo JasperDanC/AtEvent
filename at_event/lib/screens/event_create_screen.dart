@@ -65,7 +65,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
         groupDropDownItems.add(DropdownMenuItem(
           child: Container(
             child: Text(g.title!),
-            width: SizeConfig().screenWidth * 0.75,
+            width: SizeConfig().screenWidth * 0.70,
           ),
           value: nextValue,
         ));

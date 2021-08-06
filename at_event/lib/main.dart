@@ -31,7 +31,7 @@ class _VentoState extends State<Vento> {
   bool _error = false;
 
   // Define an async function to initialize FlutterFire
-  void initializeFlutterFire() async {
+  void initializeFlutterFireandPermissions() async {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
@@ -49,7 +49,7 @@ class _VentoState extends State<Vento> {
 
   @override
   void initState() {
-    initializeFlutterFire();
+    initializeFlutterFireandPermissions();
     super.initState();
   }
 
@@ -59,11 +59,15 @@ class _VentoState extends State<Vento> {
     }
     if (!_initialized) {
       return Background(
-        child: Align(
-          alignment: Alignment.center,
-          child: SpinKitFoldingCube(
-            color: kPrimaryBlue,
-            size: 50.0,
+        child: Expanded(
+          child: Container(
+            child: Align(
+              alignment: Alignment.center,
+              child: SpinKitFoldingCube(
+                color: kPrimaryBlue,
+                size: 50.0,
+              ),
+            ),
           ),
         ),
         turnAppbar: false,
