@@ -87,7 +87,7 @@ class _VentoState extends State<Vento> {
         child: MaterialApp(
             title: '@Vento',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData.dark().copyWith(
+            theme: ThemeData(
               primaryColor: kForegroundGrey,
               scaffoldBackgroundColor: kBackgroundGrey,
             ),
