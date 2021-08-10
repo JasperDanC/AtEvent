@@ -14,6 +14,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'models/user_image_model.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +55,10 @@ class _VentoState extends State<Vento> {
   }
 
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     if (_error) {
       return MaterialApp(home: SomethingWentWrongScreen());
     }
@@ -87,7 +92,7 @@ class _VentoState extends State<Vento> {
         child: MaterialApp(
             title: '@Vento',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData.dark().copyWith(
+            theme: ThemeData.light().copyWith(
               primaryColor: kForegroundGrey,
               scaffoldBackgroundColor: kBackgroundGrey,
             ),
