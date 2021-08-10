@@ -69,7 +69,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     SizeConfig().init(context);
     return Background(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 40.0),
+          padding: EdgeInsets.symmetric(vertical: 30.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -95,8 +95,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           children: <Widget>[
                             Center(
                               child: Container(
-                                height: 265,
-                                width: 325,
+                                height: SizeConfig().screenHeight * 0.30,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: DecorationImage(
@@ -131,7 +130,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           children: <Widget>[
                             Center(
                               child: Container(
-                                height: 250,
+                                height: SizeConfig().screenHeight * 0.30,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: DecorationImage(
@@ -166,7 +165,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           children: <Widget>[
                             Center(
                               child: Container(
-                                height: 200,
+                                height: SizeConfig().screenHeight * 0.30,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: DecorationImage(
@@ -179,7 +178,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             SizedBox(height: 30.0),
                             Text(
                               'Prepare with classmates!\nPlanning was never easier',
-                              style: kTitleTextStyle.copyWith(fontSize: 26),
+                              style: kTitleTextStyle.copyWith(fontSize: 24),
                             ),
                             SizedBox(height: 15.0),
                             Text(
@@ -198,7 +197,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           children: <Widget>[
                             Center(
                               child: Container(
-                                height: 200,
+                                height: SizeConfig().screenHeight * 0.25,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: DecorationImage(
@@ -211,7 +210,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             SizedBox(height: 30.0),
                             Text(
                               'Elevate each other!\nMake the most out of every moment!',
-                              style: kTitleTextStyle.copyWith(fontSize: 26),
+                              style: kTitleTextStyle.copyWith(fontSize: 24),
                             ),
                             SizedBox(height: 15.0),
                             Text(
@@ -230,7 +229,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           children: <Widget>[
                             Center(
                               child: Container(
-                                height: 200,
+                                height: SizeConfig().screenHeight * 0.30,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   image: DecorationImage(
