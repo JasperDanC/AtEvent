@@ -63,7 +63,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 30,
-              vertical: 55,
+              vertical: 20,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,6 +94,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ],
                 ),
                 ToggleSwitch(
+                  minHeight: 30.0,
                   totalSwitches: 3,
                   labels: ["Month", "Week", "Day"],
                   initialLabelIndex: widget.switchIndex,

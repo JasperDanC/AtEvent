@@ -9,6 +9,7 @@ import 'calendar_screen.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/Widgets/invite_box.dart';
+import 'package:at_common_flutter/services/size_config.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
@@ -79,6 +80,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     String? categoryString;
     switch (widget.event!.category) {
       case EventCategory.Class:
@@ -120,11 +122,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               children: [
                 Row(
                   children: [
-                    Expanded(
+                    Container(
+                    height: SizeConfig().screenHeight * 0.12,
+                    width: SizeConfig().screenWidth * 0.5,
                       child: Text(
                         widget.event!.eventName,
                         style: TextStyle(
-                            fontSize: 28.0,
+                            fontSize: 20.0,
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),

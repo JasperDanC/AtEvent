@@ -91,7 +91,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       color: Colors.white),
                 ),
                 SizedBox(
-                  height: 25.0,
+                  height: 10.0,
                 ),
                 TextField(
                   cursorColor: Colors.white,
@@ -111,7 +111,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   },
                 ),
                 SizedBox(
-                  height: 25.0,
+                  height: 10.0,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -135,7 +135,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 25.0,
+                  height: 10.0,
                 ),
                 TextField(
                   cursorColor: Colors.white,
@@ -160,7 +160,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                       SizeConfig().screenHeight * 0.9),
                 ),
                 SizedBox(
-                  height: 25.0,
+                  height: 10.0,
                 ),
                 Row(
                   children: [
@@ -228,7 +228,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 10.0,
                 ),
                 Expanded(
                   flex: 2,
@@ -360,7 +360,7 @@ class _EventCreateScreenState extends State<EventCreateScreen> {
                               ),
                             ],
                           ),
-                          SizeConfig().screenHeight * 0.2),
+                          SizeConfig().screenHeight * 0.3),
                       child: Icon(Icons.add),
                     ),
                     FloatingActionButton(

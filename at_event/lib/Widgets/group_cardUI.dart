@@ -17,7 +17,7 @@ class _GroupCardState extends State<GroupCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       height: 85,
       width: 85,
       child: Column(
@@ -41,12 +41,11 @@ class _GroupCardState extends State<GroupCard> {
                 ),
               ),
               Container(
-                width: double.infinity,
                 height: 12,
                 child: Text(
                   widget.group.title!,
                   style: kNormalTextStyle.copyWith(fontSize: 11),
-                  textAlign: TextAlign.end,
+                  textAlign: TextAlign.center,
                 ),
               )
             ],

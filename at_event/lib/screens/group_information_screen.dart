@@ -95,7 +95,7 @@ class _GroupInformationState extends State<GroupInformation> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 60.0),
+                    SizedBox(height: 10.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: isCreator
@@ -138,10 +138,15 @@ class _GroupInformationState extends State<GroupInformation> {
                               )
                                 ]
                           : [
-                              Icon(
-                                Icons.group,
-                                color: Colors.white,
-                                size: 40.0,
+                              Row(
+                                children: [
+                                  IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.white,), onPressed: () => Navigator.of(context).pop(),),
+                                  Icon(
+                                    Icons.group,
+                                    color: Colors.white,
+                                    size: 40.0,
+                                  ),
+                                ],
                               ),
                             ],
                     ),
@@ -151,7 +156,7 @@ class _GroupInformationState extends State<GroupInformation> {
                         color: Colors.green,
                       ),
                     ),
-                    SizedBox(height: 10.0),
+                    SizedBox(height: 5.0),
                     Expanded(
                       child: Text(
                         widget.group!.title!,
@@ -159,7 +164,7 @@ class _GroupInformationState extends State<GroupInformation> {
                       ),
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: 5.0,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
