@@ -1,4 +1,4 @@
-package com.company.at_event
+package com.jessejasperdevelopment.vento
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -83,7 +83,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       shape: CircleBorder(),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomeScreen()));
+                            builder: (context) => VentoHomeScreen()));
                       },
                       child: Icon(
                         Icons.chevron_left,

@@ -98,7 +98,7 @@ class _VentoState extends State<Vento> {
             ),
             routes: <String, WidgetBuilder>{
               '/': (BuildContext context) => WelcomeScreen(),
-              '/HomeScreen': (BuildContext context) => HomeScreen(),
+              '/HomeScreen': (BuildContext context) => VentoHomeScreen(),
               '/CalendarScreen': (BuildContext context) => CalendarScreen(),
               '/EventCreateScreen': (BuildContext context) =>
                   EventCreateScreen(),

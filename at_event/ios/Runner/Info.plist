@@ -25,15 +25,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>@Vento needs access to camera</string>
+	<string>@Vento needs access to camera so you can set your profile picture and set group photos</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>@Vento needs to access location</string>
+	<string>@Vento needs to access location so you can plan events at you current location</string>
 	<key>NSLocationUsageDescription</key>
-	<string>@Vento needs to access location</string>
+	<string>@Vento needs to access location so you can plan events at you current location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>@Vento needs to access location</string>
+	<string>@Vento needs to access location so you can plan events at you current location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>@Vento needs access to photos</string>
+	<string>@Vento needs access to photos so you can set your profile picture and set group photos </string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

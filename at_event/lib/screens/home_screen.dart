@@ -39,12 +39,12 @@ final Reference storageReference =
 
 final uploadReference = FirebaseFirestore.instance.collection("Uploads");
 
-class HomeScreen extends StatefulWidget {
+class VentoHomeScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _VentoHomeScreenState createState() => _VentoHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _VentoHomeScreenState extends State<VentoHomeScreen> {
   Color? scaffoldColor;
   DateTime? _selectedDay;
   DateTime _focusedDay = DateTime.now();
@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: Text("Contacts"),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => HomeScreen(),
+                      builder: (BuildContext context) => VentoHomeScreen(),
                     ));
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => ContactsScreen(),
