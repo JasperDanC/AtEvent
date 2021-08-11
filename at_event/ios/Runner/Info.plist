@@ -27,11 +27,11 @@
 	<key>NSCameraUsageDescription</key>
 	<string>@Vento needs access to camera so you can set your profile picture and set group photos</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>@Vento needs to access location so you can plan events at you current location</string>
+	<string>@Vento needs to access location so you can plan events at your current location</string>
 	<key>NSLocationUsageDescription</key>
-	<string>@Vento needs to access location so you can plan events at you current location</string>
+	<string>@Vento needs to access location so you can plan events at your current location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>@Vento needs to access location so you can plan events at you current location</string>
+	<string>@Vento needs to access location so you can plan events at your current location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>@Vento needs access to photos so you can set your profile picture and set group photos </string>
 	<key>UILaunchStoryboardName</key>
