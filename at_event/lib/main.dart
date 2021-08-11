@@ -94,8 +94,7 @@ class _VentoState extends State<Vento> {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               primaryColor: kForegroundGrey,
-              scaffoldBackgroundColor: kBackgroundGrey,
-            ),
+              scaffoldBackgroundColor: kBackgroundGrey,),
             routes: <String, WidgetBuilder>{
               '/': (BuildContext context) => WelcomeScreen(),
               '/HomeScreen': (BuildContext context) => VentoHomeScreen(),

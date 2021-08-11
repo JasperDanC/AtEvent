@@ -1,3 +1,4 @@
+import 'package:at_event/screens/home_screen.dart';
 import 'package:at_event/service/image_anonymous_authentication.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,6 @@ import 'package:at_contacts_flutter/at_contacts_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:badges/badges.dart';
-
-import 'home_screen.dart';
 
 class Background extends StatefulWidget {
   Background({this.child, this.turnAppbar = true, this.loggedIn = true});
@@ -60,7 +59,7 @@ class _BackgroundState extends State<Background> {
                 )),
                 centerTitle: true,
                 backgroundColor: kPrimaryBlue,
-                leading: IconButton(icon: Icon(Icons.home), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => HomeScreen(),),),),
+                leading: IconButton(icon: Icon(Icons.home), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => VentoHomeScreen(),),),),
                 actions: <Widget>[MaterialButton(
                   padding: EdgeInsets.zero,
                   shape: CircleBorder(),
