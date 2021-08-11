@@ -287,10 +287,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       }
                       Onboarding(
                         context: context,
+                        nextScreen: VentoHomeScreen(),
+                        appAPIKey: MixedConstants.APP_API_KEY,
                         atClientPreference: atClientPreference,
                         domain: MixedConstants.ROOT_DOMAIN,
                         appColor: kPrimaryBlue,
-                        onboard: (value, atsign) async {
+                        onboard: (Map<String?, AtClientService> value, String? atsign) async {
+                          VentoService.getInstance().setAtSign(atsign);
                           VentoService.getInstance().atClientServiceMap = value;
                           VentoService.getInstance().atClientServiceInstance =
                               value[atsign];
@@ -300,8 +303,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         onError: (error) {
                           _logger.severe('Onboarding throws $error error');
                         },
-                        nextScreen: HomeScreen(),
-                        appAPIKey: MixedConstants.APP_API_KEY,
+
                       );
                     },
                     child: Text(

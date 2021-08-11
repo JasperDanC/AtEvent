@@ -45,6 +45,10 @@ class VentoService {
     _currentKnownContext = context;
   }
 
+  void setAtSign(String? atSign ){
+    _atsign = atSign;
+  }
+
   AtClientService _getAtClientServiceForAtSign({String? atsign}) =>
       atClientServiceInstance ??=
           atClientServiceMap[atsign] ?? AtClientService();

@@ -56,7 +56,7 @@ class _ListPageState extends State<ListPage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (BuildContext context) => HomeScreen(),
+                builder: (BuildContext context) => VentoHomeScreen(),
               ),
             );
           },
@@ -95,7 +95,7 @@ class _ListPageState extends State<ListPage> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (BuildContext context) => HomeScreen(),
+                      builder: (BuildContext context) => VentoHomeScreen(),
                     ),
                   );
                 },

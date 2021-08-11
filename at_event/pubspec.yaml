@@ -1,7 +1,7 @@
 name: at_event
 description: Event planner app.
 publish_to: 'none'
-aversion: 1.0.0+1
+aversion: 0.2.3+6
 version: 1.0.0+1
 
 environment:
