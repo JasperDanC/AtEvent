@@ -25,9 +25,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>@Vento needs access to camera</string>
+	<string>@Vento needs access to camera to set profile pictures</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>@Vento needs to access location</string>
+	<string>@Vento needs to access location </string>
 	<key>NSLocationUsageDescription</key>
 	<string>@Vento needs to access location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

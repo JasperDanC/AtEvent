@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
     groupCards.insert(
       0,
       Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
         height: 85.toHeight,
         width: 30.toWidth,
         child: Column(
@@ -176,12 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     VentoService.getInstance().deleteAll(context);
                 //   },
                 // ),
-                ListTile(
-                    title: Text('Sign out and Exit!'),
-                    onTap: () async {
-                      await _auth.signOut();
-                      SystemNavigator.pop();
-                    })
               ],
             ),
           ),

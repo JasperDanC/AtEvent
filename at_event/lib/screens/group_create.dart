@@ -100,7 +100,7 @@ class _GroupCreateScreenState extends State<GroupCreateScreen> {
                   addToList: true,
                   isCreator: true,
                   width: 300.toWidth,
-                  height: 340.toHeight,
+                  height: SizeConfig().screenHeight * 0.345,
                 ),
                 FloatingActionButton(
                   backgroundColor: kPrimaryBlue,

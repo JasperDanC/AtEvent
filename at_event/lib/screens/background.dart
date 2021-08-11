@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:at_event/models/ui_data.dart';
 import 'package:badges/badges.dart';
 
+import 'home_screen.dart';
+
 class Background extends StatefulWidget {
   Background({this.child, this.turnAppbar = true, this.loggedIn = true});
   final Widget? child;
@@ -58,7 +60,7 @@ class _BackgroundState extends State<Background> {
                 )),
                 centerTitle: true,
                 backgroundColor: kPrimaryBlue,
-                leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.of(context).pop(),),
+                leading: IconButton(icon: Icon(Icons.home), onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => HomeScreen(),),),),
                 actions: <Widget>[MaterialButton(
                   padding: EdgeInsets.zero,
                   shape: CircleBorder(),
@@ -154,12 +156,6 @@ class _BackgroundState extends State<Background> {
                     //     VentoService.getInstance().deleteAll(context);
                     //   },
                     // ),
-                    ListTile(
-                        title: Text('Sign out and Exit!'),
-                        onTap: () async {
-                          await _auth.signOut();
-                          SystemNavigator.pop();
-                        })
                   ],
                 ),
               )
