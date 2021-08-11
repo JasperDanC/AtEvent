@@ -75,24 +75,7 @@ class _InviteBoxState extends State<InviteBox> {
                     MaterialButton(
                       padding: EdgeInsets.zero,
                       minWidth: 0,
-                      onPressed: () {
-                        if (_inviteeAtSign != null) {
-                          List<String> withoutAtSigns = [];
-                          for (String? sign in widget.invitees) {
-                            withoutAtSigns.add(sign!.replaceAll("@", ""));
-                          }
-                          setState(() {
-                            if (!withoutAtSigns.contains(
-                                _inviteeAtSign!.replaceAll("@", ""))) {
-                              if (widget.addToList) {
-                                widget.invitees.add(_inviteeAtSign);
-                              }
-                              widget.onAdd!();
-                              widget.controller.clear();
-                            }
-                          });
-                        }
-                      },
+                      onPressed: () => addPerson(),
                       shape: CircleBorder(),
                       child: Icon(
                         Icons.add_circle_outline,
@@ -111,6 +94,8 @@ class _InviteBoxState extends State<InviteBox> {
                           _inviteeAtSign = value;
                         },
                         keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (val) => addPerson(),
                         controller: widget.controller,
                         cursorColor: Colors.white,
                         style: kEventDetailsTextStyle,
@@ -194,5 +179,24 @@ class _InviteBoxState extends State<InviteBox> {
         ],
       ),
     );
+  }
+  void addPerson() {
+
+    if (_inviteeAtSign != null) {
+      List<String> withoutAtSigns = [];
+      for (String? sign in widget.invitees) {
+        withoutAtSigns.add(sign!.replaceAll("@", ""));
+      }
+      setState(() {
+        if (!withoutAtSigns.contains(
+            _inviteeAtSign!.replaceAll("@", ""))) {
+          if (widget.addToList) {
+            widget.invitees.add(_inviteeAtSign);
+          }
+          widget.onAdd!();
+          widget.controller.clear();
+        }
+      });
+    }
   }
 }

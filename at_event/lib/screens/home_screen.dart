@@ -57,8 +57,8 @@ class _VentoHomeScreenState extends State<VentoHomeScreen> {
   final _picker = ImagePicker();
   bool _nonAsset = false;
   final AnonymousAuthService _auth = AnonymousAuthService();
-  late PermissionStatus _photoStatus;
-  late PermissionStatus _cameraStatus;
+  late PermissionStatus? _photoStatus;
+  late PermissionStatus? _cameraStatus;
 
   List<UI_Event> events = [];
   List<Widget> groupCards = [];
@@ -98,9 +98,9 @@ class _VentoHomeScreenState extends State<VentoHomeScreen> {
     groupCards.insert(
       0,
       Container(
-        margin: EdgeInsets.all(8),
+        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
         height: 85.toHeight,
-        width: 25.toWidth,
+        width: 30.toWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -240,7 +240,7 @@ class _VentoHomeScreenState extends State<VentoHomeScreen> {
                                           style: kNormalTextStyle.copyWith(
                                               fontSize: 18)),
                                     ),
-                                    _cameraStatus.isGranted && _photoStatus.isGranted ?
+                                    _cameraStatus!.isGranted && _photoStatus!.isGranted ?
                                     GestureDetector(
                                       onTap: () {
                                           _showPicker(context);
@@ -427,7 +427,7 @@ class _VentoHomeScreenState extends State<VentoHomeScreen> {
                           ),
                         ),
                         SingleChildScrollView(
-                          padding: EdgeInsets.zero,
+                          padding: EdgeInsets.symmetric(horizontal: 2.0),
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: groupCards,
