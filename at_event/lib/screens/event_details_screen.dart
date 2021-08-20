@@ -163,8 +163,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           padding: EdgeInsets.zero,
                           minWidth: 0.0,
                           onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushReplacement(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => VentoChatScreen(
