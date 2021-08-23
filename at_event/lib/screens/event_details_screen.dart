@@ -223,18 +223,50 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 Divider(
                   color: Colors.white,
                 ),
-                Text(
-                  widget.event!.realEvent.invitees.length.toString() +
-                      " invited:",
-                  style: kEventDetailsTextStyle,
-                ),
-                InviteBox(
-                  invitees: widget.event!.invitees,
-                  onAdd: _updateAndInvite,
-                  addToList: true,
-                  width: 300.0,
-                  isCreator: isCreator,
-                  height: 200.0,
+                SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 6.0),
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            widget.event!.realEvent.invitees.length.toString() +
+                                " invited:",
+                            style: kEventDetailsTextStyle,
+                          ),
+                          InviteBox(
+                            invitees: widget.event!.invitees,
+                            onAdd: _updateAndInvite,
+                            addToList: true,
+                            width: 300.0,
+                            isCreator: isCreator,
+                            height: 200.0,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 18.toWidth,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            widget.event!.realEvent.peopleGoing.length.toString() +
+                                " going:",
+                            style: kEventDetailsTextStyle,
+                          ),
+                          InviteBox(
+                            invitees: widget.event!.peopleGoing,
+                            onAdd: _updateAndInvite,
+                            addToList: false,
+                            width: 300.0,
+                            isCreator: false,
+                            height: 200.0,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

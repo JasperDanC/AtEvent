@@ -228,7 +228,9 @@ class VentoService {
             EventNotificationModel.fromJson(jsonValue!);
 
         //add the person who confirmed to the event
-        eventModel.peopleGoing.add(notifKey.sharedBy!);
+        if(!eventModel.peopleGoing.contains(notifKey.sharedBy!)){
+          eventModel.peopleGoing.add(notifKey.sharedBy!);
+        }
 
         //convert to back to string
         value =
