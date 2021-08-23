@@ -12,10 +12,11 @@ import 'package:at_event/models/ui_data.dart';
 import 'package:badges/badges.dart';
 
 class Background extends StatefulWidget {
-  Background({this.child, this.turnAppbar = true, this.loggedIn = true});
+  Background({this.child, this.turnAppbar = true, this.loggedIn = true,this.key});
   final Widget? child;
   final bool turnAppbar;
   final bool loggedIn;
+  final GlobalKey<ScaffoldState>? key;
   @override
   _BackgroundState createState() => _BackgroundState();
 }
@@ -33,7 +34,12 @@ class _BackgroundState extends State<Background> {
       getAtSignAndInitContacts();
       _auth = AnonymousAuthService();
     }
-    scaffoldKey = GlobalKey<ScaffoldState>();
+    if(widget.key!=null){
+      scaffoldKey = widget.key;
+    } else {
+      scaffoldKey = GlobalKey<ScaffoldState>();
+    }
+
     super.initState();
   }
 

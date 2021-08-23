@@ -16,6 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/service/vento_services.dart';
 import 'package:at_event/screens/something_went_wrong.dart';
+import 'chat_screen.dart';
 
 final Reference storageReference =
     FirebaseStorage.instance.ref().child("GroupPictures");
@@ -41,7 +42,6 @@ class _GroupInformationState extends State<GroupInformation> {
   late PermissionStatus _photoStatus;
   late PermissionStatus _cameraStatus;
 
-
   @override
   void initState() {
     _listenForPermissionStatus();
@@ -60,7 +60,7 @@ class _GroupInformationState extends State<GroupInformation> {
       invitees: widget.group!.atSignMembers,
       isCreator: isCreator,
       width: 300,
-      height: SizeConfig().screenHeight*0.5,
+      height: SizeConfig().screenHeight * 0.5,
     );
     inviteBox.onAdd = () async {
       CustomToast().show('Invite Sent!', context);
@@ -78,10 +78,11 @@ class _GroupInformationState extends State<GroupInformation> {
                 height: SizeConfig().screenHeight * 0.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: 
-                      (widget.group!.imageURL == '' || widget.group!.imageURL == null
-                          ? AssetImage('assets/images/group_landscape.jpg')
-                          : NetworkImage(widget.group!.imageURL!)) as ImageProvider<Object>,
+                      image: (widget.group!.imageURL == '' ||
+                                  widget.group!.imageURL == null
+                              ? AssetImage('assets/images/group_landscape.jpg')
+                              : NetworkImage(widget.group!.imageURL!))
+                          as ImageProvider<Object>,
                       fit: BoxFit.cover),
                 ),
               ),
@@ -101,9 +102,16 @@ class _GroupInformationState extends State<GroupInformation> {
                       children: isCreator
                           ? [
                               Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.white,), onPressed: () => Navigator.of(context).pop(),),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
                                   Icon(
                                     Icons.group,
                                     color: Colors.white,
@@ -111,36 +119,77 @@ class _GroupInformationState extends State<GroupInformation> {
                                   ),
                                 ],
                               ),
-                              IconButton(
-                                icon: Icon(
-                                  Icons.add_photo_alternate,
-                                  size: 40.0,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {
-                                  if (_photoStatus.isGranted && _cameraStatus.isGranted) {
-                                    _showPicker(context);
-                                  }
-                                  else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) => CupertinoAlertDialog(
-                                      title: Text('Camera/Photo Permission'),
-                                      content: Text('This app needs camera access to take pictures or open gallery for group photos'),
-                                      actions: <Widget>[
-                                        CupertinoDialogAction(
-                                          child: Text('Deny'),
-                                          onPressed: () => Navigator.of(context).pop(),),
-                                        CupertinoDialogAction(
-                                          child: Text('Settings'),
-                                          onPressed: () => openAppSettings(),),],),);
-                                  }},
-                              )
-                                ]
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.add_photo_alternate,
+                                      size: 40.0,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      if (_photoStatus.isGranted &&
+                                          _cameraStatus.isGranted) {
+                                        _showPicker(context);
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              CupertinoAlertDialog(
+                                            title:
+                                                Text('Camera/Photo Permission'),
+                                            content: Text(
+                                                'This app needs camera access to take pictures or open gallery for group photos'),
+                                            actions: <Widget>[
+                                              CupertinoDialogAction(
+                                                child: Text('Deny'),
+                                                onPressed: () =>
+                                                    Navigator.of(context).pop(),
+                                              ),
+                                              CupertinoDialogAction(
+                                                child: Text('Settings'),
+                                                onPressed: () =>
+                                                    openAppSettings(),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  // IconButton(
+                                  //   icon: Icon(
+                                  //     Icons.chat_bubble,
+                                  //     size: 40.0,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => VentoChatScreen(
+                                  //           chatID: widget.group!.key,
+                                  //           groupMembers:
+                                  //               widget.group!.atSignMembers,
+                                  //         ),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  // ),
+                                ],
+                              ),
+                            ]
                           : [
                               Row(
                                 children: [
-                                  IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.white,), onPressed: () => Navigator.of(context).pop(),),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                  ),
                                   Icon(
                                     Icons.group,
                                     color: Colors.white,
@@ -148,6 +197,28 @@ class _GroupInformationState extends State<GroupInformation> {
                                   ),
                                 ],
                               ),
+                              // MaterialButton(
+                              //   shape: CircleBorder(),
+                              //   padding: EdgeInsets.zero,
+                              //   minWidth: 0.0,
+                              //   onPressed: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) => VentoChatScreen(
+                              //           chatID: widget.group!.key,
+                              //           groupMembers:
+                              //               widget.group!.atSignMembers,
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              //   child: Icon(
+                              //     Icons.chat_bubble,
+                              //     color: Colors.white,
+                              //     size: 30.0.toWidth,
+                              //   ),
+                              // ),
                             ],
                     ),
                     Container(
@@ -368,7 +439,10 @@ class _GroupInformationState extends State<GroupInformation> {
   }
 
   Future<String> uploadPhoto(mImageFile) async {
-    await storageReference.child('post_$postId.jpg').putFile(mImageFile).then((taskSnapshot) {
+    await storageReference
+        .child('post_$postId.jpg')
+        .putFile(mImageFile)
+        .then((taskSnapshot) {
       print("task done");
 
 // download url when it is uploaded
@@ -384,7 +458,6 @@ class _GroupInformationState extends State<GroupInformation> {
               builder: (BuildContext context) => SomethingWentWrongScreen()));
         });
       }
-
     });
     return 'failed';
   }
@@ -418,7 +491,8 @@ class _GroupInformationState extends State<GroupInformation> {
       });
       print("finished upload");
     }
-  }  
+  }
+
   void _listenForPermissionStatus() async {
     final cameraStatus = await Permission.camera.status;
     final photoStatus = await Permission.photos.status;

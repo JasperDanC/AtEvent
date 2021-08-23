@@ -1,3 +1,4 @@
+import 'package:at_chat_flutter/screens/chat_screen.dart';
 import 'package:at_event/models/event_datatypes.dart';
 import 'package:at_event/screens/background.dart';
 import 'package:at_event/screens/location_map_screen.dart';
@@ -10,6 +11,7 @@ import 'package:at_event/service/vento_services.dart';
 import 'package:at_commons/at_commons.dart';
 import 'package:at_event/Widgets/invite_box.dart';
 import 'package:at_common_flutter/services/size_config.dart';
+import 'chat_screen.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   EventDetailsScreen({this.event});
@@ -24,6 +26,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   VentoService? clientSdkService;
   late String timeText;
   bool isCreator = false;
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -118,13 +121,14 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             padding: const EdgeInsets.all(35.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                    height: SizeConfig().screenHeight * 0.12,
-                    width: SizeConfig().screenWidth * 0.5,
+                      height: SizeConfig().screenHeight * 0.12,
+                      width: SizeConfig().screenWidth * 0.4,
                       child: Text(
                         widget.event!.eventName,
                         style: TextStyle(
@@ -133,21 +137,49 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             color: Colors.white),
                       ),
                     ),
-                    MaterialButton(
-                      shape: CircleBorder(),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CalendarScreen()),
-                        );
-                      },
-                      child: Icon(
-                        Icons.chevron_left,
-                        color: Colors.white,
-                        size: 50.0,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        MaterialButton(
+                          shape: CircleBorder(),
+                          padding: EdgeInsets.zero,
+                          minWidth: 0.0,
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CalendarScreen()),
+                            );
+                          },
+                          child: Icon(
+                            Icons.chevron_left,
+                            color: Colors.white,
+                            size: 50.0.toWidth,
+                          ),
+                        ),
+                        // MaterialButton(
+                        //   shape: CircleBorder(),
+                        //   padding: EdgeInsets.zero,
+                        //   minWidth: 0.0,
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => VentoChatScreen(
+                        //           chatID: widget.event!.realEvent.key,
+                        //           groupMembers: widget.event!.peopleGoing,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: Icon(
+                        //     Icons.chat_bubble,
+                        //     color: Colors.white,
+                        //     size: 30.0.toWidth,
+                        //   ),
+                        // ),
+                      ],
                     ),
                   ],
                 ),
@@ -191,18 +223,50 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                 Divider(
                   color: Colors.white,
                 ),
-                Text(
-                  widget.event!.realEvent.invitees.length.toString() +
-                      " invited:",
-                  style: kEventDetailsTextStyle,
-                ),
-                InviteBox(
-                  invitees: widget.event!.invitees,
-                  onAdd: _updateAndInvite,
-                  addToList: true,
-                  width: 300.0,
-                  isCreator: isCreator,
-                  height: 200.0,
+                SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 6.0),
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            widget.event!.realEvent.invitees.length.toString() +
+                                " invited:",
+                            style: kEventDetailsTextStyle,
+                          ),
+                          InviteBox(
+                            invitees: widget.event!.invitees,
+                            onAdd: _updateAndInvite,
+                            addToList: true,
+                            width: 300.0,
+                            isCreator: isCreator,
+                            height: 200.0,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: 18.toWidth,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            widget.event!.realEvent.peopleGoing.length.toString() +
+                                " going:",
+                            style: kEventDetailsTextStyle,
+                          ),
+                          InviteBox(
+                            invitees: widget.event!.peopleGoing,
+                            onAdd: _updateAndInvite,
+                            addToList: false,
+                            width: 300.0,
+                            isCreator: false,
+                            height: 200.0,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
