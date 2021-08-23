@@ -157,25 +157,25 @@ class _GroupInformationState extends State<GroupInformation> {
                                       }
                                     },
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.chat_bubble,
-                                      size: 40.0,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => VentoChatScreen(
-                                            chatID: widget.group!.key,
-                                            groupMembers:
-                                                widget.group!.atSignMembers,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                  // IconButton(
+                                  //   icon: Icon(
+                                  //     Icons.chat_bubble,
+                                  //     size: 40.0,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  //   onPressed: () {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //         builder: (context) => VentoChatScreen(
+                                  //           chatID: widget.group!.key,
+                                  //           groupMembers:
+                                  //               widget.group!.atSignMembers,
+                                  //         ),
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             ]
@@ -197,28 +197,28 @@ class _GroupInformationState extends State<GroupInformation> {
                                   ),
                                 ],
                               ),
-                              MaterialButton(
-                                shape: CircleBorder(),
-                                padding: EdgeInsets.zero,
-                                minWidth: 0.0,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => VentoChatScreen(
-                                        chatID: widget.group!.key,
-                                        groupMembers:
-                                            widget.group!.atSignMembers,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.chat_bubble,
-                                  color: Colors.white,
-                                  size: 30.0.toWidth,
-                                ),
-                              ),
+                              // MaterialButton(
+                              //   shape: CircleBorder(),
+                              //   padding: EdgeInsets.zero,
+                              //   minWidth: 0.0,
+                              //   onPressed: () {
+                              //     Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) => VentoChatScreen(
+                              //           chatID: widget.group!.key,
+                              //           groupMembers:
+                              //               widget.group!.atSignMembers,
+                              //         ),
+                              //       ),
+                              //     );
+                              //   },
+                              //   child: Icon(
+                              //     Icons.chat_bubble,
+                              //     color: Colors.white,
+                              //     size: 30.0.toWidth,
+                              //   ),
+                              // ),
                             ],
                     ),
                     Container(

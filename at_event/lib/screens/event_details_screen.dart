@@ -158,27 +158,27 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             size: 50.0.toWidth,
                           ),
                         ),
-                        MaterialButton(
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.zero,
-                          minWidth: 0.0,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VentoChatScreen(
-                                  chatID: widget.event!.realEvent.key,
-                                  groupMembers: widget.event!.peopleGoing,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.chat_bubble,
-                            color: Colors.white,
-                            size: 30.0.toWidth,
-                          ),
-                        ),
+                        // MaterialButton(
+                        //   shape: CircleBorder(),
+                        //   padding: EdgeInsets.zero,
+                        //   minWidth: 0.0,
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => VentoChatScreen(
+                        //           chatID: widget.event!.realEvent.key,
+                        //           groupMembers: widget.event!.peopleGoing,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: Icon(
+                        //     Icons.chat_bubble,
+                        //     color: Colors.white,
+                        //     size: 30.0.toWidth,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],
