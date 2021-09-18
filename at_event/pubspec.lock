@@ -51,7 +51,7 @@ packages:
     source: hosted
     version: "1.0.0"
   at_chat_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: at_chat_flutter
       url: "https://pub.dartlang.org"
@@ -119,7 +119,7 @@ packages:
       name: at_onboarding_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.1.3"
   at_persistence_secondary_server:
     dependency: transitive
     description:
